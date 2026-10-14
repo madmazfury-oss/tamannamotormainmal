@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition-all backdrop-blur-md cursor-pointer active:scale-95"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer active:scale-95"
           title="Toggle Navigation Sidebar"
           aria-label="Toggle Navigation Sidebar"
         >
@@ -178,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Greeting - only on xl+ viewports so zoom-in never collides */}
-        <div className="hidden xl:flex items-center gap-1.5 min-w-0 shrink">
+        <div className="hidden xl:flex shrink-0 items-center gap-1.5 min-w-0">
           <span className="text-xs lg:text-sm font-bold text-white truncate max-w-[240px] 2xl:max-w-[320px]">
             {t.welcome}, {currentUser?.name || (lang === 'bn' ? 'অ্যাডমিন' : 'Admin')}
           </span>
@@ -325,14 +325,14 @@ export const Header: React.FC<HeaderProps> = ({
             )}
 
         {/* Location selector */}
-        <div className="relative ml-1 hidden xl:block">
+        <div className="relative ml-1 hidden 2xl:block">
           <button
             onClick={() => {
               setBranchDropdownOpen(!branchDropdownOpen);
               setProfileDropdownOpen(false);
               setNotificationOpen(false);
             }}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-2 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2 py-1.5 text-xs font-medium text-white hover:bg-white/20 transition-colors"
           >
             <Store className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
             <span className="truncate max-w-[130px]">
@@ -375,13 +375,13 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Language Switcher (EN / বাংলা) */}
-        <div className="flex items-center rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-0.5 text-xs font-bold shrink-0">
+        <div className="flex items-center rounded-xl border border-white/25 bg-white/10 p-0.5 text-xs font-bold shrink-0">
           <button
             onClick={() => onToggleLang('en')}
             className={`px-1.5 sm:px-2 py-1 rounded-md transition-colors text-[11px] sm:text-xs ${
               lang === 'en'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-white text-[#4a1fb8] shadow-xs'
+                : 'text-white/60 hover:text-white'
             }`}
             title="English Version"
           >
@@ -391,8 +391,8 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={() => onToggleLang('bn')}
             className={`px-1.5 sm:px-2 py-1 rounded-md transition-colors text-[11px] sm:text-xs ${
               lang === 'bn'
-                ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                ? 'bg-white text-[#4a1fb8] shadow-xs'
+                : 'text-white/60 hover:text-white'
             }`}
             title="বাংলা সংস্করণ (Bangla)"
           >
@@ -403,7 +403,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Theme Toggle (Dark / Light) */}
         <button
           onClick={onToggleTheme}
-          className="flex h-8.5 w-8.5 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all backdrop-blur-md cursor-pointer active:scale-95"
+          className="flex h-8.5 w-8.5 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer active:scale-95"
           title={theme === 'dark' ? "Switch to Light Mode" : "Switch to Dark Mode"}
           aria-label="Toggle Theme"
         >
@@ -417,12 +417,12 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Global Quick Search Button (Ctrl+S) - responsive on wide viewports */}
         <button
           onClick={onOpenSearch}
-          className="hidden lg:flex items-center gap-1.5 rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 p-2 xl:px-2.5 xl:py-1.5 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:border-emerald-500/50 transition-all backdrop-blur-md shadow-2xs cursor-pointer active:scale-95 shrink-0"
+          className="hidden lg:flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 p-2 xl:px-2.5 xl:py-1.5 text-xs text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
           title="Global Search & Commands (Ctrl+S)"
         >
           <Search className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span className="hidden 2xl:inline text-[11px] font-medium">{lang === 'bn' ? 'সার্চ...' : 'Search...'}</span>
-          <kbd className="hidden 2xl:inline-block px-1 py-0.2 text-[9px] font-mono font-bold rounded bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600">
+          <kbd className="hidden 2xl:inline-block px-1 py-0.2 text-[9px] font-mono font-bold rounded bg-white/20 text-white border border-white/25">
             Ctrl+S
           </kbd>
         </button>
@@ -430,7 +430,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Calculator Button - hidden when zooming in, accessible via shortcuts */}
         <button
           onClick={onOpenCalculator}
-          className="hidden 2xl:flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all backdrop-blur-md cursor-pointer active:scale-95"
+          className="hidden 2xl:flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white hover:bg-white/20 transition-all cursor-pointer active:scale-95"
           title="Calculator (Alt+C)"
           aria-label="Open Calculator"
         >
@@ -440,7 +440,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Invoice QR Scanner Button - hidden on tight viewports, accessible via Ctrl+I */}
         <button
           onClick={onOpenInvoiceScanner}
-          className="hidden 2xl:flex items-center gap-1.5 rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 px-2.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all backdrop-blur-md whitespace-nowrap cursor-pointer shadow-xs active:scale-95 shrink-0"
+          className="hidden 2xl:flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2.5 py-2 text-xs font-bold text-white hover:bg-white/20 transition-all whitespace-nowrap cursor-pointer active:scale-95 shrink-0"
           title={lang === 'bn' ? 'চালান কিউআর স্ক্যান ও যাচাই (Ctrl+I)' : 'Scan & Verify Invoice QR (Ctrl+I)'}
         >
           <QrCode className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -482,7 +482,7 @@ export const Header: React.FC<HeaderProps> = ({
               setBranchDropdownOpen(false);
               setNotificationOpen(false);
             }}
-            className="flex items-center gap-1.5 rounded-xl border border-white/20 dark:border-white/10 bg-white/50 dark:bg-slate-800/50 p-1 pl-1 sm:pl-1.5 hover:bg-slate-100/80 dark:hover:bg-slate-800 transition-all backdrop-blur-md cursor-pointer active:scale-95 shrink-0"
+            className="flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 p-1 pl-1 sm:pl-1.5 hover:bg-white/20 transition-all cursor-pointer active:scale-95 shrink-0"
             aria-label="User Menu"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 text-xs font-bold text-white overflow-hidden shadow-xs ring-1 ring-white/20 shrink-0">
