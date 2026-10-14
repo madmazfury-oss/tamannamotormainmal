@@ -941,6 +941,16 @@ export default function App() {
 
   // Handlers for Purchases
   const handleAddPurchase = (purchase: Purchase) => {
+    const items = (purchase as any).items as { productId: string; quantity: number; unitCost: number; sellingPrice: number }[] | undefined;
+    if (items?.length && purchase.purchaseStatus === 'Received') {
+      setProducts(prev => prev.map(p => {
+        const it = items.find(i => i.productId === p.id);
+        if (!it) return p;
+        const np = { ...p, currentStock: (p.currentStock || 0) + it.quantity, unitPurchasePrice: it.unitCost || p.unitPurchasePrice, sellingPrice: it.sellingPrice || p.sellingPrice };
+        FirestoreSync.upsertProduct(np);
+        return np;
+      }));
+    }
     const updated = [purchase, ...purchases];
     setPurchases(updated);
     DatabaseStorage.savePurchases(updated);
@@ -2645,6 +2655,7 @@ export default function App() {
         isOpen={isAddPurchaseOpen}
         onClose={() => setIsAddPurchaseOpen(false)}
         suppliers={suppliers}
+        products={products}
         onAddPurchase={handleAddPurchase}
       />
 
