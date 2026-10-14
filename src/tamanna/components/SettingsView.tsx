@@ -383,57 +383,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </form>
       )}
 
-      {/* Enterprise Cloud Storage Status Badge (Clean & Hidden Keys) */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-3 text-xs transition-colors">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400">
-              <Cloud className="h-4 w-4" />
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span>{lang === 'bn' ? 'ইন্টিগ্রেটেড ক্লাউড ডেটাবেজ ও স্টোরেজ' : 'Integrated Cloud Database & Storage'}</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                  Connected & Secure
-                </span>
-              </h4>
-              <p className="text-[11px] text-slate-500">
-                {lang === 'bn'
-                  ? 'তামান্না মোটরস এন্টারপ্রাইজ ক্লাউড পার্সিস্টেন্স এবং অটো-ব্যাকআপ সক্রিয় রয়েছে।'
-                  : 'Tamanna Motors Enterprise Cloud Persistence and Auto-Backup active.'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Live Data Import & Cloud Sync Quick Trigger */}
-      {onImportLiveData && (
-        <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50/30 dark:bg-emerald-950/20 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-emerald-600/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-              <RefreshCw className="h-4 w-4" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-slate-900 dark:text-white">
-                {lang === 'bn' ? 'TAMANNA MOTORS রিয়েল ডেটাবেজ সিঙ্ক' : 'TAMANNA MOTORS Live Database Sync'}
-              </h5>
-              <p className="text-[11px] text-slate-500">
-                {lang === 'bn' ? '৫২১টি পণ্য, ৮৪০টি বিক্রয় চালান এবং ৪১টি সরবরাহকারী হিসাব।' : '521 catalog items, 840 sales tickets & 41 supplier ledgers.'}
-              </p>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={onImportLiveData}
-            className="flex items-center gap-1.5 rounded-xl border border-emerald-500 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 text-xs font-bold shadow-xs transition-all cursor-pointer whitespace-nowrap active:scale-95"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            <span>{lang === 'bn' ? 'রিয়েল ডাটা সিঙ্ক করুন' : 'Sync Live Data'}</span>
-          </button>
-        </div>
-      )}
-
+      {/* Cloud status & live sync panels hidden for a cleaner look */}
       {/* Developer Credit - Discreet & Professional */}
       <div className="pt-6 pb-2 border-t border-slate-200/80 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500 gap-3">
         <div className="flex items-center gap-2 text-[11px]">
