@@ -137,31 +137,49 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     [last7DaysSalesData]
   );
 
-  // Key metrics calculation for TAMANNA MOTORS (in BDT ৳)
+  // Key metrics calculation for TAMANNA MOTORS (in BDT ৳) — filtered by selected period
+  const [period, setPeriod] = useState<'today' | 'yesterday' | '7d' | '30d' | 'month' | 'all'>('today');
+  const inPeriod = (raw?: string) => {
+    if (period === 'all') return true;
+    if (!raw) return false;
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return false;
+    const now = new Date();
+    const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const day = 86400000;
+    if (period === 'today') return d >= startToday;
+    if (period === 'yesterday') return d >= new Date(startToday.getTime() - day) && d < startToday;
+    if (period === '7d') return d >= new Date(startToday.getTime() - 6 * day);
+    if (period === '30d') return d >= new Date(startToday.getTime() - 29 * day);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  };
+  const pSales = useMemo(() => (sales || []).filter(s => inPeriod(s.saleDate)), [sales, period]);
+  const pPurchases = useMemo(() => (purchases || []).filter(p => inPeriod(p.purchaseDate)), [purchases, period]);
+  const pExpenses = useMemo(() => (expenses || []).filter(e => inPeriod(e.expenseDate)), [expenses, period]);
   const totalSalesValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + (Number(s.totalAmount) || 0), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + (Number(s.totalAmount) || 0), 0),
+    [pSales]
   );
   const netSalesValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + ((Number(s.totalAmount) || 0) - (Number(s.taxAmount) || 0)), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + ((Number(s.totalAmount) || 0) - (Number(s.taxAmount) || 0)), 0),
+    [pSales]
   );
   const invoiceDueValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + (Number(s.invoiceDue) || 0), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + (Number(s.invoiceDue) || 0), 0),
+    [pSales]
   );
   const totalPurchaseValue = useMemo(() => 
-    (purchases || []).reduce((acc, p) => acc + (Number(p.grandTotal) || 0), 0),
-    [purchases]
+    pPurchases.reduce((acc, p) => acc + (Number(p.grandTotal) || 0), 0),
+    [pPurchases]
   );
   const purchaseDueValue = useMemo(() => 
-    (purchases || []).reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
-    [purchases]
+    pPurchases.reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
+    [pPurchases]
   );
   const totalPurchaseReturnValue = returnedStockValue;
   const totalExpensesValue = useMemo(() => 
-    (expenses || []).reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
-    [expenses]
+    pExpenses.reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
+    [pExpenses]
   );
 
   // Dynamic 30 Days sales calculation from real sales
@@ -311,7 +329,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </section>
 
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
-        <div><h2 className="text-lg font-bold text-home-ink">{lang === 'bn' ? 'ব্যবসার সারসংক্ষেপ' : 'Business overview'}</h2><p className="mt-1 text-xs text-home-subtle">{lang === 'bn' ? 'সর্বসময়ের হিসাব' : 'All-time totals'}</p></div>
+        <div><h2 className="text-lg font-bold text-home-ink">{lang === 'bn' ? 'ব্যবসার সারসংক্ষেপ' : 'Business overview'}</h2>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {([['today','আজ','Today'],['yesterday','গতকাল','Yesterday'],['7d','৭ দিন','7 days'],['30d','৩০ দিন','30 days'],['month','এই মাস','This month'],['all','সব সময়','All time']] as const).map(([k, bn, en]) => (
+              <Button key={k} size="sm" variant={period === k ? 'default' : 'outline'} onClick={() => setPeriod(k)} className={period === k ? 'h-7 px-3 text-xs' : 'h-7 px-3 text-xs border-home-border bg-home-surface text-home-ink hover:bg-home-muted'}>{lang === 'bn' ? bn : en}</Button>
+            ))}
+          </div>
+        </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={() => onNavigate('products-add')} className="border-home-border bg-home-surface text-home-ink hover:bg-home-muted"><Plus />{t.nav.addProduct}</Button>
           <Button variant="outline" size="sm" onClick={() => onNavigate('purchase-add')} className="border-home-border bg-home-surface text-home-ink hover:bg-home-muted"><ShoppingBag />{t.nav.addPurchase}</Button>
@@ -320,10 +344,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${sales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
+          { label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${pSales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
           { label: t.dashboard.netSales, value: netSalesValue, icon: CreditCard, tone: 'info', note: lang === 'bn' ? 'ভ্যাট বাদে বিক্রয়' : 'Sales excluding tax' },
           { label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
-          { label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${purchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
+          { label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${pPurchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
           { label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
           { label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
           { label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
