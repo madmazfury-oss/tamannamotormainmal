@@ -273,7 +273,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-2 sm:p-4 backdrop-blur-md animate-in fade-in overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-2 sm:p-4 backdrop-blur-md animate-in fade-in overflow-y-auto" onClick={onClose}>
       <div 
         className={`w-full ${layoutMode === 'a4' ? 'max-w-4xl' : 'max-w-md'} rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl my-4 overflow-hidden transition-all`}
         onClick={(e) => e.stopPropagation()}
