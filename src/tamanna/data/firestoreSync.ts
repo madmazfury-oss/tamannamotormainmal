@@ -112,3 +112,10 @@ export const FirestoreSync = {
   subscribeContacts: (cb: (items: Contact[]) => void) => subscribe<Contact>("contacts", cb),
   subscribeUsers: (cb: (items: AuthUser[]) => void) => subscribe<AuthUser>("users", cb, filterStaff),
 };
+
+/** Generic access for master-data collections (units, brands, tax rates, ...). */
+export const CloudCollections = {
+  upsert: (collection: string, id: string, data: unknown) => upsertDoc(collection, id, data),
+  remove: (collection: string, id: string) => deleteDoc(collection, id),
+  subscribe: <T,>(collection: string, cb: (items: T[]) => void) => subscribe<T>(collection, cb),
+};
