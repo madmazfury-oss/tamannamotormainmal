@@ -179,13 +179,13 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Greeting - only on xl+ viewports so zoom-in never collides */}
         <div className="hidden xl:flex items-center gap-1.5 min-w-0 shrink">
-          <span className="text-xs lg:text-sm font-bold text-white truncate max-w-[120px] 2xl:max-w-[200px]">
+          <span className="text-xs lg:text-sm font-bold text-white truncate max-w-[190px] 2xl:max-w-[260px]">
             {t.welcome}, {currentUser?.name || (lang === 'bn' ? 'অ্যাডমিন' : 'Admin')}
           </span>
 
-          <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-black tracking-wide border border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 shrink-0">
-            <Shield className="h-2.5 w-2.5" />
-            <span>
+          <div className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-black tracking-wide border border-white/30 bg-white/15 shrink-0">
+            <Shield className="h-2.5 w-2.5 text-emerald-100" />
+            <span className="text-emerald-100">
               {currentUser?.role === 'super_admin'
                 ? t.superAdmin
                 : currentUser?.role === 'admin'
@@ -366,12 +366,12 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right section: Theme, Language, Date/Time, POS shortcut, Calculator & Profile */}
       <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 shrink-0">
-        {/* Live Date & Time - shown only on extra wide screens / 100% zoom on 1440p+ */}
-        <div className="hidden 2xl:flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300 border-r border-slate-200 dark:border-slate-800 pr-2.5">
-          <Clock className="h-3.5 w-3.5 text-slate-400" />
-          <span className="font-medium">{currentDate}</span>
-          <span className="text-slate-300 dark:text-slate-700">·</span>
-          <span className="font-mono tabular-nums font-semibold text-slate-900 dark:text-slate-100">{currentTime}</span>
+        {/* Live Date & Time - compact clock, visible from tablet up */}
+        <div className="hidden md:flex items-center gap-1.5 border-r border-white/20 pr-2 text-xs">
+          <Clock className="h-3.5 w-3.5 text-amber-300" />
+          <span className="hidden 2xl:inline font-medium text-white/80">{currentDate}</span>
+          <span className="hidden 2xl:inline text-white/40">·</span>
+          <span className="font-mono font-bold tabular-nums text-white">{currentTime}</span>
         </div>
 
         {/* Language Switcher (EN / বাংলা) */}
