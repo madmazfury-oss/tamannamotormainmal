@@ -137,31 +137,49 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     [last7DaysSalesData]
   );
 
-  // Key metrics calculation for TAMANNA MOTORS (in BDT ৳)
+  // Key metrics calculation for TAMANNA MOTORS (in BDT ৳) — filtered by selected period
+  const [period, setPeriod] = useState<'today' | 'yesterday' | '7d' | '30d' | 'month' | 'all'>('today');
+  const inPeriod = (raw?: string) => {
+    if (period === 'all') return true;
+    if (!raw) return false;
+    const d = new Date(raw);
+    if (isNaN(d.getTime())) return false;
+    const now = new Date();
+    const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const day = 86400000;
+    if (period === 'today') return d >= startToday;
+    if (period === 'yesterday') return d >= new Date(startToday.getTime() - day) && d < startToday;
+    if (period === '7d') return d >= new Date(startToday.getTime() - 6 * day);
+    if (period === '30d') return d >= new Date(startToday.getTime() - 29 * day);
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  };
+  const pSales = useMemo(() => (sales || []).filter(s => inPeriod(s.saleDate)), [sales, period]);
+  const pPurchases = useMemo(() => (purchases || []).filter(p => inPeriod(p.purchaseDate)), [purchases, period]);
+  const pExpenses = useMemo(() => (expenses || []).filter(e => inPeriod(e.expenseDate)), [expenses, period]);
   const totalSalesValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + (Number(s.totalAmount) || 0), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + (Number(s.totalAmount) || 0), 0),
+    [pSales]
   );
   const netSalesValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + ((Number(s.totalAmount) || 0) - (Number(s.taxAmount) || 0)), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + ((Number(s.totalAmount) || 0) - (Number(s.taxAmount) || 0)), 0),
+    [pSales]
   );
   const invoiceDueValue = useMemo(() => 
-    (sales || []).reduce((acc, s) => acc + (Number(s.invoiceDue) || 0), 0),
-    [sales]
+    pSales.reduce((acc, s) => acc + (Number(s.invoiceDue) || 0), 0),
+    [pSales]
   );
   const totalPurchaseValue = useMemo(() => 
-    (purchases || []).reduce((acc, p) => acc + (Number(p.grandTotal) || 0), 0),
-    [purchases]
+    pPurchases.reduce((acc, p) => acc + (Number(p.grandTotal) || 0), 0),
+    [pPurchases]
   );
   const purchaseDueValue = useMemo(() => 
-    (purchases || []).reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
-    [purchases]
+    pPurchases.reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
+    [pPurchases]
   );
   const totalPurchaseReturnValue = returnedStockValue;
   const totalExpensesValue = useMemo(() => 
-    (expenses || []).reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
-    [expenses]
+    pExpenses.reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
+    [pExpenses]
   );
 
   // Dynamic 30 Days sales calculation from real sales
