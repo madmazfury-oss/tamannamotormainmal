@@ -69,6 +69,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   lang = 'en',
   userRole = 'super_admin',
   currentUser,
+  returnedStockValue = 0,
   onQuickRestock
 }) => {
   const t = TRANSLATIONS[lang];
@@ -157,7 +158,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     (purchases || []).reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
     [purchases]
   );
-  const totalPurchaseReturnValue = 0.00;
+  const totalPurchaseReturnValue = returnedStockValue;
   const totalExpensesValue = useMemo(() => 
     (expenses || []).reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
     [expenses]
