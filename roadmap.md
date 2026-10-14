@@ -1,8 +1,8 @@
 # TAMANNA MOTORS Migration Roadmap
 
-- [ ] Apply database schema (supabase_schema.sql) via migration
-- [ ] Import live data (imported_live_data.json: 521 products, 840 sells, 248 purchases, 42 customers, 41 suppliers)
-- [ ] Port React app (App.tsx + components) into TanStack Start route
-- [ ] Replace old Supabase client with generated Lovable Cloud client
-- [ ] Remove Firebase/Express/Drizzle dependencies
-- [ ] Verify build + app runs in preview
+- [x] Apply database schema via migration
+- [x] Seed data bundled with app (importedTamannaData.json: products, sales, purchases, contacts)
+- [x] Port React app into TanStack Start route (src/tamanna/, route /)
+- [x] Replace old Supabase/Firebase clients with Lovable Cloud client (sync_documents table + realtime)
+- [x] Remove Firebase/Express/Drizzle dependencies
+- [x] Verify build + login + dashboard in preview
