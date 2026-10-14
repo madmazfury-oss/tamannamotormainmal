@@ -54,6 +54,7 @@ import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
+import { StaffAccountsView } from './components/StaffAccountsView';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceScanModal } from './components/InvoiceScanModal';
 import { QuickSearchModal } from './components/QuickSearchModal';
@@ -396,6 +397,31 @@ export default function App() {
   const [staffUsers, setStaffUsers] = useState<AuthUser[]>(() => DatabaseStorage.loadStaffUsers());
   const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
   const [authReady, setAuthReady] = useState(false);
+  const [realUser, setRealUser] = useState<AuthUser | null>(null);
+  const [noRole, setNoRole] = useState(false);
+  const isRealSuper = (realUser ?? currentUser)?.role === 'super_admin';
+  const logDelete = (entityType: string, obj: any) => {
+    const title = obj?.name || obj?.businessName || obj?.invoiceNo || obj?.purchaseNo || obj?.expenseNo || obj?.transferNo || obj?.id || '';
+    const who = realUser ?? currentUser;
+    supabase.from('audit_logs').insert({
+      id: `del-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      timestamp: new Date().toISOString(), action_type: 'DELETED', entity_type: entityType,
+      entity_id: String(obj?.id ?? ''), entity_title: String(title),
+      performed_by: `${who?.name || ''} <${who?.email || ''}>`, details: JSON.stringify(obj).slice(0, 5000),
+    }).then(({ error }) => { if (error) console.error('audit log failed', error); });
+  };
+  const handleJumpToAccount = (acc: { id: string; name: string; email: string; phone: string; role: string | null }) => {
+    if (!isRealSuper || !acc.role) return;
+    if (!realUser) setRealUser(currentUser);
+    const role = acc.role as UserRole;
+    setCurrentUser({ id: acc.id, uid: acc.id, name: acc.name, email: acc.email, username: (acc.email || acc.name).split('@')[0], role, phone: acc.phone, businessLocation: 'Hazigonj Branch', status: 'Active', emailVerified: true } as AuthUser);
+    setUserRole(role);
+    setCurrentRoute('home');
+  };
+  const handleReturnToSuper = () => {
+    if (!realUser) return;
+    setCurrentUser(realUser); setUserRole(realUser.role); setRealUser(null);
+  };
 
   // 10-minute inactivity auto-logout timer
   useEffect(() => {
@@ -629,14 +655,18 @@ export default function App() {
   // Cloud auth session -> app user
   useEffect(() => {
     const apply = async (session: any) => {
-      if (!session?.user) { setCurrentUser(null); setAuthReady(true); return; }
+      if (!session?.user) { setCurrentUser(null); setRealUser(null); setNoRole(false); setAuthReady(true); return; }
       const u = session.user;
       const [{ data: prof }, { data: roles }] = await Promise.all([
         supabase.from('profiles').select('full_name, phone').eq('id', u.id).maybeSingle(),
         supabase.from('user_roles').select('role').eq('user_id', u.id),
       ]);
       const order = ['super_admin', 'admin', 'manager', 'cashier'];
-      const role = (order.find(r => roles?.some((x: any) => x.role === r)) || 'cashier') as UserRole;
+      const found = order.find(r => roles?.some((x: any) => x.role === r));
+      supabase.from('profiles').update({ email: u.email }).eq('id', u.id).then(() => {});
+      if (!found) { setNoRole(true); setCurrentUser(null); setAuthReady(true); return; }
+      setNoRole(false); setRealUser(null);
+      const role = found as UserRole;
       const user: AuthUser = {
         id: u.id, uid: u.id, email: u.email || '',
         name: prof?.full_name || u.user_metadata?.full_name || (u.email || '').split('@')[0],
@@ -737,6 +767,7 @@ export default function App() {
 
   // Handlers for Products
   const handleAddProduct = (newProd: Product) => {
+    if (editingProduct && !isRealSuper) { showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন এডিট করতে পারবেন।' : '⚠️ Only Super Admin can edit records.'); return; }
     if (editingProduct) {
       const updated = products.map(p => p.id === newProd.id ? newProd : p);
       setProducts(updated);
@@ -766,7 +797,8 @@ export default function App() {
   };
 
   const handleDeleteProduct = (prod: Product) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Product', prod);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -782,6 +814,7 @@ export default function App() {
 
   // Handlers for Contacts (Suppliers & Customers)
   const handleAddSupplier = (contact: Contact) => {
+    if (editingContact && !isRealSuper) { showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন এডিট করতে পারবেন।' : '⚠️ Only Super Admin can edit records.'); return; }
     if (editingContact) {
       const updated = suppliers.map(s => s.id === contact.id ? contact : s);
       setSuppliers(updated);
@@ -811,7 +844,8 @@ export default function App() {
   };
 
   const handleDeleteSupplier = (row: Contact) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Contact', row);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -826,6 +860,7 @@ export default function App() {
   };
 
   const handleAddCustomer = (contact: Contact) => {
+    if (editingContact && !isRealSuper) { showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন এডিট করতে পারবেন।' : '⚠️ Only Super Admin can edit records.'); return; }
     if (editingContact) {
       const updated = customers.map(c => c.id === contact.id ? contact : c);
       setCustomers(updated);
@@ -855,7 +890,8 @@ export default function App() {
   };
 
   const handleDeleteCustomer = (row: Contact) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Contact', row);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -885,7 +921,8 @@ export default function App() {
   };
 
   const handleDeleteExpense = (row: Expense) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Expense', row);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -915,7 +952,8 @@ export default function App() {
   };
 
   const handleDeletePurchase = (row: Purchase) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Purchase', row);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -936,7 +974,8 @@ export default function App() {
   };
 
   const handleDeleteTransfer = (transfer: StockTransfer) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Transfer', transfer);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -966,7 +1005,8 @@ export default function App() {
   };
 
   const handleDeleteSale = (sale: Sale) => {
-    const isSuper = currentUser?.role === 'super_admin' || userRole === 'super_admin';
+    const isSuper = isRealSuper;
+    if (isSuper) logDelete('Sale', sale);
     if (!isSuper) {
       showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন (Super Admin) যেকোনো রেকর্ড ডিলিট করতে পারবেন।' : '⚠️ Only Super Admin has permission to delete records.');
       return;
@@ -983,6 +1023,7 @@ export default function App() {
   // Super Admin: Universal Edit Entry Save Handler
   const handleEditEntrySave = (updatedEntry: any) => {
     if (!editingEntry) return;
+    if (!isRealSuper) { showSyncNotice(lang === 'bn' ? '⚠️ শুধুমাত্র সুপার অ্যাডমিন এডিট করতে পারবেন।' : '⚠️ Only Super Admin can edit records.'); return; }
 
     if (editingEntry.type === 'sale') {
       setSales(prev => prev.map(s => s.id === updatedEntry.id ? updatedEntry : s));
@@ -1377,7 +1418,7 @@ export default function App() {
         );
 
       case 'user-management':
-        if (currentUser?.role !== 'super_admin') {
+        if (!isRealSuper || realUser) {
           return (
             <div className="flex flex-col items-center justify-center p-6 sm:p-12 text-center min-h-[450px]">
               <div className="max-w-md w-full rounded-3xl bg-rose-500/10 dark:bg-rose-950/30 border border-rose-500/30 p-8 backdrop-blur-2xl shadow-2xl">
@@ -1403,12 +1444,7 @@ export default function App() {
           );
         }
         return (
-          <UserManagementView
-            users={staffUsers}
-            onUpdateUsers={handleUpdateStaffUsers}
-            currentUser={currentUser}
-            lang={lang}
-          />
+          <StaffAccountsView lang={lang} myId={(realUser ?? currentUser)!.id} onJump={handleJumpToAccount} />
         );
 
       case 'contact-suppliers':
@@ -2366,6 +2402,17 @@ export default function App() {
   if (!authReady) {
     return <div className="min-h-screen grid place-items-center"><div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" /></div>;
   }
+  if (noRole) {
+    return (
+      <div className="min-h-screen grid place-items-center p-6 bg-slate-50 dark:bg-slate-950">
+        <div className="max-w-sm w-full rounded-3xl bg-white dark:bg-slate-900 shadow-xl p-8 text-center space-y-3">
+          <h2 className="text-xl font-extrabold">{lang === 'bn' ? 'অনুমোদনের অপেক্ষায়' : 'Waiting for approval'}</h2>
+          <p className="text-sm text-slate-500">{lang === 'bn' ? 'সুপার অ্যাডমিন আপনাকে একটি রোল দিলে আপনি ঢুকতে পারবেন।' : 'You can enter once a Super Admin assigns you a role.'}</p>
+          <button onClick={() => supabase.auth.signOut()} className="w-full py-2.5 rounded-xl bg-amber-500 font-bold">{lang === 'bn' ? 'লগআউট' : 'Sign out'}</button>
+        </div>
+      </div>
+    );
+  }
   if (!currentUser) {
     return (
       <AuthScreen
@@ -2412,6 +2459,14 @@ export default function App() {
 
       {/* Main Container */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
+        {realUser && (
+          <div className="flex items-center justify-between gap-3 px-4 py-2 bg-amber-500 text-slate-950 text-sm font-semibold">
+            <span>{lang === 'bn' ? `আপনি এখন '${currentUser.name}' অ্যাকাউন্টে আছেন` : `Viewing as '${currentUser.name}'`}</span>
+            <button onClick={handleReturnToSuper} className="px-3 py-1 rounded-lg bg-slate-950 text-amber-400 text-xs font-bold">
+              {lang === 'bn' ? 'সুপার অ্যাডমিনে ফিরুন' : 'Back to Super Admin'}
+            </button>
+          </div>
+        )}
         {/* 1. Top Bar (Header) with Theme & Language */}
         <Header
           sidebarOpen={sidebarOpen}
