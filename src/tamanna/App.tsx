@@ -2459,6 +2459,14 @@ export default function App() {
 
       {/* Main Container */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
+        {realUser && (
+          <div className="flex items-center justify-between gap-3 px-4 py-2 bg-amber-500 text-slate-950 text-sm font-semibold">
+            <span>{lang === 'bn' ? `আপনি এখন '${currentUser.name}' অ্যাকাউন্টে আছেন` : `Viewing as '${currentUser.name}'`}</span>
+            <button onClick={handleReturnToSuper} className="px-3 py-1 rounded-lg bg-slate-950 text-amber-400 text-xs font-bold">
+              {lang === 'bn' ? 'সুপার অ্যাডমিনে ফিরুন' : 'Back to Super Admin'}
+            </button>
+          </div>
+        )}
         {/* 1. Top Bar (Header) with Theme & Language */}
         <Header
           sidebarOpen={sidebarOpen}
