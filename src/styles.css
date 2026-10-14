@@ -74,6 +74,18 @@
 }
 
 :root {
+  --auth-bg: oklch(0.18 0.006 260);
+  --auth-panel: oklch(0.2 0.008 260 / 0.94);
+  --auth-ink: oklch(0.98 0.003 95);
+  --auth-muted: oklch(0.72 0.009 260);
+  --auth-border: oklch(0.98 0 0 / 0.16);
+  --auth-field: oklch(0.26 0.008 260 / 0.84);
+  --auth-yellow: oklch(0.85 0.17 88);
+  --auth-yellow-hover: oklch(0.9 0.15 88);
+  --auth-on-yellow: oklch(0.2 0.015 88);
+  --auth-error: oklch(0.78 0.13 25);
+  --auth-success: oklch(0.8 0.14 160);
+  --auth-shadow: 0 16px 64px oklch(0.1 0 0 / 0.25);
   --home-surface: oklch(1 0 0);
   --home-muted: oklch(0.975 0.005 170);
   --home-ink: oklch(0.25 0.018 170);
@@ -180,3 +192,58 @@
     color: var(--color-foreground);
   }
 }
+
+/* Industrial sign-in screen; isolated from the legacy application theme. */
+.tm-excavator-auth { position: relative; isolation: isolate; min-height: 100svh; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(390px, .85fr); grid-template-rows: auto 1fr auto; background: var(--auth-bg); color: var(--auth-ink); font-family: Arial, sans-serif; letter-spacing: 0; }
+.tm-excavator-backdrop { position: absolute; inset: 0; z-index: -3; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.tm-excavator-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, color-mix(in oklch, var(--auth-bg) 65%, transparent), transparent 28%, color-mix(in oklch, var(--auth-bg) 92%, transparent) 100%); }
+.tm-excavator-header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding: 30px 4%; gap: 16px; }
+.tm-excavator-brand { display: flex; align-items: center; gap: 12px; color: var(--auth-ink); text-decoration: none; }
+.tm-excavator-brand strong { display: block; font-size: 20px; font-weight: 800; }
+.tm-excavator-brand small { display: block; margin-top: 4px; font-size: 10px; color: var(--auth-muted); }
+.tm-excavator-brand img, .tm-excavator-mark { width: 46px; height: 46px; border-radius: 6px; object-fit: contain; }
+.tm-excavator-mark { display: grid; place-items: center; color: var(--auth-on-yellow); background: var(--auth-yellow); }
+.tm-excavator-mark svg { width: 28px; height: 28px; }
+.tm-excavator-auth .tm-excavator-language { color: var(--auth-ink); background: color-mix(in oklch, var(--auth-bg) 65%, transparent); border: 1px solid var(--auth-border); }
+.tm-excavator-story { align-self: end; padding: 60px 6% 42px; max-width: 760px; }
+.tm-excavator-eyebrow { font-size: 11px; color: var(--auth-yellow); display: block; margin-bottom: 14px; }
+.tm-excavator-story h1 { font-size: 48px; line-height: 1.1; font-weight: 900; overflow-wrap: anywhere; margin: 0; }
+.tm-excavator-story h1 span { display: block; font-size: 27px; color: var(--auth-yellow); font-weight: 600; margin-top: 12px; }
+.tm-excavator-location { font-size: 12px; color: var(--auth-muted); display: flex; align-items: center; gap: 9px; margin-top: 22px; }
+.tm-excavator-location > span { width: 6px; height: 6px; background: var(--auth-yellow); border-radius: 50%; flex-shrink: 0; }
+.tm-excavator-login { display: flex; align-items: center; justify-content: center; padding: 20px 9% 30px 4%; }
+.tm-excavator-form { width: 100%; max-width: 420px; background: var(--auth-panel); border: 1px solid var(--auth-border); border-top: 3px solid var(--auth-yellow); padding: 32px; backdrop-filter: blur(18px); border-radius: 8px; box-shadow: var(--auth-shadow); animation: auth-enter .6s ease-out both; }
+.tm-excavator-section-label { font-size: 10px; display: flex; align-items: center; gap: 8px; color: var(--auth-yellow); margin-bottom: 22px; }
+.tm-excavator-section-label span { width: 18px; height: 2px; background: var(--auth-yellow); }
+.tm-excavator-form h2 { font-size: 32px; line-height: 1.2; font-weight: 750; margin: 0; }
+.tm-excavator-subtitle { color: var(--auth-muted); font-size: 13px; margin: 9px 0 23px; }
+.tm-excavator-tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--auth-border); margin-bottom: 24px; }
+.tm-excavator-tabs button { color: var(--auth-muted); border-radius: 0; padding-bottom: 12px; height: 42px; border-bottom: 2px solid transparent; background: transparent; }
+.tm-excavator-tabs button[aria-selected="true"] { color: var(--auth-yellow); border-color: var(--auth-yellow); }
+.tm-excavator-fields { display: flex; flex-direction: column; gap: 16px; }
+.tm-excavator-fields label { font-size: 12px; color: var(--auth-ink); display: block; }
+.tm-excavator-field { display: flex; align-items: center; gap: 10px; margin-top: 8px; border: 1px solid var(--auth-border); border-radius: 6px; background: var(--auth-field); padding: 0 12px; height: 48px; }
+.tm-excavator-field:focus-within { border-color: var(--auth-yellow); }
+.tm-excavator-field > svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--auth-muted); }
+.tm-excavator-field input { min-width: 0; width: 100%; height: 100%; outline: none; background: transparent; color: var(--auth-ink); font-size: 13px; }
+.tm-excavator-field input::placeholder { color: var(--auth-muted); }
+.tm-excavator-field button { color: var(--auth-muted); background: transparent; width: 28px; flex-shrink: 0; }
+.tm-excavator-auth .tm-excavator-forgot { align-self: flex-end; color: var(--auth-yellow); height: auto; padding: 0; font-size: 11px; }
+.tm-excavator-auth .tm-excavator-submit { height: 48px; width: 100%; background: var(--auth-yellow); color: var(--auth-on-yellow); font-weight: 750; justify-content: space-between; padding: 0 18px; box-shadow: none; }
+.tm-excavator-auth .tm-excavator-submit:hover { background: var(--auth-yellow-hover); }
+.tm-excavator-divider { display: flex; gap: 12px; align-items: center; font-size: 10px; color: var(--auth-muted); margin: 22px 0 16px; }
+.tm-excavator-divider span { height: 1px; background: var(--auth-border); flex: 1; }
+.tm-excavator-auth .tm-excavator-google { background: var(--auth-field); color: var(--auth-ink); border-color: var(--auth-border); height: 46px; width: 100%; }
+.tm-google-letter { font-size: 20px; font-weight: 800; }
+.tm-excavator-security { display: flex; justify-content: center; gap: 7px; align-items: center; margin-top: 22px; font-size: 10px; color: var(--auth-muted); }
+.tm-excavator-security svg { width: 14px; height: 14px; }
+.tm-excavator-error, .tm-excavator-info { font-size: 12px; line-height: 1.5; }
+.tm-excavator-error { color: var(--auth-error); }
+.tm-excavator-info { color: var(--auth-success); }
+.tm-excavator-auth .tm-excavator-back { padding: 0; color: var(--auth-muted); background: transparent; margin-bottom: 14px; }
+.tm-excavator-footer { grid-column: 1 / -1; padding: 18px 4%; border-top: 1px solid var(--auth-border); display: flex; justify-content: space-between; gap: 16px; font-size: 9px; color: var(--auth-muted); }
+@keyframes auth-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (min-width: 1700px) { .tm-excavator-auth { min-height: 100svh; } .tm-excavator-story h1 { font-size: 64px; } }
+@media (max-width: 1100px) { .tm-excavator-header { padding: 22px 3%; } .tm-excavator-login { padding: 8px 5% 24px 2%; } .tm-excavator-form { padding: 24px; } .tm-excavator-story h1 { font-size: 36px; } .tm-excavator-story h1 span { font-size: 22px; } }
+@media (max-width: 760px) { .tm-excavator-auth { grid-template-columns: minmax(0, 1fr); } .tm-excavator-header { padding: 20px; } .tm-excavator-brand strong { font-size: 16px; } .tm-excavator-brand small { font-size: 9px; } .tm-excavator-backdrop { position: absolute; height: 440px; object-position: 26% center; } .tm-excavator-shade { background: linear-gradient(180deg, color-mix(in oklch, var(--auth-bg) 45%, transparent), color-mix(in oklch, var(--auth-bg) 20%, transparent) 150px, var(--auth-bg) 430px); } .tm-excavator-story { padding: 140px 24px 26px; } .tm-excavator-story h1 { font-size: 30px; } .tm-excavator-story h1 span { font-size: 20px; } .tm-excavator-eyebrow { font-size: 9px; } .tm-excavator-location { margin-top: 14px; font-size: 11px; } .tm-excavator-login { padding: 0 20px 30px; } .tm-excavator-form { max-width: 480px; padding: 24px; } .tm-excavator-footer { padding: 18px 20px; flex-wrap: wrap; font-size: 8px; } }
+@media (prefers-reduced-motion: reduce) { .tm-excavator-form { animation: none; } }
