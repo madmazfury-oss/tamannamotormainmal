@@ -110,7 +110,7 @@ export const AuthScreen: React.FC<Props> = ({ lang, onToggleLang, businessName, 
           </div>
           <div className="tm-auth-card relative rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-violet-900/15 border border-white dark:border-slate-800 p-8 sm:p-10">
             {mode === 'forgot' && (
-              <button onClick={() => setMode('signin')} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-amber-600"><ArrowLeft className="w-4 h-4" />{t('Back', 'ফিরে যান')}</button>
+              <button onClick={() => setMode('signin')} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-violet-600"><ArrowLeft className="w-4 h-4" />{t('Back', 'ফিরে যান')}</button>
             )}
             <h2 className="text-2xl font-extrabold">
               {mode === 'signin' ? t('Welcome back', 'স্বাগতম') : mode === 'signup' ? t('Create account', 'অ্যাকাউন্ট তৈরি করুন') : t('Reset password', 'পাসওয়ার্ড রিসেট')}
@@ -148,11 +148,11 @@ export const AuthScreen: React.FC<Props> = ({ lang, onToggleLang, businessName, 
                 </div>
               )}
               {mode === 'signin' && (
-                <div className="text-right"><button type="button" onClick={() => setMode('forgot')} className="text-xs font-semibold text-amber-600 hover:underline">{t('Forgot password?', 'পাসওয়ার্ড ভুলে গেছেন?')}</button></div>
+                <div className="text-right"><button type="button" onClick={() => setMode('forgot')} className="text-xs font-semibold text-violet-600 hover:underline">{t('Forgot password?', 'পাসওয়ার্ড ভুলে গেছেন?')}</button></div>
               )}
               {error && <div className="text-sm rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 px-4 py-2.5">{error}</div>}
               {info && <div className="text-sm rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 px-4 py-2.5">{info}</div>}
-              <button disabled={busy} className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold flex items-center justify-center gap-2 disabled:opacity-60 transition">
+              <button disabled={busy} className="w-full py-3 rounded-xl tm-btn-primary text-white font-bold shadow-lg shadow-violet-600/30 hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-60 transition">
                 {busy && <Loader2 className="w-4 h-4 animate-spin" />}
                 {mode === 'signin' ? t('Sign in', 'লগইন') : mode === 'signup' ? t('Create account', 'অ্যাকাউন্ট তৈরি') : t('Send reset link', 'রিসেট লিংক পাঠান')}
               </button>
