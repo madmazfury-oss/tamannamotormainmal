@@ -156,6 +156,18 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
     }));
   };
 
+  const setCustomQuantity = (productId: string, qty: number) => {
+    if (!qty || qty <= 0 || isNaN(qty)) return;
+    setCart(prev => prev.map(item => {
+      if (item.product.id !== productId) return item;
+      if (qty > item.product.currentStock) {
+        showToast(lang === 'bn' ? `স্টক অতিক্রম করেছে (${item.product.currentStock})।` : `Cannot exceed stock (${item.product.currentStock}).`);
+        return item;
+      }
+      return { ...item, quantity: qty };
+    }));
+  };
+
   const removeFromCart = (productId: string) => {
     setCart(prev => prev.filter(item => item.product.id !== productId));
   };
