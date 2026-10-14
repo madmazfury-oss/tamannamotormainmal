@@ -178,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Greeting - only on xl+ viewports so zoom-in never collides */}
-        <div className="hidden xl:flex shrink-0 items-center gap-1.5 min-w-0">
+        <div className="hidden xl:flex min-w-0 items-center gap-1.5">
           <span className="text-xs lg:text-sm font-bold text-white truncate max-w-[240px] 2xl:max-w-[320px]">
             {t.welcome}, {currentUser?.name || (lang === 'bn' ? 'অ্যাডমিন' : 'Admin')}
           </span>
@@ -334,7 +334,7 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2 py-1.5 text-xs font-medium text-white hover:bg-white/20 transition-colors"
           >
-            <Store className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+            <Store className="h-3.5 w-3.5 text-white" />
             <span className="truncate max-w-[130px]">
               {branches.find(b => b.id === currentBranch)?.[lang === 'bn' ? 'labelBn' : 'labelEn'] || currentBranch}
             </span>
@@ -365,7 +365,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right section: Theme, Language, Date/Time, POS shortcut, Calculator & Profile */}
-      <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 shrink-0">
+      <div className="relative z-10 flex shrink-0 items-center gap-1 sm:gap-1.5 lg:gap-2">
         {/* Live Date & Time - compact clock, visible from tablet up */}
         <div className="hidden md:flex items-center gap-1.5 border-r border-white/20 pr-2 text-xs">
           <Clock className="h-3.5 w-3.5 text-amber-300" />
@@ -410,7 +410,7 @@ export const Header: React.FC<HeaderProps> = ({
           {theme === 'dark' ? (
             <Sun className="h-4 w-4 text-amber-400" />
           ) : (
-            <Moon className="h-4 w-4 text-slate-600 dark:text-slate-300" />
+            <Moon className="h-4 w-4 text-white" />
           )}
         </button>
 
@@ -420,7 +420,7 @@ export const Header: React.FC<HeaderProps> = ({
           className="hidden lg:flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 p-2 xl:px-2.5 xl:py-1.5 text-xs text-white/80 hover:bg-white/20 hover:text-white transition-all cursor-pointer active:scale-95 shrink-0"
           title="Global Search & Commands (Ctrl+S)"
         >
-          <Search className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+          <Search className="h-3.5 w-3.5 shrink-0 text-white" />
           <span className="hidden 2xl:inline text-[11px] font-medium">{lang === 'bn' ? 'সার্চ...' : 'Search...'}</span>
           <kbd className="hidden 2xl:inline-block px-1 py-0.2 text-[9px] font-mono font-bold rounded bg-white/20 text-white border border-white/25">
             Ctrl+S
@@ -443,7 +443,7 @@ export const Header: React.FC<HeaderProps> = ({
           className="hidden 2xl:flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2.5 py-2 text-xs font-bold text-white hover:bg-white/20 transition-all whitespace-nowrap cursor-pointer active:scale-95 shrink-0"
           title={lang === 'bn' ? 'চালান কিউআর স্ক্যান ও যাচাই (Ctrl+I)' : 'Scan & Verify Invoice QR (Ctrl+I)'}
         >
-          <QrCode className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          <QrCode className="h-4 w-4 text-white" />
           <span>{lang === 'bn' ? 'চালান স্ক্যান' : 'Scan'}</span>
         </button>
 
