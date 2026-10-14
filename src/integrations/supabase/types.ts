@@ -14,7 +14,434 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      app_settings: {
+        Row: {
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      audit_logs: {
+        Row: {
+          action_type: string
+          business_location: string | null
+          details: string | null
+          entity_id: string
+          entity_title: string
+          entity_type: string
+          id: string
+          performed_by: string
+          timestamp: string
+        }
+        Insert: {
+          action_type: string
+          business_location?: string | null
+          details?: string | null
+          entity_id: string
+          entity_title: string
+          entity_type: string
+          id: string
+          performed_by: string
+          timestamp: string
+        }
+        Update: {
+          action_type?: string
+          business_location?: string | null
+          details?: string | null
+          entity_id?: string
+          entity_title?: string
+          entity_type?: string
+          id?: string
+          performed_by?: string
+          timestamp?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          address: string | null
+          balance: number | null
+          business_location: string | null
+          business_name: string | null
+          created_at: string
+          credit_limit: number | null
+          customer_group: string | null
+          email: string | null
+          id: string
+          name: string
+          phone: string | null
+          total_purchases: number | null
+          type: string
+        }
+        Insert: {
+          address?: string | null
+          balance?: number | null
+          business_location?: string | null
+          business_name?: string | null
+          created_at?: string
+          credit_limit?: number | null
+          customer_group?: string | null
+          email?: string | null
+          id: string
+          name: string
+          phone?: string | null
+          total_purchases?: number | null
+          type: string
+        }
+        Update: {
+          address?: string | null
+          balance?: number | null
+          business_location?: string | null
+          business_name?: string | null
+          created_at?: string
+          credit_limit?: number | null
+          customer_group?: string | null
+          email?: string | null
+          id?: string
+          name?: string
+          phone?: string | null
+          total_purchases?: number | null
+          type?: string
+        }
+        Relationships: []
+      }
+      delete_requests: {
+        Row: {
+          business_location: string | null
+          damage_severity: string | null
+          entity_id: string
+          entity_title: string
+          entity_type: string
+          id: string
+          item_value: number | null
+          reason: string
+          request_date: string
+          requested_by: string
+          status: string | null
+        }
+        Insert: {
+          business_location?: string | null
+          damage_severity?: string | null
+          entity_id: string
+          entity_title: string
+          entity_type: string
+          id: string
+          item_value?: number | null
+          reason: string
+          request_date: string
+          requested_by: string
+          status?: string | null
+        }
+        Update: {
+          business_location?: string | null
+          damage_severity?: string | null
+          entity_id?: string
+          entity_title?: string
+          entity_type?: string
+          id?: string
+          item_value?: number | null
+          reason?: string
+          request_date?: string
+          requested_by?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
+      due_payments: {
+        Row: {
+          amount_paid: number
+          created_at: string
+          id: string
+          invoice_no: string | null
+          notes: string | null
+          payment_date: string
+          payment_method: string | null
+          received_by: string | null
+          remaining_due: number | null
+          sale_id: string | null
+        }
+        Insert: {
+          amount_paid: number
+          created_at?: string
+          id: string
+          invoice_no?: string | null
+          notes?: string | null
+          payment_date: string
+          payment_method?: string | null
+          received_by?: string | null
+          remaining_due?: number | null
+          sale_id?: string | null
+        }
+        Update: {
+          amount_paid?: number
+          created_at?: string
+          id?: string
+          invoice_no?: string | null
+          notes?: string | null
+          payment_date?: string
+          payment_method?: string | null
+          received_by?: string | null
+          remaining_due?: number | null
+          sale_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "due_payments_sale_id_fkey"
+            columns: ["sale_id"]
+            isOneToOne: false
+            referencedRelation: "sales"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expenses: {
+        Row: {
+          amount: number
+          business_location: string | null
+          category: string
+          created_at: string
+          expense_date: string
+          expense_no: string
+          id: string
+          note: string | null
+          reference_no: string | null
+        }
+        Insert: {
+          amount: number
+          business_location?: string | null
+          category: string
+          created_at?: string
+          expense_date: string
+          expense_no: string
+          id: string
+          note?: string | null
+          reference_no?: string | null
+        }
+        Update: {
+          amount?: number
+          business_location?: string | null
+          category?: string
+          created_at?: string
+          expense_date?: string
+          expense_no?: string
+          id?: string
+          note?: string | null
+          reference_no?: string | null
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          alert_quantity: number | null
+          business_location: string | null
+          category: string
+          created_at: string | null
+          current_stock: number
+          id: string
+          image_url: string | null
+          name: string
+          selling_price: number
+          sku: string
+          unit_purchase_price: number
+        }
+        Insert: {
+          alert_quantity?: number | null
+          business_location?: string | null
+          category: string
+          created_at?: string | null
+          current_stock?: number
+          id: string
+          image_url?: string | null
+          name: string
+          selling_price?: number
+          sku: string
+          unit_purchase_price?: number
+        }
+        Update: {
+          alert_quantity?: number | null
+          business_location?: string | null
+          category?: string
+          created_at?: string | null
+          current_stock?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          selling_price?: number
+          sku?: string
+          unit_purchase_price?: number
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          business_location: string | null
+          created_at: string
+          grand_total: number
+          id: string
+          items_count: number | null
+          payment_due: number | null
+          payment_status: string | null
+          purchase_date: string
+          purchase_no: string
+          purchase_status: string | null
+          supplier_name: string
+        }
+        Insert: {
+          business_location?: string | null
+          created_at?: string
+          grand_total?: number
+          id: string
+          items_count?: number | null
+          payment_due?: number | null
+          payment_status?: string | null
+          purchase_date: string
+          purchase_no: string
+          purchase_status?: string | null
+          supplier_name: string
+        }
+        Update: {
+          business_location?: string | null
+          created_at?: string
+          grand_total?: number
+          id?: string
+          items_count?: number | null
+          payment_due?: number | null
+          payment_status?: string | null
+          purchase_date?: string
+          purchase_no?: string
+          purchase_status?: string | null
+          supplier_name?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          amount_tendered: number | null
+          business_location: string | null
+          cashier_name: string | null
+          change_due: number | null
+          created_at: string
+          customer_name: string
+          customer_phone: string | null
+          discount_amount: number | null
+          due_notes: string | null
+          id: string
+          invoice_due: number | null
+          invoice_no: string
+          items_count: number | null
+          items_data: string | null
+          payment_method: string | null
+          payment_status: string | null
+          sale_date: string
+          subtotal: number | null
+          tax_amount: number | null
+          total_amount: number
+          type: string | null
+        }
+        Insert: {
+          amount_tendered?: number | null
+          business_location?: string | null
+          cashier_name?: string | null
+          change_due?: number | null
+          created_at?: string
+          customer_name: string
+          customer_phone?: string | null
+          discount_amount?: number | null
+          due_notes?: string | null
+          id: string
+          invoice_due?: number | null
+          invoice_no: string
+          items_count?: number | null
+          items_data?: string | null
+          payment_method?: string | null
+          payment_status?: string | null
+          sale_date: string
+          subtotal?: number | null
+          tax_amount?: number | null
+          total_amount?: number
+          type?: string | null
+        }
+        Update: {
+          amount_tendered?: number | null
+          business_location?: string | null
+          cashier_name?: string | null
+          change_due?: number | null
+          created_at?: string
+          customer_name?: string
+          customer_phone?: string | null
+          discount_amount?: number | null
+          due_notes?: string | null
+          id?: string
+          invoice_due?: number | null
+          invoice_no?: string
+          items_count?: number | null
+          items_data?: string | null
+          payment_method?: string | null
+          payment_status?: string | null
+          sale_date?: string
+          subtotal?: number | null
+          tax_amount?: number | null
+          total_amount?: number
+          type?: string | null
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          business_location: string | null
+          created_at: string
+          email: string
+          id: number
+          last_login: string | null
+          name: string
+          password: string | null
+          phone: string | null
+          role: string | null
+          status: string | null
+          uid: string
+          username: string
+        }
+        Insert: {
+          business_location?: string | null
+          created_at?: string
+          email: string
+          id?: number
+          last_login?: string | null
+          name: string
+          password?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          uid: string
+          username: string
+        }
+        Update: {
+          business_location?: string | null
+          created_at?: string
+          email?: string
+          id?: number
+          last_login?: string | null
+          name?: string
+          password?: string | null
+          phone?: string | null
+          role?: string | null
+          status?: string | null
+          uid?: string
+          username?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
