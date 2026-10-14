@@ -178,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Greeting - only on xl+ viewports so zoom-in never collides */}
-        <div className="hidden xl:flex min-w-0 items-center gap-1.5">
+        <div className="hidden min-[1400px]:flex min-w-0 items-center gap-1.5">
           <span className="text-xs lg:text-sm font-bold text-white truncate max-w-[240px] 2xl:max-w-[320px]">
             {t.welcome}, {currentUser?.name || (lang === 'bn' ? 'অ্যাডমিন' : 'Admin')}
           </span>
