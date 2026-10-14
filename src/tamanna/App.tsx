@@ -1,6 +1,7 @@
 import { MasterDataModule, MODULES } from './components/MasterDataModule';
 import { ImportModule, ImportKind } from './components/ImportModule';
 import { RolesView } from './components/RolesView';
+import { ProfitView } from './components/ProfitView';
 import React, { useState, useEffect } from 'react';
 import {
   DatabaseStorage,
@@ -1410,6 +1411,7 @@ export default function App() {
       return <ImportModule key={currentRoute} kind={IMPORTS[currentRoute]} lang={lang} products={products} location={currentUser?.businessLocation || 'Hazigonj Branch'} />;
     }
     if (currentRoute === 'roles-list') return <RolesView lang={lang} />;
+    if (currentRoute === 'reports-profit-loss') return <ProfitView products={products} sales={sales} expenses={expenses} lang={lang} />;
     if (MODULES[currentRoute]) {
       return <MasterDataModule key={currentRoute} route={currentRoute} lang={lang} canEdit={isRealSuper && !realUser} onDeleteLog={logDelete} />;
     }
