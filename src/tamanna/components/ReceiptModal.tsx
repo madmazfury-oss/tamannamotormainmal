@@ -273,7 +273,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-2 sm:p-4 backdrop-blur-md animate-in fade-in overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-2 sm:p-4 backdrop-blur-md animate-in fade-in overflow-y-auto" onClick={onClose}>
       <div 
         className={`w-full ${layoutMode === 'a4' ? 'max-w-4xl' : 'max-w-md'} rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl my-4 overflow-hidden transition-all`}
         onClick={(e) => e.stopPropagation()}
@@ -843,7 +843,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
         </div>
 
         {/* Modal Action Footer Toolbar */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-800/80 flex items-center justify-end gap-3">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 bg-slate-50/90 dark:bg-slate-800/80 flex items-center justify-between gap-3">
+          <button
+            onClick={onClose}
+            title={lang === 'bn' ? 'বন্ধ করুন (Esc)' : 'Close (Esc)'}
+            className="flex items-center gap-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-4 py-2.5 text-xs font-black text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 hover:border-slate-400 transition-colors shadow-xs cursor-pointer"
+          >
+            <X className="h-4 w-4" />
+            <span>{lang === 'bn' ? 'বন্ধ করুন' : 'Close'}</span>
+          </button>
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownloadSlip}
