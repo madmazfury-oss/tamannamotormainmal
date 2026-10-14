@@ -139,3 +139,24 @@
 .hn-header .absolute button:hover { background-color:#f1f5f9; }
 .hn-header button.bg-white, .hn-header .bg-white { color:#4a1fb8 !important; background-color:#fff !important; }
 .hn-header span[class*="text-emerald-"] { color:#d1fae5 !important; border-color:rgba(255,255,255,.35) !important; background-color:rgba(255,255,255,.12) !important; }
+
+/* ---- Dark mode for the hisabnikash-style shell & new forms ---- */
+.dark aside { background-color:#0b1120 !important; border-color:#1e293b !important; color:#cbd5e1; }
+.dark aside .bg-white { background-color:#0b1120 !important; }
+.dark aside .bg-slate-50 { background-color:#111827 !important; }
+.dark aside .border-slate-200 { border-color:#1e293b !important; }
+.dark aside .text-slate-700, .dark aside .text-slate-600 { color:#cbd5e1 !important; }
+.dark aside .bg-slate-200\/70 { background-color:rgba(124,58,237,.18) !important; }
+.dark aside .text-\[\#2563eb\] { color:#a78bfa !important; }
+.dark aside .bg-violet-50 { background-color:rgba(124,58,237,.18) !important; }
+.dark aside .text-\[\#4a1fb8\] { color:#c4b5fd !important; }
+.dark aside .hover\:bg-slate-100:hover { background-color:#1e293b !important; }
+.dark aside input { color:#e2e8f0; }
+.dark .hn-header { background-color:#1e1147 !important; }
+/* modals & forms built light-first */
+.dark form.bg-white, .dark .bg-white.rounded-2xl { background-color:#0f172a !important; color:#e2e8f0; }
+.dark form .bg-white, .dark form input, .dark form select, .dark form textarea { background-color:#1e293b !important; color:#e2e8f0 !important; border-color:#334155 !important; }
+.dark form .text-slate-600, .dark form .text-slate-700, .dark form .text-slate-800 { color:#cbd5e1 !important; }
+.dark form .border-slate-200, .dark form .border-slate-100 { border-color:#334155 !important; }
+.dark form .hover\:bg-violet-50:hover, .dark form .hover\:bg-slate-100:hover { background-color:#334155 !important; }
+.dark .bg-violet-50 { background-color:rgba(124,58,237,.15); }

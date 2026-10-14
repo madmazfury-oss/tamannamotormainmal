@@ -376,6 +376,14 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' || !searchQuery.trim()) return;
+                  e.preventDefault();
+                  const q = searchQuery.trim().toLowerCase();
+                  const exact = filteredProducts.find(p => (p.sku || '').toLowerCase() === q || p.name.toLowerCase() === q);
+                  const pick = exact || filteredProducts.find(p => p.currentStock > 0) || filteredProducts[0];
+                  if (pick && pick.currentStock > 0) { addToCart(pick); setSearchQuery(''); }
+                }}
                 placeholder={t.pos.searchPlaceholder}
                 autoFocus
                 className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 py-2.5 pl-10 pr-4 text-xs font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 shadow-xs focus:border-emerald-500 focus:outline-none"
