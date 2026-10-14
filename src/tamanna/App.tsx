@@ -2370,7 +2370,7 @@ export default function App() {
     return (
       <AuthScreen
         lang={lang}
-        onToggleLang={handleToggleLang}
+        onToggleLang={() => handleToggleLang(lang === "bn" ? "en" : "bn" as any)}
         logoUrl={businessSettings.logoUrl}
         businessName={businessSettings.businessName}
       />
