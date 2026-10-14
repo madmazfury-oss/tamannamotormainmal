@@ -7,5 +7,7 @@
 - [x] Remove Firebase/Express/Drizzle dependencies
 - [x] Verify build + login + dashboard in preview
 - [x] Sign in to hisabnikash, inventory modules (counts match existing app data)
-- [ ] Import 2 sell returns + 2 stock adjustments (rest already present) — awaiting user go-ahead
-- [ ] Remaining master-prompt phases — awaiting user priority
+- [x] All hisabnikash data loaded into cloud database (521 products, 83 contacts, 840 sales, 248 purchases, 6 expenses, 2 returns, 2 adjustments)
+- [ ] Email sign-up & login (next)
+- [ ] Premium redesign
+- [ ] Missing sections: returns, stock adjustment, cash/ledger, profit & loss
