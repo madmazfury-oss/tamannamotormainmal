@@ -22,6 +22,13 @@
       "when": 1791981403839,
       "tag": "0002_auth_profiles_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791981716817,
+      "tag": "0003_role_limits_and_super_admin_access",
+      "breakpoints": true
     }
   ]
 }
