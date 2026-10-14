@@ -38,6 +38,9 @@ interface PosTerminalProps {
   currentUser?: AuthUser | null;
 }
 
+const isLooseProduct = (p: { name?: string; category?: string }) =>
+  /oil|mobil|lubric|grease|tel\b|তেল|মবিল|গ্রিজ/i.test(`${p?.name || ''} ${p?.category || ''}`);
+
 export const PosTerminal: React.FC<PosTerminalProps> = ({
   products,
   customers,
@@ -138,6 +141,19 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
         })
         .filter(Boolean) as CartItem[];
     });
+  };
+
+  const setLooseQuantity = (productId: string, grams: number) => {
+    if (!grams || grams <= 0) return;
+    setCart(prev => prev.map(item => {
+      if (item.product.id !== productId) return item;
+      const q = Math.round(grams) / 1000;
+      if (q > item.product.currentStock) {
+        showToast(lang === 'bn' ? `স্টক অতিক্রম করেছে (${item.product.currentStock} লিটার/কেজি)।` : `Cannot exceed stock (${item.product.currentStock} L/kg).`);
+        return item;
+      }
+      return { ...item, quantity: q };
+    }));
   };
 
   const removeFromCart = (productId: string) => {
@@ -573,8 +589,22 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="font-bold text-slate-900 dark:text-white truncate">{item.product.name}</div>
                       <div className="text-[11px] text-slate-600 dark:text-slate-300 font-mono">
-                        ৳{price.toFixed(0)}
+                        ৳{price.toFixed(0)}{isLooseProduct(item.product) ? (lang === 'bn' ? ' / লিটার-কেজি' : ' / L-kg') : ''}
                       </div>
+                      {isLooseProduct(item.product) && (
+                        <div className="mt-1 flex flex-wrap items-center gap-1">
+                          {[100, 200, 250, 500, 1000].map(g => (
+                            <button key={g} type="button" onClick={() => setLooseQuantity(item.product.id, g)}
+                              className={`rounded px-1.5 py-0.5 text-[10px] font-bold border ${Math.round(item.quantity * 1000) === g ? 'bg-amber-500 text-white border-amber-500' : 'border-amber-300 text-amber-700 dark:text-amber-300'}`}>
+                              {g === 1000 ? '1 kg/L' : `${g}g`}
+                            </button>
+                          ))}
+                          <input type="number" min={1} placeholder={lang === 'bn' ? 'গ্রাম/মিলি' : 'g/ml'}
+                            onKeyDown={e => { if (e.key === 'Enter') { setLooseQuantity(item.product.id, Number((e.target as HTMLInputElement).value)); (e.target as HTMLInputElement).value=''; } }}
+                            onBlur={e => { if (e.target.value) { setLooseQuantity(item.product.id, Number(e.target.value)); e.target.value=''; } }}
+                            className="w-16 rounded border border-slate-300 dark:border-slate-600 bg-transparent px-1 py-0.5 text-[10px]" />
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-1.5">
@@ -584,8 +614,8 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                       >
                         <Minus className="h-3 w-3" />
                       </button>
-                      <span className="w-6 text-center font-mono font-bold text-slate-800 dark:text-slate-100">
-                        {item.quantity}
+                      <span className="min-w-6 text-center font-mono font-bold text-slate-800 dark:text-slate-100">
+                        {isLooseProduct(item.product) && item.quantity % 1 !== 0 ? `${Math.round(item.quantity * 1000)}g` : item.quantity}
                       </span>
                       <button
                         onClick={() => updateQuantity(item.product.id, 1)}
