@@ -397,6 +397,27 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_documents: {
+        Row: {
+          collection: string
+          data: Json
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          collection: string
+          data: Json
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          collection?: string
+          data?: Json
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           business_location: string | null
