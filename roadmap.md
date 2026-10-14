@@ -13,6 +13,8 @@
 - [ ] Missing sections: returns, stock adjustment, cash/ledger, profit & loss
 - [x] hisabnikash look (purple bar, white sidebar)
 - [x] 15 settings/master pages now real add/edit/delete (units, brands, categories, warranties, variations, tax, locations, printers, barcodes, discounts, shipments, expense categories, agents, price groups, notification templates)
-- [ ] Match each form field-by-field with hisabnikash: Add Product, Add Sale/POS, Add Purchase, Contacts, Expenses
-- [ ] Import pages (products, opening stock, sales, contacts) with real file reading
-- [ ] Roles page from real staff data
+- [x] Add Purchase (product lines, discount, shipping, payment, auto stock-in) & Add Expense full forms
+- [ ] Field-by-field match: Add Product, POS/Add Sale, Contacts
+- [x] Import pages (products, opening stock, sales, contacts)
+- [x] Roles page from real staff data
+- [ ] Print Labels with real barcodes
