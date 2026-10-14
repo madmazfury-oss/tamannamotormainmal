@@ -145,7 +145,7 @@ export const LoginView: React.FC<LoginViewProps> = ({
             await supabase.from('users').update({ 
               email_verified: true,
               status: 'Active' 
-            }).eq('email', user.email);
+            } as any).eq('email', user.email || '');
 
             fetch('/api/users', {
               method: 'POST',
