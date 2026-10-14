@@ -129,3 +129,8 @@
 }
 
 
+
+/* hisabnikash-style purple top bar: keep text/icons readable */
+.hn-header button, .hn-header a { color: #fff; border-color: rgba(255,255,255,.35) !important; background-color: rgba(255,255,255,.08); }
+.hn-header button:hover { background-color: rgba(255,255,255,.18); }
+.hn-header input { color:#0f172a; }

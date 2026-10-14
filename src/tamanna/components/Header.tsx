@@ -119,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-1 sm:gap-2 lg:gap-3 border-b border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl px-2 sm:px-3 lg:px-5 shadow-md select-none transition-colors overflow-hidden whitespace-nowrap">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-1 sm:gap-2 lg:gap-3 hn-header bg-[#4a1fb8] text-white px-2 sm:px-3 lg:px-5 shadow-md select-none transition-colors overflow-hidden whitespace-nowrap">
       {/* Left section: Toggle, Logo & Greeting */}
       <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
         <button

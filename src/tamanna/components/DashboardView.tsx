@@ -287,12 +287,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const lowStockItems = products.filter(p => p.currentStock <= p.alertQuantity);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <div aria-hidden className="pointer-events-none absolute -top-6 -left-6 -right-6 h-[260px] bg-gradient-to-br from-[#4a1fb8] to-[#5b2bd0] -z-0" />
       {/* Welcome Banner / Overview Header */}
-      <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-5 shadow-xs lg:flex-row lg:items-center lg:justify-between transition-colors">
+      <div className="flex flex-col gap-3 relative z-10 bg-transparent p-1 lg:flex-row lg:items-center lg:justify-between transition-colors">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white">
               {lang === 'bn' ? `স্বাগতম ${currentUser?.name || 'সুপার অ্যাডমিন'}, 👋` : `Welcome ${currentUser?.name || 'Super Admin'}, 👋`}
             </h1>
             <span className="text-xs text-emerald-800 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
@@ -365,7 +366,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       )}
 
       {/* Summary Widgets (Cards) - All 7 Required Metrics */}
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+      <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* 1. Total Sales */}
         <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
           <div className="flex items-center justify-between text-slate-500">

@@ -121,13 +121,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'home',
       labelKey: t.nav.home,
-      icon: <Home className="h-4 w-4 shrink-0" />,
+      icon: <Home className="h-5 w-5 shrink-0" />,
       category: 'core'
     },
     {
       id: 'user-management',
       labelKey: t.nav.userManagement,
-      icon: <Users className="h-4 w-4 shrink-0" />,
+      icon: <Users className="h-5 w-5 shrink-0" />,
       category: 'core',
       children: [
         { id: 'user-management', labelKey: lang === 'bn' ? 'ইউজার তালিকা' : 'Users' },
@@ -144,7 +144,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'contact',
       labelKey: t.nav.contact,
-      icon: <Contact className="h-4 w-4 shrink-0" />,
+      icon: <Contact className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'contact-suppliers', labelKey: t.nav.suppliers },
@@ -156,7 +156,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'products',
       labelKey: t.nav.products,
-      icon: <Package className="h-4 w-4 shrink-0" />,
+      icon: <Package className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'products-list', labelKey: t.nav.listOfProducts },
@@ -173,7 +173,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'purchase',
       labelKey: t.nav.purchase,
-      icon: <ShoppingBag className="h-4 w-4 shrink-0" />,
+      icon: <ShoppingBag className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'purchase-list', labelKey: t.nav.listOfPurchases },
@@ -184,7 +184,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'sales',
       labelKey: t.nav.sales,
-      icon: <TrendingUp className="h-4 w-4 shrink-0" />,
+      icon: <TrendingUp className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'sales-all', labelKey: t.nav.allSales },
@@ -204,7 +204,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'stock-transfer',
       labelKey: t.nav.stockTransfer,
-      icon: <ArrowLeftRight className="h-4 w-4 shrink-0" />,
+      icon: <ArrowLeftRight className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'stock-transfer-list', labelKey: t.nav.listStockTransfer },
@@ -214,7 +214,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'stock-adjustment',
       labelKey: lang === 'bn' ? 'স্টক অ্যাডজাস্টমেন্ট' : 'Stock Adjustment',
-      icon: <SlidersHorizontal className="h-4 w-4 shrink-0" />,
+      icon: <SlidersHorizontal className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'stock-adjustment-list', labelKey: lang === 'bn' ? 'অ্যাডজাস্টমেন্ট তালিকা' : 'List Stock Adjustments' },
@@ -224,7 +224,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'expenses',
       labelKey: t.nav.expenses,
-      icon: <Receipt className="h-4 w-4 shrink-0" />,
+      icon: <Receipt className="h-5 w-5 shrink-0" />,
       category: 'operations',
       children: [
         { id: 'expenses-list', labelKey: t.nav.listExpenses },
@@ -235,7 +235,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'reports',
       labelKey: t.nav.reports,
-      icon: <BarChart3 className="h-4 w-4 shrink-0" />,
+      icon: <BarChart3 className="h-5 w-5 shrink-0" />,
       category: 'admin',
       children: [
         { id: 'reports-profit-loss', labelKey: t.nav.profitLoss },
@@ -260,7 +260,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     {
       id: 'settings',
       labelKey: t.nav.settings,
-      icon: <Settings className="h-4 w-4 shrink-0" />,
+      icon: <Settings className="h-5 w-5 shrink-0" />,
       category: 'admin',
       children: [
         { id: 'settings-business', labelKey: t.nav.businessSettings },
@@ -338,16 +338,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Sidebar container - Fixed in place while data scrolls */}
       <aside
-        className={`fixed lg:sticky top-0 bottom-0 left-0 h-screen z-40 flex flex-col shrink-0 border-r border-white/10 dark:border-white/5 bg-slate-900/95 dark:bg-slate-950/95 backdrop-blur-2xl text-slate-200 transition-all duration-300 ease-in-out select-none shadow-2xl lg:shadow-none overflow-hidden ${
+        className={`fixed lg:sticky top-0 bottom-0 left-0 h-screen z-40 flex flex-col shrink-0 border-r border-slate-200 bg-white text-slate-700 transition-all duration-300 ease-in-out select-none shadow-2xl lg:shadow-none overflow-hidden ${
           isOpen
             ? 'w-72 sm:w-80 lg:w-64 xl:w-72 translate-x-0'
             : '-translate-x-full lg:w-20 lg:translate-x-0'
         }`}
       >
         {/* Brand header */}
-        <div className="flex h-16 items-center justify-between border-b border-slate-800/80 px-4 sm:px-5">
+        <div className="flex h-16 items-center justify-between bg-[#4a1fb8] px-4 sm:px-5">
           <div className="flex items-center gap-3 overflow-hidden min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-slate-950 font-bold overflow-hidden shadow-xs ring-1 ring-emerald-400/30">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-[#4a1fb8] font-bold overflow-hidden">
               {businessSettings?.logoUrl ? (
                 <img src={businessSettings.logoUrl} alt="Logo" className="h-full w-full object-contain p-0.5 bg-white" />
               ) : (
@@ -359,7 +359,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 <span className="text-sm font-extrabold tracking-tight text-white block truncate">
                   {lang === 'bn' ? 'তামান্না মোটরস' : 'TAMANNA MOTORS'}
                 </span>
-                <span className="text-[10px] text-emerald-400 font-semibold block truncate">
+                <span className="text-[10px] text-violet-200 font-semibold block truncate">
                   {lang === 'bn' ? 'মোটর পার্টস ও পিওএস' : 'Motor Parts & POS'}
                 </span>
               </div>
@@ -392,7 +392,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={lang === 'bn' ? 'মেনু সার্চ করুন...' : 'Search menu...'}
-                className="w-full rounded-xl border border-slate-800 bg-slate-800/60 py-1.5 pl-8 pr-7 text-xs text-slate-200 placeholder:text-slate-500 focus:border-emerald-500 focus:bg-slate-800 focus:outline-none transition-colors"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-1.5 pl-8 pr-7 text-xs text-slate-700 placeholder:text-slate-400 focus:border-[#4a1fb8] focus:bg-white focus:outline-none transition-colors"
               />
               {searchQuery && (
                 <button
@@ -408,7 +408,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
 
         {/* Navigation items scroll area */}
-        <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1 scrollbar-thin scrollbar-thumb-slate-800">
+        <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1 scrollbar-thin ">
           {filteredMenuItems.map((item) => {
             const hasChildren = Boolean(item.children && item.children.length > 0);
             const isSubOpen = Boolean(openSubmenus[item.id] || searchQuery.trim().length > 0);
@@ -422,23 +422,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   type="button"
                   onClick={() => handleItemClick(item)}
                   title={!isOpen ? item.labelKey : undefined}
-                  className={`group relative flex w-full items-center justify-between rounded-xl px-3 py-2.5 font-medium transition-all ${
+                  className={`group relative flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-[14px] font-medium transition-all ${
                     isDirectActive || hasActiveChild
-                      ? 'bg-gradient-to-r from-emerald-600/20 to-emerald-500/10 text-emerald-400 font-semibold'
-                      : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                      ? 'bg-slate-200/70 text-[#2563eb] font-semibold'
+                      : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  {/* Active accent strip */}
-                  {(isDirectActive || hasActiveChild) && (
-                    <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-emerald-500 rounded-r-full" />
-                  )}
 
                   <div className="flex items-center gap-3 min-w-0">
                     <span
                       className={`transition-colors ${
                         isDirectActive || hasActiveChild
-                          ? 'text-emerald-400'
-                          : 'text-slate-400 group-hover:text-slate-200'
+                          ? 'text-[#2563eb]'
+                          : 'text-slate-600'
                       }`}
                     >
                       {item.icon}
@@ -447,11 +443,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
 
                   {isOpen && hasChildren && (
-                    <span className="text-slate-500 group-hover:text-slate-300 shrink-0 ml-1">
+                    <span className="text-slate-500 shrink-0 ml-1">
                       {isSubOpen ? (
                         <ChevronDown className="h-3.5 w-3.5" />
                       ) : (
-                        <ChevronRight className="h-3.5 w-3.5" />
+                        <ChevronRight className="h-3.5 w-3.5 rotate-180" />
                       )}
                     </span>
                   )}
@@ -459,7 +455,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
                 {/* Submenu children list */}
                 {isOpen && hasChildren && isSubOpen && (
-                  <div className="mt-1 ml-4 pl-3 border-l border-slate-800/80 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="mt-1 ml-4 pl-3 border-l border-slate-200 space-y-0.5 animate-in fade-in slide-in-from-top-1 duration-150">
                     {item.children!.map((child) => {
                       const isCurrentChild = currentRoute === child.id;
                       return (
@@ -469,11 +465,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           onClick={() => handleChildClick(child.id)}
                           className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs text-left transition-colors ${
                             isCurrentChild
-                              ? 'bg-emerald-500/20 font-bold text-emerald-300'
-                              : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+                              ? 'bg-violet-50 font-semibold text-[#4a1fb8]'
+                              : 'text-slate-600 hover:bg-slate-100'
                           }`}
                         >
-                          <CircleDot className={`h-2.5 w-2.5 shrink-0 ${isCurrentChild ? 'text-emerald-400' : 'text-slate-600'}`} />
+                          <CircleDot className={`h-2.5 w-2.5 shrink-0 ${isCurrentChild ? 'text-[#4a1fb8]' : 'text-slate-400'}`} />
                           <span className="truncate">{child.labelKey}</span>
                         </button>
                       );
@@ -486,14 +482,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
 
         {/* Sidebar Footer with Desktop Collapse Toggle & Store Status */}
-        <div className="border-t border-slate-800/80 p-3 bg-slate-900/90 space-y-2">
+        <div className="border-t border-slate-200 p-3 bg-white space-y-2">
           {isOpen ? (
-            <div className="flex items-center justify-between rounded-xl bg-slate-800/40 p-2.5 text-xs text-slate-400 border border-slate-800">
+            <div className="flex items-center justify-between rounded-xl bg-slate-50 p-2.5 text-xs text-slate-500 border border-slate-200">
               <div className="flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span className="font-semibold text-slate-200">TAMANNA POS</span>
+                <span className="font-semibold text-slate-700">TAMANNA POS</span>
               </div>
-              <span className="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/60">
+              <span className="text-[10px] font-mono text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                 Online
               </span>
             </div>
@@ -508,7 +504,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               type="button"
               onClick={onToggle}
-              className={`hidden lg:flex w-full items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold text-slate-400 hover:bg-slate-800 hover:text-slate-200 transition-colors ${
+              className={`hidden lg:flex w-full items-center justify-center gap-2 rounded-xl py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 transition-colors ${
                 !isOpen ? 'px-0' : 'px-3'
               }`}
               title={isOpen ? (lang === 'bn' ? 'সাইডবার গুটিয়ে নিন' : 'Collapse Sidebar') : (lang === 'bn' ? 'সাইডবার বিস্তার করুন' : 'Expand Sidebar')}
