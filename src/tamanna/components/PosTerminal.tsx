@@ -18,7 +18,11 @@ import {
   Printer,
   FileText,
   Smartphone,
-  AlertCircle
+  AlertCircle,
+  Clock,
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { Product, Contact, CartItem, Sale, BusinessSettings, InvoiceSettings, AuthUser } from '../types';
 import { ReceiptModal } from './ReceiptModal';
@@ -36,6 +40,9 @@ interface PosTerminalProps {
   branchLocation?: string;
   cashierName?: string;
   currentUser?: AuthUser | null;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
+  onToggleLang?: (lang: Language) => void;
 }
 
 const isLooseProduct = (p: { name?: string; category?: string }) =>
@@ -52,9 +59,39 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
   invoiceSettings,
   branchLocation = "Hazigonj Branch",
   cashierName,
-  currentUser
+  currentUser,
+  theme = 'light',
+  onToggleTheme,
+  onToggleLang
 }) => {
   const t = TRANSLATIONS[lang];
+  const [posTime, setPosTime] = useState<string>('');
+  const [posDate, setPosDate] = useState<string>('');
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setPosTime(
+        now.toLocaleTimeString(lang === 'bn' ? 'bn-BD' : 'en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        })
+      );
+      setPosDate(
+        now.toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-US', {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        })
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [lang]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('cust-walkin');
   const [walkInName, setWalkInName] = useState<string>('');
