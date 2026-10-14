@@ -1,5 +1,4 @@
 import { supabase } from '@/integrations/supabase/client';
-import { uploadToSupabaseStorage } from '../lib/supabaseStorage';
 import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
@@ -104,11 +103,15 @@ export const Header: React.FC<HeaderProps> = ({
     try {
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return;
-      const res = await uploadToSupabaseStorage(f, 'avatars', `${u.user.id}_${Date.now()}.${(f.name.split('.').pop() || 'jpg')}`);
-      if (res.url) {
-        await supabase.from('profiles').update({ avatar_url: res.url }).eq('id', u.user.id);
-        setAvatarUrl(res.url);
-      }
+      const url: string = await new Promise((ok, bad) => {
+        const img = new Image(); const r = new FileReader();
+        r.onload = () => { img.onload = () => { const c = document.createElement('canvas'); const n = 256; const sc = Math.max(n / img.width, n / img.height);
+          c.width = n; c.height = n; const x = c.getContext('2d')!; x.drawImage(img, (n - img.width * sc) / 2, (n - img.height * sc) / 2, img.width * sc, img.height * sc);
+          ok(c.toDataURL('image/jpeg', 0.85)); }; img.onerror = bad; img.src = String(r.result); };
+        r.onerror = bad; r.readAsDataURL(f);
+      });
+      await supabase.from('profiles').update({ avatar_url: url }).eq('id', u.user.id);
+      setAvatarUrl(url);
     } finally { setAvatarBusy(false); e.target.value = ''; }
   };
   const avatarFace = (size: string) => avatarUrl
