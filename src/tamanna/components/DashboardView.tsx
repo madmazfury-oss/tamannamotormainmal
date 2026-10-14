@@ -72,6 +72,7 @@ interface DashboardViewProps {
   userRole?: UserRole;
   currentUser?: AuthUser | null;
   returnedStockValue?: number;
+  returnEntries?: { date?: string; amount: number }[];
   onQuickRestock?: (productId: string, amount: number) => void;
 }
 
@@ -86,6 +87,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   userRole = 'super_admin',
   currentUser,
   returnedStockValue = 0,
+  returnEntries,
   onQuickRestock
 }) => {
   const t = TRANSLATIONS[lang];
@@ -193,7 +195,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     pPurchases.reduce((acc, p) => acc + (Number(p.paymentDue) || 0), 0),
     [pPurchases]
   );
-  const totalPurchaseReturnValue = returnedStockValue;
+  const totalPurchaseReturnValue = useMemo(() => {
+    if (!returnEntries) return period === 'all' ? returnedStockValue : 0;
+    return returnEntries.filter(e => inPeriod(e.date)).reduce((acc, e) => acc + e.amount, 0);
+  }, [returnEntries, returnedStockValue, period]);
   const totalExpensesValue = useMemo(() => 
     pExpenses.reduce((acc, e) => acc + (Number(e.amount) || 0), 0),
     [pExpenses]

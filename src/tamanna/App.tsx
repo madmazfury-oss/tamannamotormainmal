@@ -118,6 +118,7 @@ export default function App() {
   const [sales, setSales] = useState<Sale[]>(() => DatabaseStorage.loadSales());
   const [salesReturns, setSalesReturns] = useState<SalesReturn[]>(INITIAL_SALES_RETURNS);
   const [returnedStockValue, setReturnedStockValue] = useState<number>(0);
+  const [returnEntries, setReturnEntries] = useState<{ date?: string; amount: number }[]>([]);
   const [stockTransfers, setStockTransfers] = useState<StockTransfer[]>(INITIAL_STOCK_TRANSFERS);
   const [expenses, setExpenses] = useState<Expense[]>(() => DatabaseStorage.loadExpenses());
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings>(() => DatabaseStorage.loadBusinessSettings());
@@ -390,15 +391,19 @@ export default function App() {
       }
     });
     // Live returned-goods value: customer sales returns + stock adjustments
-    let salesReturnsTotal = 0;
-    let adjustmentsTotal = 0;
-    const updateReturnedValue = () => setReturnedStockValue(salesReturnsTotal + adjustmentsTotal);
+    let srEntries: { date?: string; amount: number }[] = [];
+    let adjEntries: { date?: string; amount: number }[] = [];
+    const updateReturnedValue = () => {
+      const all = [...srEntries, ...adjEntries];
+      setReturnEntries(all);
+      setReturnedStockValue(all.reduce((acc, e) => acc + e.amount, 0));
+    };
     const unsubSalesReturns = CloudCollections.subscribe<any>('sales_returns', (items) => {
-      salesReturnsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || Number(r?.totalRefund) || 0), 0);
+      srEntries = (items || []).map(r => ({ date: r?.date || r?.returnDate || r?.createdAt, amount: Number(r?.totalAmount) || Number(r?.totalRefund) || 0 }));
       updateReturnedValue();
     });
     const unsubAdjustments = CloudCollections.subscribe<any>('stock_adjustments', (items) => {
-      adjustmentsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || 0), 0);
+      adjEntries = (items || []).map(r => ({ date: r?.date || r?.adjustmentDate || r?.createdAt, amount: Number(r?.totalAmount) || 0 }));
       updateReturnedValue();
     });
 
@@ -1470,6 +1475,7 @@ export default function App() {
             userRole={userRole}
             currentUser={currentUser}
             returnedStockValue={returnedStockValue}
+            returnEntries={returnEntries}
             onQuickRestock={handleQuickRestock}
           />
         );
