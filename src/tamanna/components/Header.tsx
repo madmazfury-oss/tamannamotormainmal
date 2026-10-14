@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) return;
       const url: string = await new Promise((ok, bad) => {
-        const img = new Image(); const r = new FileReader();
+        const img = document.createElement("img"); const r = new FileReader();
         r.onload = () => { img.onload = () => { const c = document.createElement('canvas'); const n = 256; const sc = Math.max(n / img.width, n / img.height);
           c.width = n; c.height = n; const x = c.getContext('2d')!; x.drawImage(img, (n - img.width * sc) / 2, (n - img.height * sc) / 2, img.width * sc, img.height * sc);
           ok(c.toDataURL('image/jpeg', 0.85)); }; img.onerror = bad; img.src = String(r.result); };
