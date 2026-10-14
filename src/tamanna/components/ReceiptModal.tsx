@@ -110,9 +110,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
 
   // Business constants with updated Hazigonj Chandpur address
   const businessName = businessSettings?.businessName || "TAMANNA MOTORS";
-  const businessAddress = businessSettings?.address || "HAZIGONJ-KACHUA MAIN ROAD, WEST BAZAR, HAZIGONJ, CHANDPUR.";
-  const businessPhone = businessSettings?.contactPhone || "01626666906, 01878934956";
-  const businessEmail = businessSettings?.contactEmail || "tamannamotors158@gmail.com";
+  const businessAddress = invoiceSettings?.invoiceAddress || businessSettings?.address || "HAZIGONJ-KACHUA MAIN ROAD, WEST BAZAR, HAZIGONJ, CHANDPUR.";
+  const businessPhone = invoiceSettings?.invoicePhone || businessSettings?.contactPhone || "01626666906, 01878934956";
+  const businessEmail = invoiceSettings?.invoiceEmail || businessSettings?.contactEmail || "tamannamotors158@gmail.com";
   const taxBin = businessSettings?.taxNumber || "";
   const footerNotes = invoiceSettings?.footerNotes || (lang === 'bn' ? "তামান্না মোটরসে কেনাকাটার জন্য আন্তরিক ধন্যবাদ! ১০০% জেনুইন পার্টসের বিশ্বস্ত প্রতিষ্ঠান।" : "Thank you for shopping at TAMANNA MOTORS! Your trusted motorcycle spares partner.");
   const terms = invoiceSettings?.termsAndConditions || (

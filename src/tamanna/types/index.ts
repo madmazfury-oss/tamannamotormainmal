@@ -224,4 +224,7 @@ export interface InvoiceSettings {
   paperSize: '80mm' | 'Letter' | 'A4';
   footerNotes: string;
   logoUrl?: string;
+  invoiceEmail?: string;
+  invoicePhone?: string;
+  invoiceAddress?: string;
 }

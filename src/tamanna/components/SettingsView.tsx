@@ -38,6 +38,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [customLogoUrl, setCustomLogoUrl] = useState<string>(businessSettings.logoUrl || '');
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // keep logo & fields live-synced between Business and Invoice settings
+  React.useEffect(() => { setBSettings(businessSettings); setCustomLogoUrl(businessSettings.logoUrl || invoiceSettings.logoUrl || ''); }, [businessSettings]);
+  React.useEffect(() => { setISettings(invoiceSettings); }, [invoiceSettings]);
 
   // Instant logo saver across both business and invoice configs
   const handleSaveLogoOnly = (newLogoUrl?: string) => {
@@ -315,6 +318,26 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </form>
       ) : (
         <form onSubmit={handleSaveInvoice} className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs space-y-4 text-xs">
+          <div className="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">{lang === 'bn' ? 'ইনভয়েসের ইমেইল (কাস্টম)' : 'Invoice Email (custom)'}</label>
+            <input type="email" value={iSettings.invoiceEmail ?? ''} placeholder={bSettings.contactEmail || ''}
+              onChange={(e) => setISettings({ ...iSettings, invoiceEmail: e.target.value })}
+              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:border-violet-500 focus:outline-hidden" />
+          </div>
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">{lang === 'bn' ? 'ইনভয়েসের ফোন' : 'Invoice Phone'}</label>
+            <input type="text" value={iSettings.invoicePhone ?? ''} placeholder={bSettings.contactPhone || ''}
+              onChange={(e) => setISettings({ ...iSettings, invoicePhone: e.target.value })}
+              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:border-violet-500 focus:outline-hidden" />
+          </div>
+          </div>
+          <div>
+            <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">{lang === 'bn' ? 'ইনভয়েসের ঠিকানা' : 'Invoice Address'}</label>
+            <input type="text" value={iSettings.invoiceAddress ?? ''} placeholder={bSettings.address || ''}
+              onChange={(e) => setISettings({ ...iSettings, invoiceAddress: e.target.value })}
+              className="w-full rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 p-2.5 text-slate-900 dark:text-white focus:border-violet-500 focus:outline-hidden" />
+          </div>
           <div>
             <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
               {lang === 'bn' ? 'ইনভয়েস প্রিফিক্স (Prefix)' : 'Invoice Number Prefix'}
