@@ -55,7 +55,7 @@ import { ReportsView } from './components/ReportsView';
 import { UserManagementView } from './components/UserManagementView';
 import { SyncedDuesView } from './components/SyncedDuesView';
 import { SupabaseSync } from './data/supabaseSync';
-import { FirestoreSync } from './data/firestoreSync';
+import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
 import { StaffAccountsView } from './components/StaffAccountsView';
@@ -117,6 +117,7 @@ export default function App() {
   const [purchaseReturns, setPurchaseReturns] = useState<PurchaseReturn[]>(INITIAL_PURCHASE_RETURNS);
   const [sales, setSales] = useState<Sale[]>(() => DatabaseStorage.loadSales());
   const [salesReturns, setSalesReturns] = useState<SalesReturn[]>(INITIAL_SALES_RETURNS);
+  const [returnedStockValue, setReturnedStockValue] = useState<number>(0);
   const [stockTransfers, setStockTransfers] = useState<StockTransfer[]>(INITIAL_STOCK_TRANSFERS);
   const [expenses, setExpenses] = useState<Expense[]>(() => DatabaseStorage.loadExpenses());
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings>(() => DatabaseStorage.loadBusinessSettings());
@@ -388,12 +389,26 @@ export default function App() {
         }
       }
     });
+    // Live returned-goods value: customer sales returns + stock adjustments
+    let salesReturnsTotal = 0;
+    let adjustmentsTotal = 0;
+    const updateReturnedValue = () => setReturnedStockValue(salesReturnsTotal + adjustmentsTotal);
+    const unsubSalesReturns = CloudCollections.subscribe<any>('sales_returns', (items) => {
+      salesReturnsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || Number(r?.totalRefund) || 0), 0);
+      updateReturnedValue();
+    });
+    const unsubAdjustments = CloudCollections.subscribe<any>('stock_adjustments', (items) => {
+      adjustmentsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || 0), 0);
+      updateReturnedValue();
+    });
 
     return () => {
       unsubProds();
       unsubSales();
       unsubContacts();
       unsubUsers();
+      unsubSalesReturns();
+      unsubAdjustments();
     };
   }, []);
 
@@ -1454,6 +1469,7 @@ export default function App() {
             lang={lang}
             userRole={userRole}
             currentUser={currentUser}
+            returnedStockValue={returnedStockValue}
             onQuickRestock={handleQuickRestock}
           />
         );
