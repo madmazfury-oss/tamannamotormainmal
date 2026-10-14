@@ -389,12 +389,26 @@ export default function App() {
         }
       }
     });
+    // Live returned-goods value: customer sales returns + stock adjustments
+    let salesReturnsTotal = 0;
+    let adjustmentsTotal = 0;
+    const updateReturnedValue = () => setReturnedStockValue(salesReturnsTotal + adjustmentsTotal);
+    const unsubSalesReturns = CloudCollections.subscribe<any>('sales_returns', (items) => {
+      salesReturnsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || Number(r?.totalRefund) || 0), 0);
+      updateReturnedValue();
+    });
+    const unsubAdjustments = CloudCollections.subscribe<any>('stock_adjustments', (items) => {
+      adjustmentsTotal = (items || []).reduce((acc, r) => acc + (Number(r?.totalAmount) || 0), 0);
+      updateReturnedValue();
+    });
 
     return () => {
       unsubProds();
       unsubSales();
       unsubContacts();
       unsubUsers();
+      unsubSalesReturns();
+      unsubAdjustments();
     };
   }, []);
 
