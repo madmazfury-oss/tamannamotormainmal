@@ -18,7 +18,11 @@ import {
   Printer,
   FileText,
   Smartphone,
-  AlertCircle
+  AlertCircle,
+  Clock,
+  X,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { Product, Contact, CartItem, Sale, BusinessSettings, InvoiceSettings, AuthUser } from '../types';
 import { ReceiptModal } from './ReceiptModal';
@@ -36,6 +40,9 @@ interface PosTerminalProps {
   branchLocation?: string;
   cashierName?: string;
   currentUser?: AuthUser | null;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
+  onToggleLang?: (lang: Language) => void;
 }
 
 const isLooseProduct = (p: { name?: string; category?: string }) =>
@@ -52,9 +59,39 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
   invoiceSettings,
   branchLocation = "Hazigonj Branch",
   cashierName,
-  currentUser
+  currentUser,
+  theme = 'light',
+  onToggleTheme,
+  onToggleLang
 }) => {
   const t = TRANSLATIONS[lang];
+  const [posTime, setPosTime] = useState<string>('');
+  const [posDate, setPosDate] = useState<string>('');
+
+  useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      setPosTime(
+        now.toLocaleTimeString(lang === 'bn' ? 'bn-BD' : 'en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: true
+        })
+      );
+      setPosDate(
+        now.toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-US', {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        })
+      );
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [lang]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('cust-walkin');
   const [walkInName, setWalkInName] = useState<string>('');
@@ -344,52 +381,111 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-slate-100 dark:bg-slate-950 animate-in fade-in select-none text-slate-900 dark:text-slate-100 transition-colors">
       {/* POS Top Bar */}
-      <header className="flex h-14 items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 shadow-xs">
-        <div className="flex items-center gap-3">
+      <header className="hn-header flex h-14 shrink-0 items-center justify-between gap-2 border-b border-white/15 bg-[#4a1fb8] px-2 text-white shadow-md select-none sm:px-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <button
             onClick={onClose}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95"
+            title={lang === 'bn' ? 'ড্যাশবোর্ডে ফিরে যান' : 'Back to dashboard'}
           >
-            <ArrowLeft className="h-4 w-4" />
-            <span>{t.nav.home}</span>
+            <ArrowLeft className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">{t.nav.home}</span>
           </button>
-          <div className="h-4 w-px bg-slate-200 dark:bg-slate-800" />
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-extrabold text-slate-900 dark:text-white">
-              {businessSettings?.businessName || "TAMANNA MOTORS"} · POS
+
+          <div className="hidden h-5 w-px shrink-0 bg-white/20 sm:block" />
+
+          <div className="flex min-w-0 items-center gap-2">
+            <ShoppingCart className="h-4 w-4 shrink-0 text-amber-300" />
+            <span className="truncate text-sm font-extrabold text-white">
+              {businessSettings?.businessName || 'TAMANNA MOTORS'} · POS
             </span>
-            <span className="text-xs text-emerald-800 dark:text-emerald-400 font-medium">
-              · {branchLocation}
+            <span className="hidden shrink-0 rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-[10px] font-semibold text-white/90 md:inline">
+              {branchLocation}
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* Reprint Last Receipt Button */}
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          {/* Live date & time */}
+          <div className="flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2 py-1.5">
+            <Clock className="h-3.5 w-3.5 shrink-0 text-amber-300" />
+            <span className="hidden text-[11px] font-medium text-white/80 lg:inline">{posDate}</span>
+            <span className="hidden text-white/40 lg:inline">·</span>
+            <span className="font-mono text-xs font-bold tabular-nums text-white">{posTime}</span>
+          </div>
+
+          <div className="hidden text-[11px] font-medium text-white/80 xl:block">
+            {lang === 'bn' ? 'ক্যাশিয়ার' : 'Cashier'}:{' '}
+            <strong className="text-white">
+              {cashierName || currentUser?.name || (lang === 'bn' ? 'অপারেটর' : 'Cashier')}
+            </strong>
+          </div>
+
           {lastCompletedSale && (
             <button
               onClick={() => {
                 setAutoTriggerPrint(false);
                 setIsReceiptOpen(true);
               }}
-              className="flex items-center gap-1.5 rounded-lg border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-colors"
+              className="hidden items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95 sm:flex"
               title="Print or view previous receipt"
             >
-              <Printer className="h-3.5 w-3.5" />
-              <span>{lang === 'bn' ? 'শেষ রসিদ প্রিন্ট' : 'Reprint Last Receipt'}</span>
+              <Printer className="h-3.5 w-3.5 shrink-0" />
+              <span className="hidden lg:inline">{lang === 'bn' ? 'শেষ রসিদ প্রিন্ট' : 'Reprint Last Receipt'}</span>
             </button>
           )}
 
           <button
             onClick={onOpenCalculator}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700"
+            className="flex items-center gap-1.5 rounded-xl border border-white/25 bg-white/10 px-2.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-white/20 active:scale-95"
+            title="Calculator"
           >
-            <CalcIcon className="h-3.5 w-3.5 text-slate-500 dark:text-slate-400" />
-            <span className="hidden sm:inline">{t.calculator}</span>
+            <CalcIcon className="h-3.5 w-3.5 shrink-0" />
+            <span className="hidden lg:inline">{t.calculator}</span>
           </button>
-          <div className="text-xs text-slate-600 dark:text-slate-300 font-mono hidden md:block">
-            {lang === 'bn' ? 'ক্যাশিয়ার' : 'Cashier'}: <strong>{cashierName || currentUser?.name || (lang === 'bn' ? 'অপারেটর' : 'Cashier')}</strong>
-          </div>
+
+          {onToggleLang && (
+            <div className="flex shrink-0 items-center rounded-xl border border-white/25 bg-white/10 p-0.5 text-[11px] font-bold">
+              <button
+                onClick={() => onToggleLang('en')}
+                className={`rounded-lg px-1.5 py-1 transition-colors ${
+                  lang === 'en' ? 'bg-white/25 text-white' : 'text-white/60 hover:text-white'
+                }`}
+                title="English Version"
+              >
+                EN
+              </button>
+              <button
+                onClick={() => onToggleLang('bn')}
+                className={`rounded-lg px-1.5 py-1 transition-colors ${
+                  lang === 'bn' ? 'bg-white/25 text-white' : 'text-white/60 hover:text-white'
+                }`}
+                title="বাংলা সংস্করণ (Bangla)"
+              >
+                বাং
+              </button>
+            </div>
+          )}
+
+          {onToggleTheme && (
+            <button
+              onClick={onToggleTheme}
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white transition-all hover:bg-white/20 active:scale-95"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              aria-label="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4 text-amber-300" /> : <Moon className="h-4 w-4" />}
+            </button>
+          )}
+
+          <button
+            onClick={onClose}
+            className="flex shrink-0 items-center gap-1.5 rounded-xl border border-rose-300/40 bg-rose-500/25 px-2.5 py-1.5 text-xs font-bold text-white transition-all hover:bg-rose-500/45 active:scale-95"
+            title={lang === 'bn' ? 'পিরতন করুন (Esc)' : 'Close (Esc)'}
+          >
+            <X className="h-4 w-4 shrink-0" />
+            <span className="hidden sm:inline">{lang === 'bn' ? 'বন্ধ করুন' : 'Close'}</span>
+          </button>
         </div>
       </header>
 
