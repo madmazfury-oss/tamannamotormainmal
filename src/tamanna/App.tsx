@@ -2530,29 +2530,31 @@ export default function App() {
             </button>
           </div>
         )}
-        {/* 1. Top Bar (Header) with Theme & Language */}
-        <Header
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          onOpenPos={() => setIsPosOpen(true)}
-          onOpenCalculator={() => setIsCalculatorOpen(true)}
-          onNavigate={setCurrentRoute}
-          currentBranch={currentBranch}
-          onChangeBranch={setCurrentBranch}
-          theme={theme}
-          onToggleTheme={handleToggleTheme}
-          lang={lang}
-          onToggleLang={handleToggleLang}
-          businessSettings={businessSettings}
-          userRole={currentUser?.role === 'super_admin' ? userRole : (currentUser?.role || 'cashier')}
-          onToggleUserRole={currentUser?.role === 'super_admin' ? handleToggleUserRole : undefined}
-          onPutNewEntry={currentUser?.role === 'super_admin' ? handlePutNewEntry : undefined}
-          currentUser={currentUser}
-          onLogout={handleLogout}
-          onOpenInvoiceScanner={() => setIsInvoiceScanOpen(true)}
-          onOpenSearch={() => setIsSearchOpen(true)}
-          onOpenShortcutsHelp={() => setIsShortcutsHelpOpen(true)}
-        />
+        {/* 1. Top Bar (Header) with Theme & Language — hidden while POS is open, POS has its own bar */}
+        {!isPosOpen && (
+          <Header
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            onOpenPos={() => setIsPosOpen(true)}
+            onOpenCalculator={() => setIsCalculatorOpen(true)}
+            onNavigate={setCurrentRoute}
+            currentBranch={currentBranch}
+            onChangeBranch={setCurrentBranch}
+            theme={theme}
+            onToggleTheme={handleToggleTheme}
+            lang={lang}
+            onToggleLang={handleToggleLang}
+            businessSettings={businessSettings}
+            userRole={currentUser?.role === 'super_admin' ? userRole : (currentUser?.role || 'cashier')}
+            onToggleUserRole={currentUser?.role === 'super_admin' ? handleToggleUserRole : undefined}
+            onPutNewEntry={currentUser?.role === 'super_admin' ? handlePutNewEntry : undefined}
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            onOpenInvoiceScanner={() => setIsInvoiceScanOpen(true)}
+            onOpenSearch={() => setIsSearchOpen(true)}
+            onOpenShortcutsHelp={() => setIsShortcutsHelpOpen(true)}
+          />
+        )}
 
         {/* 3. Main Content Area */}
         <main className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-8">
@@ -2592,6 +2594,10 @@ export default function App() {
           businessSettings={businessSettings}
           invoiceSettings={invoiceSettings}
           branchLocation={currentBranch}
+          currentUser={currentUser}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
+          onToggleLang={handleToggleLang}
         />
       )}
 
