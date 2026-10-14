@@ -294,7 +294,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-3xl font-extrabold tracking-tight text-white">
-              {lang === 'bn' ? `স্বাগতম ${currentUser?.name || 'সুপার অ্যাডমিন'}, 👋` : `Welcome ${currentUser?.name || 'Super Admin'}, 👋`}
+              {lang === 'bn' ? `স্বাগতম ${currentUser?.name || 'সুপার অ্যাডমিন'}` : `Welcome ${currentUser?.name || 'Super Admin'}`}
             </h1>
             <span className="text-xs text-emerald-800 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
               TAMANNA MOTORS

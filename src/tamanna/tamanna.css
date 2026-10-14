@@ -134,3 +134,8 @@
 .hn-header button, .hn-header a { color: #fff; border-color: rgba(255,255,255,.35) !important; background-color: rgba(255,255,255,.08); }
 .hn-header button:hover { background-color: rgba(255,255,255,.18); }
 .hn-header input { color:#0f172a; }
+.hn-header .absolute { color:#334155; }
+.hn-header .absolute button, .hn-header .absolute a { color:#334155; background-color:transparent; border-color:transparent !important; }
+.hn-header .absolute button:hover { background-color:#f1f5f9; }
+.hn-header button.bg-white, .hn-header .bg-white { color:#4a1fb8 !important; background-color:#fff !important; }
+.hn-header span[class*="text-emerald-"] { color:#d1fae5 !important; border-color:rgba(255,255,255,.35) !important; background-color:rgba(255,255,255,.12) !important; }
