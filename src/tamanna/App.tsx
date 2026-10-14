@@ -940,8 +940,25 @@ export default function App() {
     showSyncNotice(lang === 'bn' ? `ব্যয় '${row.expenseNo}' মুছে ফেলা হয়েছে।` : `Expense '${row.expenseNo}' deleted and synced.`);
   };
 
+  // Keep customer / supplier ledgers linked to sales & purchases
+  const bumpContact = (kind: 'customer' | 'supplier', name: string, phone: string | undefined, dueDelta: number, totalDelta: number) => {
+    if (!name || (!dueDelta && !totalDelta)) return;
+    const setter = kind === 'customer' ? setCustomers : setSuppliers;
+    setter(prev => {
+      const key = name.trim().toLowerCase();
+      const i = prev.findIndex(c => (phone && c.phone === phone) || (c.name || '').trim().toLowerCase() === key || (c.businessName || '').trim().toLowerCase() === key);
+      if (i < 0) return prev;
+      const c = { ...prev[i], balance: +((prev[i].balance || 0) + dueDelta).toFixed(2), totalPurchases: +(((prev[i] as any).totalPurchases || 0) + totalDelta).toFixed(2) } as Contact;
+      SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
+      const next = [...prev]; next[i] = c;
+      kind === 'customer' ? DatabaseStorage.saveCustomers(next) : DatabaseStorage.saveSuppliers(next);
+      return next;
+    });
+  };
+
   // Handlers for Purchases
   const handleAddPurchase = (purchase: Purchase) => {
+    bumpContact('supplier', purchase.supplierName, undefined, Number(purchase.paymentDue || 0), Number(purchase.grandTotal || 0));
     const items = (purchase as any).items as { productId: string; quantity: number; unitCost: number; sellingPrice: number }[] | undefined;
     if (items?.length && purchase.purchaseStatus === 'Received') {
       setProducts(prev => prev.map(p => {
@@ -1000,6 +1017,7 @@ export default function App() {
 
   // Handlers for Sales
   const handleCompleteSale = (newSale: Sale, updatedProducts: Product[]) => {
+    bumpContact('customer', newSale.customerName, newSale.customerPhone, Number(newSale.invoiceDue || 0), Number(newSale.totalAmount || 0));
     setSales([newSale, ...sales]);
     setProducts(updatedProducts);
     DatabaseStorage.saveSales([newSale, ...sales]);

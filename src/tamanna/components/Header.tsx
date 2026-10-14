@@ -1,3 +1,4 @@
+import { supabase } from '@/integrations/supabase/client';
 import React, { useState, useEffect } from 'react';
 import { 
   Calculator, 
@@ -83,6 +84,39 @@ export const Header: React.FC<HeaderProps> = ({
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentDate, setCurrentDate] = useState<string>('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const avatarInput = React.useRef<HTMLInputElement | null>(null);
+  React.useEffect(() => {
+    let alive = true;
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return;
+      const { data } = await supabase.from('profiles').select('avatar_url').eq('id', u.user.id).maybeSingle();
+      if (alive && data?.avatar_url) setAvatarUrl(data.avatar_url);
+    })();
+    return () => { alive = false; };
+  }, [currentUser?.id]);
+  const onAvatarPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]; if (!f) return;
+    setAvatarBusy(true);
+    try {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return;
+      const url: string = await new Promise((ok, bad) => {
+        const img = new Image(); const r = new FileReader();
+        r.onload = () => { img.onload = () => { const c = document.createElement('canvas'); const n = 256; const sc = Math.max(n / img.width, n / img.height);
+          c.width = n; c.height = n; const x = c.getContext('2d')!; x.drawImage(img, (n - img.width * sc) / 2, (n - img.height * sc) / 2, img.width * sc, img.height * sc);
+          ok(c.toDataURL('image/jpeg', 0.85)); }; img.onerror = bad; img.src = String(r.result); };
+        r.onerror = bad; r.readAsDataURL(f);
+      });
+      await supabase.from('profiles').update({ avatar_url: url }).eq('id', u.user.id);
+      setAvatarUrl(url);
+    } finally { setAvatarBusy(false); e.target.value = ''; }
+  };
+  const avatarFace = (size: string) => avatarUrl
+    ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+    : <span>{currentUser?.name ? currentUser.name.charAt(0) : 'TM'}</span>;
   const [branchDropdownOpen, setBranchDropdownOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [quickEntryDropdownOpen, setQuickEntryDropdownOpen] = useState(false);
@@ -119,7 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-1 sm:gap-2 lg:gap-3 hn-header bg-[#4a1fb8] text-white px-2 sm:px-3 lg:px-5 shadow-md select-none transition-colors overflow-hidden whitespace-nowrap">
+    <header className="sticky top-0 z-[60] flex h-16 w-full items-center justify-between gap-1 sm:gap-2 lg:gap-3 hn-header bg-[#4a1fb8] text-white px-2 sm:px-3 lg:px-5 shadow-md select-none transition-colors whitespace-nowrap">
       {/* Left section: Toggle, Logo & Greeting */}
       <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 shrink">
         <button
@@ -452,11 +486,7 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="User Menu"
           >
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 text-xs font-bold text-white overflow-hidden shadow-xs ring-1 ring-white/20 shrink-0">
-              {currentUser?.name ? currentUser.name.charAt(0) : (businessSettings?.logoUrl ? (
-                <img src={businessSettings.logoUrl} alt="Logo" className="h-full w-full object-cover" />
-              ) : (
-                <span>TM</span>
-              ))}
+              {avatarFace("7")}
             </div>
             <div className="hidden text-left 2xl:block min-w-0">
               <div className="text-xs font-bold text-slate-900 dark:text-white leading-tight truncate max-w-[110px]">
@@ -474,12 +504,15 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {profileDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95">
+            <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
               <div className="border-b border-slate-100 dark:border-slate-800/80 px-4 py-2.5">
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg overflow-hidden bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white font-bold text-xs shrink-0 shadow-xs ring-1 ring-white/20">
-                    {currentUser?.name ? currentUser.name.charAt(0) : 'TM'}
-                  </div>
+                  <button type="button" onClick={() => avatarInput.current?.click()} title={lang === 'bn' ? 'ছবি পরিবর্তন' : 'Change photo'}
+                    className="relative group h-14 w-14 rounded-2xl overflow-hidden bg-gradient-to-br from-violet-600 to-fuchsia-600 flex items-center justify-center !text-white font-bold text-lg shrink-0 shadow-md ring-2 ring-violet-200 dark:ring-violet-900">
+                    {avatarFace("14")}
+                    <span className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition grid place-items-center text-[10px] !text-white">{avatarBusy ? '...' : (lang === 'bn' ? 'ছবি দিন' : 'Upload')}</span>
+                  </button>
+                  <input ref={avatarInput} type="file" accept="image/*" className="hidden" onChange={onAvatarPick} />
                   <div className="overflow-hidden">
                     <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {currentUser?.name || 'TAMANNA MOTORS'}

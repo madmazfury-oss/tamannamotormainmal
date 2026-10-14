@@ -21,3 +21,7 @@
 - [x] POS: type name + Enter adds product
 - [x] Dark / light mode fixed for menu, top bar, forms
 - [x] Profit report: today, yesterday, 7 days, 30 days, this month, custom range, daily table
+- [x] Gorgeous login & inner UI polish, responsive (phone→TV)
+- [x] Invoice settings: custom email/phone/address, logo synced with business settings
+- [x] Profile photo upload in user menu; menu no longer hidden behind page
+- [x] Sales/purchases update customer/supplier dues automatically

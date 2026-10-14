@@ -29,6 +29,20 @@
       "when": 1791981716817,
       "tag": "0003_role_limits_and_super_admin_access",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791984680877,
+      "tag": "0004_profile_avatar",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791984717017,
+      "tag": "0005_media_bucket_policies",
+      "breakpoints": true
     }
   ]
 }
