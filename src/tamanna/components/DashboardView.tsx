@@ -114,7 +114,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       const daySales = (sales || []).filter(s => {
         if (!s.saleDate) return false;
         try {
-          const sDate = new Date(s.saleDate);
+          const sDate = parseSaleDate(s.saleDate);
+          if (!sDate) return false;
           return (
             sDate.getDate() === d.getDate() &&
             sDate.getMonth() === d.getMonth() &&
@@ -158,8 +159,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const inPeriod = (raw?: string) => {
     if (period === 'all') return true;
     if (!raw) return false;
-    const d = new Date(raw);
-    if (isNaN(d.getTime())) return false;
+    const d = parseSaleDate(raw);
+    if (!d) return false;
     const now = new Date();
     const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const day = 86400000;
@@ -212,7 +213,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       const daySales = (sales || []).filter(s => {
         if (!s.saleDate) return false;
         try {
-          const sDate = new Date(s.saleDate);
+          const sDate = parseSaleDate(s.saleDate);
+          if (!sDate) return false;
           return (
             sDate.getDate() === d.getDate() &&
             sDate.getMonth() === d.getMonth() &&
@@ -276,7 +278,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       const monthSales = (sales || []).filter(s => {
         if (!s.saleDate) return false;
         try {
-          const d = new Date(s.saleDate);
+          const d = parseSaleDate(s.saleDate);
+          if (!d) return false;
           return d.getFullYear() === currentYear && d.getMonth() === m;
         } catch {
           return false;
