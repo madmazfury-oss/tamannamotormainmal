@@ -55,7 +55,7 @@ import { ReportsView } from './components/ReportsView';
 import { UserManagementView } from './components/UserManagementView';
 import { SyncedDuesView } from './components/SyncedDuesView';
 import { SupabaseSync } from './data/supabaseSync';
-import { FirestoreSync } from './data/firestoreSync';
+import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
 import { StaffAccountsView } from './components/StaffAccountsView';
@@ -117,6 +117,7 @@ export default function App() {
   const [purchaseReturns, setPurchaseReturns] = useState<PurchaseReturn[]>(INITIAL_PURCHASE_RETURNS);
   const [sales, setSales] = useState<Sale[]>(() => DatabaseStorage.loadSales());
   const [salesReturns, setSalesReturns] = useState<SalesReturn[]>(INITIAL_SALES_RETURNS);
+  const [returnedStockValue, setReturnedStockValue] = useState<number>(0);
   const [stockTransfers, setStockTransfers] = useState<StockTransfer[]>(INITIAL_STOCK_TRANSFERS);
   const [expenses, setExpenses] = useState<Expense[]>(() => DatabaseStorage.loadExpenses());
   const [businessSettings, setBusinessSettings] = useState<BusinessSettings>(() => DatabaseStorage.loadBusinessSettings());
