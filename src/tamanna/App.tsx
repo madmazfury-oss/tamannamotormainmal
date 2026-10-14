@@ -1,3 +1,4 @@
+import { MasterDataModule, MODULES } from './components/MasterDataModule';
 import React, { useState, useEffect } from 'react';
 import {
   DatabaseStorage,
@@ -1392,6 +1393,9 @@ export default function App() {
 
   // Render the selected route
   const renderMainContent = () => {
+    if (MODULES[currentRoute]) {
+      return <MasterDataModule key={currentRoute} route={currentRoute} lang={lang} canEdit={isRealSuper && !realUser} onDeleteLog={logDelete} />;
+    }
     switch (currentRoute) {
       case 'home':
         return (

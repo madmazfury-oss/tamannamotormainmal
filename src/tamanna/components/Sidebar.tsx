@@ -150,6 +150,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'contact-suppliers', labelKey: t.nav.suppliers },
         { id: 'contact-customers', labelKey: t.nav.customers },
         { id: 'contact-customer-group', labelKey: t.nav.customerGroup },
+        { id: 'selling-price-group', labelKey: lang === 'bn' ? 'বিক্রয় মূল্য গ্রুপ' : 'Selling Price Group' },
         { id: 'contact-import', labelKey: lang === 'bn' ? 'কন্টাক্ট ইমপোর্ট' : 'Import Contacts' }
       ]
     },
@@ -268,7 +269,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'settings-invoice', labelKey: t.nav.invoiceSettings },
         { id: 'settings-barcodes', labelKey: lang === 'bn' ? 'বারকোড সেটিংস' : 'Barcode Settings' },
         { id: 'settings-printers', labelKey: lang === 'bn' ? 'রসিদ ও থার্মাল প্রিন্টার' : 'Receipt Printers' },
-        { id: 'settings-tax-rates', labelKey: lang === 'bn' ? 'ট্যাক্স রেট (Tax Rates)' : 'Tax Rates' }
+        { id: 'settings-tax-rates', labelKey: lang === 'bn' ? 'ট্যাক্স রেট (Tax Rates)' : 'Tax Rates' },
+        { id: 'notification-templates', labelKey: lang === 'bn' ? 'নোটিফিকেশন টেমপ্লেট' : 'Notification Templates' }
       ]
     }
   ];
