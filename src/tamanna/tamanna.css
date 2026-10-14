@@ -196,3 +196,17 @@ main .overflow-x-auto, main [class*="overflow-x"] { -webkit-overflow-scrolling: 
 @media (max-width: 640px) { main { padding-left: .5rem !important; padding-right: .5rem !important; } main .p-6 { padding: 1rem; } }
 @media (min-width: 1920px) { html { font-size: 18px; } }
 @media (min-width: 2560px) { html { font-size: 21px; } }
+
+/* ---- Invoices always look like printed paper (white), even in dark mode ---- */
+.dark #printable-receipt, .dark #printable-a4-invoice { background:#fff !important; color:#0f172a !important; color-scheme: light; }
+.dark #printable-receipt *, .dark #printable-a4-invoice * { color:#0f172a !important; border-color:#cbd5e1 !important; }
+.dark #printable-receipt :is(div,table,tr,td,th,section,header,footer,p,span), .dark #printable-a4-invoice :is(div,table,tr,td,th,section,header,footer,p,span) { background-color:transparent !important; }
+.dark #printable-receipt, .dark #printable-a4-invoice { box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); }
+
+/* ---- Own identity (less like hisabnikash): soft violet side menu with gradient pills ---- */
+aside { background: linear-gradient(180deg, #faf8ff 0%, #ffffff 40%, #fdf7ff 100%) !important; border-right: 1px solid #ede9fe !important; }
+aside button { border-radius: 12px !important; transition: background .2s, transform .15s, color .2s; }
+aside button:hover { transform: translateX(2px); }
+aside button.bg-slate-200\/70, aside button.bg-violet-50 { background: linear-gradient(90deg, #4a1fb8, #7c3aed 70%, #c026d3) !important; color:#fff !important; box-shadow: 0 8px 18px -10px rgba(124,58,237,.8) !important; }
+aside button.bg-slate-200\/70 *, aside button.bg-violet-50 * { color:#fff !important; }
+.dark aside { background: linear-gradient(180deg, #0f0a24 0%, #0b1120 60%) !important; border-color:#1e1b4b !important; }
