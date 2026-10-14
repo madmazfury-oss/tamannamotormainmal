@@ -60,44 +60,55 @@ export const AuthScreen: React.FC<Props> = ({ lang, onToggleLang, businessName, 
     if ((res as any)?.error) setError(String((res as any).error.message || (res as any).error));
   };
 
-  const input = 'w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/60 pl-11 pr-4 py-3 text-sm outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/15 transition';
+  const input = 'w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-900/60 pl-11 pr-4 py-3 text-sm outline-none focus:border-violet-500 focus:ring-4 focus:ring-violet-500/15 transition';
 
   return (
-    <div className="min-h-screen grid lg:grid-cols-2 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      <aside className="relative hidden lg:flex flex-col justify-between p-12 overflow-hidden bg-slate-950 text-slate-100">
-        <div className="absolute -top-32 -left-32 w-[28rem] h-[28rem] rounded-full bg-amber-500/25 blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full bg-red-600/20 blur-3xl" />
+    <div className="tm-auth min-h-screen grid lg:grid-cols-[1.1fr_1fr] text-slate-900 dark:text-slate-100">
+      <div className="tm-auth-hero relative hidden lg:flex flex-col justify-between p-12 overflow-hidden text-white">
+        <div className="tm-blob absolute -top-40 -left-32 w-[32rem] h-[32rem] rounded-full bg-fuchsia-500/40 blur-3xl" />
+        <div className="tm-blob tm-blob-2 absolute -bottom-40 -right-24 w-[34rem] h-[34rem] rounded-full bg-amber-400/30 blur-3xl" />
+        <div className="absolute inset-0 tm-grid opacity-30" />
         <div className="relative flex items-center gap-3">
-          {logoUrl ? <img src={logoUrl} alt="" className="w-12 h-12 rounded-xl object-cover" /> :
-            <div className="w-12 h-12 rounded-xl bg-amber-500 grid place-items-center"><Bike className="w-7 h-7 text-slate-950" /></div>}
+          {logoUrl ? <img src={logoUrl} alt="" className="w-14 h-14 rounded-2xl object-cover ring-2 ring-white/40" /> :
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-300 to-orange-500 grid place-items-center shadow-lg shadow-orange-500/40"><Bike className="w-8 h-8 text-white" /></div>}
           <div>
-            <div className="font-extrabold tracking-wide text-lg">{businessName || 'TAMANNA MOTORS'}</div>
-            <div className="text-xs text-slate-400">{t('Hazigonj Branch, Chandpur', 'হাজীগঞ্জ শাখা, চাঁদপুর')}</div>
+            <div className="font-extrabold tracking-[0.15em] text-xl">{businessName || 'TAMANNA MOTORS'}</div>
+            <div className="text-xs text-white/70">{t('Hazigonj Branch, Chandpur', 'হাজীগঞ্জ শাখা, চাঁদপুর')}</div>
           </div>
         </div>
         <div className="relative">
-          <h1 className="text-5xl font-extrabold leading-tight">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 border border-white/25 text-xs font-semibold mb-6 backdrop-blur">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> {t('Live cloud sync', 'লাইভ ক্লাউড সিঙ্ক')}
+          </div>
+          <h1 className="text-5xl xl:text-6xl font-extrabold leading-[1.05]">
             {t('Run your showroom', 'আপনার শোরুম চালান')}<br />
-            <span className="text-amber-400">{t('with confidence.', 'আত্মবিশ্বাসের সাথে।')}</span>
+            <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-orange-400 bg-clip-text text-transparent">{t('with confidence.', 'আত্মবিশ্বাসের সাথে।')}</span>
           </h1>
-          <p className="mt-5 text-slate-400 max-w-md">
-            {t('POS, inventory, dues and reports — synced live to the cloud for every staff member.',
-               'POS, ইনভেন্টরি, বাকি ও রিপোর্ট — সব স্টাফের জন্য ক্লাউডে লাইভ সিঙ্ক।')}
+          <p className="mt-5 text-white/75 max-w-md text-lg">
+            {t('POS, inventory, dues and reports — synced live for every staff member.',
+               'POS, ইনভেন্টরি, বাকি ও রিপোর্ট — সব স্টাফের জন্য লাইভ সিঙ্ক।')}
           </p>
+          <div className="mt-8 grid grid-cols-3 gap-3 max-w-lg">
+            {[[t('Fast POS','দ্রুত POS'),'⚡'],[t('Profit reports','লাভের রিপোর্ট'),'📈'],[t('Stock control','স্টক নিয়ন্ত্রণ'),'📦']].map(([l,i]) => (
+              <div key={l} className="rounded-2xl bg-white/10 border border-white/20 backdrop-blur p-4 hover:bg-white/15 transition">
+                <div className="text-2xl">{i}</div><div className="mt-2 text-sm font-semibold">{l}</div>
+              </div>))}
+          </div>
         </div>
-        <div className="relative flex items-center gap-2 text-sm text-slate-400">
-          <ShieldCheck className="w-4 h-4 text-amber-400" /> {t('Secure encrypted sign-in', 'নিরাপদ এনক্রিপ্টেড লগইন')}
+        <div className="relative flex items-center gap-2 text-sm text-white/70">
+          <ShieldCheck className="w-4 h-4 text-amber-300" /> {t('Secure encrypted sign-in', 'নিরাপদ এনক্রিপ্টেড লগইন')}
         </div>
-      </aside>
+      </div>
 
-      <main className="flex items-center justify-center p-6">
+      <main className="relative flex items-center justify-center p-6 overflow-hidden">
+        <div className="tm-blob absolute -top-24 -right-24 w-80 h-80 rounded-full bg-violet-400/20 blur-3xl lg:hidden" />
         <div className="w-full max-w-md">
           <div className="flex justify-end mb-6">
             <button onClick={onToggleLang} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:border-amber-500">
               {bn ? 'English' : 'বাংলা'}
             </button>
           </div>
-          <div className="rounded-3xl bg-white dark:bg-slate-900 shadow-xl shadow-slate-900/5 border border-slate-100 dark:border-slate-800 p-8">
+          <div className="tm-auth-card relative rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl shadow-violet-900/15 border border-white dark:border-slate-800 p-8 sm:p-10">
             {mode === 'forgot' && (
               <button onClick={() => setMode('signin')} className="flex items-center gap-1 text-sm text-slate-500 mb-4 hover:text-amber-600"><ArrowLeft className="w-4 h-4" />{t('Back', 'ফিরে যান')}</button>
             )}
@@ -114,7 +125,7 @@ export const AuthScreen: React.FC<Props> = ({ lang, onToggleLang, businessName, 
               <div className="grid grid-cols-2 p-1 mb-6 rounded-xl bg-slate-100 dark:bg-slate-800">
                 {(['signin', 'signup'] as Mode[]).map(m => (
                   <button key={m} onClick={() => { setMode(m); setError(''); }}
-                    className={`py-2 rounded-lg text-sm font-semibold transition ${mode === m ? 'bg-white dark:bg-slate-950 shadow text-amber-600' : 'text-slate-500'}`}>
+                    className={`py-2 rounded-lg text-sm font-semibold transition ${mode === m ? 'bg-white dark:bg-slate-950 shadow text-violet-700 dark:text-violet-300' : 'text-slate-500'}`}>
                     {m === 'signin' ? t('Sign in', 'লগইন') : t('Sign up', 'সাইন আপ')}
                   </button>
                 ))}
