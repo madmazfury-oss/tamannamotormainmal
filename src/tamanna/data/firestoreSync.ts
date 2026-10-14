@@ -11,7 +11,7 @@ async function upsertDoc(collection: string, id: string, data: unknown) {
   try {
     const { error } = await supabase
       .from(TABLE)
-      .upsert({ collection, id, data, updated_at: new Date().toISOString() }, { onConflict: "collection,id" });
+      .upsert({ collection, id, data: data as any, updated_at: new Date().toISOString() }, { onConflict: "collection,id" });
     if (error) logError(`write ${collection}/${id}`, error);
   } catch (e) {
     logError(`write ${collection}/${id}`, e);

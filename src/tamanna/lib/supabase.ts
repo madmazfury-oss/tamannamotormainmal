@@ -8,7 +8,15 @@ export const getSupabaseUrl = (): string => {
 
 export const isSupabaseConfigured = (): boolean => true;
 
+export const getSupabaseAnonKey = (): string => {
+  return (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string) || "";
+};
+
 export const isCustomSupabaseSet = (): boolean => false;
+
+export const resetCustomSupabaseConfig = (): void => {
+  // Lovable Cloud manages the connection; nothing to reset.
+};
 
 export const setCustomSupabaseConfig = (_url: string, _anonKey: string): boolean => {
   // Lovable Cloud manages the connection; custom overrides are not needed.
