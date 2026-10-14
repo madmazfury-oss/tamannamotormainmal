@@ -12,9 +12,9 @@
 - [x] Verify build + login + dashboard in preview
 - [x] Sign in to hisabnikash, inventory modules (counts match existing app data)
 - [x] All hisabnikash data loaded into cloud database (521 products, 83 contacts, 840 sales, 248 purchases, 6 expenses, 2 returns, 2 adjustments)
-- [ ] Email sign-up & login (next)
-- [ ] Premium redesign
-- [ ] Missing sections: returns, stock adjustment, cash/ledger, profit & loss
+- [x] Email sign-up & login
+- [x] Premium redesign
+- [x] Missing sections: returns, stock adjustment, cash/ledger, profit & loss
 - [x] hisabnikash look (purple bar, white sidebar)
 - [x] 15 settings/master pages now real add/edit/delete (units, brands, categories, warranties, variations, tax, locations, printers, barcodes, discounts, shipments, expense categories, agents, price groups, notification templates)
 - [x] Add Purchase (product lines, discount, shipping, payment, auto stock-in) & Add Expense full forms
@@ -29,3 +29,7 @@
 - [x] Invoice settings: custom email/phone/address, logo synced with business settings
 - [x] Profile photo upload in user menu; menu no longer hidden behind page
 - [x] Sales/purchases update customer/supplier dues automatically
+- [x] POS terminal header fixed (no white strip behind the purple bar) with its own live clock; app top bar clock visible from tablet up, name/badges/icons readable
+- [ ] Field-by-field match: Add Product, POS/Add Sale, Contacts
+- [ ] Print Labels with real barcodes
+- [ ] Publish (Publish button gives the public link)
