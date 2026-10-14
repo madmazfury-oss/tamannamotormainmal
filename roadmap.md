@@ -18,3 +18,6 @@
 - [x] Import pages (products, opening stock, sales, contacts)
 - [x] Roles page from real staff data
 - [ ] Print Labels with real barcodes
+- [x] POS: type name + Enter adds product
+- [x] Dark / light mode fixed for menu, top bar, forms
+- [x] Profit report: today, yesterday, 7 days, 30 days, this month, custom range, daily table
