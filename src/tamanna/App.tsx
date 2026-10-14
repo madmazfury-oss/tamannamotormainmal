@@ -1469,6 +1469,7 @@ export default function App() {
             lang={lang}
             userRole={userRole}
             currentUser={currentUser}
+            returnedStockValue={returnedStockValue}
             onQuickRestock={handleQuickRestock}
           />
         );

@@ -55,6 +55,7 @@ interface DashboardViewProps {
   lang?: Language;
   userRole?: UserRole;
   currentUser?: AuthUser | null;
+  returnedStockValue?: number;
   onQuickRestock?: (productId: string, amount: number) => void;
 }
 
