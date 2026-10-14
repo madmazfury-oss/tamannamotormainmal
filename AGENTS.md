@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep home-dashboard visuals scoped to `.tm-dashboard` and use global `home-*` semantic tokens; this isolates its theme from legacy module styling without changing business calculations.
+- Scope sign-in visuals to `.tm-excavator-*` with global `auth-*` semantic tokens and shared Button controls so legacy dashboard themes cannot override the entry screen.

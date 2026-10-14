@@ -1,5 +1,7 @@
 # TAMANNA MOTORS Migration Roadmap
 
+- [x] Redesign login with excavator and spare-parts imagery; verify desktop/mobile, signup/reset forms, password visibility and invalid-login feedback without changing authentication.
+
 - [x] Redesign home dashboard with richer visual hierarchy; verify authenticated light/dark and mobile views without changing data.
 
 - [x] Apply database schema via migration
