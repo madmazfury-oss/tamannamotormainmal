@@ -163,6 +163,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'products-list', labelKey: t.nav.listOfProducts },
         { id: 'products-add', labelKey: t.nav.addProduct },
         { id: 'products-update-price', labelKey: t.nav.updatePrice },
+        { id: 'products-import', labelKey: lang === 'bn' ? 'পণ্য ইমপোর্ট' : 'Import Products' },
+        { id: 'products-import-opening-stock', labelKey: lang === 'bn' ? 'ওপেনিং স্টক ইমপোর্ট' : 'Import Opening Stock' },
         { id: 'products-print-labels', labelKey: lang === 'bn' ? 'বারকোড লেবেল প্রিন্ট' : 'Print Labels' },
         { id: 'products-variations', labelKey: lang === 'bn' ? 'ভ্যারিয়েশন টেমপ্লেট' : 'Variations' },
         { id: 'products-units', labelKey: lang === 'bn' ? 'পরিমাপ ইউনিট (Units)' : 'Units' },
@@ -199,7 +201,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'sales-quotation-list', labelKey: lang === 'bn' ? 'কোটেশন তালিকা' : 'List Quotations' },
         { id: 'sales-return-list', labelKey: t.nav.listSalesReturn },
         { id: 'sales-shipments', labelKey: lang === 'bn' ? 'ডেলিভারি ও শিপমেন্ট' : 'Shipments' },
-        { id: 'sales-discounts', labelKey: lang === 'bn' ? 'ডিসকাউন্ট স্কিম' : 'Discounts' }
+        { id: 'sales-discounts', labelKey: lang === 'bn' ? 'ডিসকাউন্ট স্কিম' : 'Discounts' },
+        { id: 'sales-import', labelKey: lang === 'bn' ? 'বিক্রয় ইমপোর্ট' : 'Import Sales' }
       ]
     },
     {

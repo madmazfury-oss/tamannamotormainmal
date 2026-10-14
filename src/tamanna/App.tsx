@@ -1,4 +1,6 @@
 import { MasterDataModule, MODULES } from './components/MasterDataModule';
+import { ImportModule, ImportKind } from './components/ImportModule';
+import { RolesView } from './components/RolesView';
 import React, { useState, useEffect } from 'react';
 import {
   DatabaseStorage,
@@ -1393,6 +1395,11 @@ export default function App() {
 
   // Render the selected route
   const renderMainContent = () => {
+    const IMPORTS: Record<string, ImportKind> = { 'contact-import': 'contacts', 'products-import': 'products', 'products-import-opening-stock': 'opening-stock', 'sales-import': 'sales' };
+    if (IMPORTS[currentRoute]) {
+      return <ImportModule key={currentRoute} kind={IMPORTS[currentRoute]} lang={lang} products={products} location={currentUser?.businessLocation || 'Hazigonj Branch'} />;
+    }
+    if (currentRoute === 'roles-list') return <RolesView lang={lang} />;
     if (MODULES[currentRoute]) {
       return <MasterDataModule key={currentRoute} route={currentRoute} lang={lang} canEdit={isRealSuper && !realUser} onDeleteLog={logDelete} />;
     }
