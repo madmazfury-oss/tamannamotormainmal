@@ -1,6 +1,6 @@
 # TAMANNA MOTORS Migration Roadmap
 
-- [ ] Redesign home dashboard with richer visual hierarchy; verify authenticated light/dark and mobile views without changing data.
+- [x] Redesign home dashboard with richer visual hierarchy; verify authenticated light/dark and mobile views without changing data.
 
 - [x] Apply database schema via migration
 - [x] Seed data bundled with app (importedTamannaData.json: products, sales, purchases, contacts)

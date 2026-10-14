@@ -663,7 +663,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Filter Pills for Low Stock */}
           {lowStockItems.length > 0 && (
-            <div className="flex items-center gap-1.5 py-2.5 border-b border-home-border  text-[11px]">
+            <div className="flex flex-wrap items-center gap-1.5 py-2.5 border-b border-home-border text-[11px]">
               <Button variant="ghost"
                 type="button"
                 onClick={() => setLowStockFilter('all')}
@@ -792,7 +792,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <Button variant="ghost"
                           type="button"
                           onClick={() => onQuickRestock(item.id, 10)}
-                          className="flex items-center gap-1 rounded-lg bg-home-positive hover:bg-home-positive text-home-ink font-bold px-2 py-0.5 shadow-xs transition-transform active:scale-95"
+                          className="flex items-center gap-1 rounded-lg bg-home-positive hover:bg-home-positive/90 text-home-on-positive font-bold px-2 py-0.5 shadow-xs transition-transform active:scale-95"
                           title="Instantly add +10 stock (Super Admin)"
                         >
                           <Zap className="h-3 w-3" />
@@ -807,7 +807,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* One-Click Navigation Buttons */}
-          <div className="mt-4 pt-3 border-t border-home-border  grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="mt-4 pt-3 border-t border-home-border grid grid-cols-1 gap-2">
             <Button variant="ghost"
               onClick={() => onNavigate('products-list')}
               className="flex items-center justify-center gap-1.5 rounded-lg bg-home-warning hover:bg-home-warning active:bg-home-warning py-2.5 text-xs font-extrabold text-home-ink shadow-xs transition-all active:scale-98"
