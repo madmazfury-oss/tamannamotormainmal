@@ -428,10 +428,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
-                  {/* Active accent strip */}
-                  {(isDirectActive || hasActiveChild) && (
-                    
-                  )}
 
                   <div className="flex items-center gap-3 min-w-0">
                     <span
