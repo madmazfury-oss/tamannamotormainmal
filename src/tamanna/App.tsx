@@ -53,7 +53,8 @@ import { SyncedDuesView } from './components/SyncedDuesView';
 import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
-import { LoginView } from './components/LoginView';
+import { AuthScreen } from './components/AuthScreen';
+import { supabase } from '@/integrations/supabase/client';
 import { InvoiceScanModal } from './components/InvoiceScanModal';
 import { QuickSearchModal } from './components/QuickSearchModal';
 import { ShortcutsHelpModal } from './components/ShortcutsHelpModal';
@@ -393,7 +394,8 @@ export default function App() {
 
   // Authentication & Staff User state
   const [staffUsers, setStaffUsers] = useState<AuthUser[]>(() => DatabaseStorage.loadStaffUsers());
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => DatabaseStorage.loadCurrentUser());
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+  const [authReady, setAuthReady] = useState(false);
 
   // 10-minute inactivity auto-logout timer
   useEffect(() => {
@@ -621,7 +623,34 @@ export default function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     DatabaseStorage.saveCurrentUser(null);
+    supabase.auth.signOut();
   };
+
+  // Cloud auth session -> app user
+  useEffect(() => {
+    const apply = async (session: any) => {
+      if (!session?.user) { setCurrentUser(null); setAuthReady(true); return; }
+      const u = session.user;
+      const [{ data: prof }, { data: roles }] = await Promise.all([
+        supabase.from('profiles').select('full_name, phone').eq('id', u.id).maybeSingle(),
+        supabase.from('user_roles').select('role').eq('user_id', u.id),
+      ]);
+      const order = ['super_admin', 'admin', 'manager', 'cashier'];
+      const role = (order.find(r => roles?.some((x: any) => x.role === r)) || 'cashier') as UserRole;
+      const user: AuthUser = {
+        id: u.id, uid: u.id, email: u.email || '',
+        name: prof?.full_name || u.user_metadata?.full_name || (u.email || '').split('@')[0],
+        username: (u.email || '').split('@')[0], role, phone: prof?.phone || '',
+        businessLocation: 'Hazigonj Branch', status: 'Active', emailVerified: true,
+      } as AuthUser;
+      setCurrentUser(user); setUserRole(role); setAuthReady(true);
+    };
+    supabase.auth.getSession().then(({ data }) => apply(data.session));
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'USER_UPDATED') setTimeout(() => apply(session), 0);
+    });
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   // Deep link check for invoice QR code scan: "?invoice=TM-2026-..."
   useEffect(() => {
@@ -2334,16 +2363,14 @@ export default function App() {
   };
 
   // If not authenticated, render Login view
+  if (!authReady) {
+    return <div className="min-h-screen grid place-items-center"><div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" /></div>;
+  }
   if (!currentUser) {
     return (
-      <LoginView
-        staffUsers={staffUsers}
-        onLogin={handleLogin}
-        onRegister={handleRegister}
+      <AuthScreen
         lang={lang}
         onToggleLang={handleToggleLang}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
         logoUrl={businessSettings.logoUrl}
         businessName={businessSettings.businessName}
       />
