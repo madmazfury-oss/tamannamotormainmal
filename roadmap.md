@@ -6,6 +6,6 @@
 - [x] Replace old Supabase/Firebase clients with Lovable Cloud client (sync_documents table + realtime)
 - [x] Remove Firebase/Express/Drizzle dependencies
 - [x] Verify build + login + dashboard in preview
-- [ ] Sign in to hisabnikash (owner-provided account), inventory modules & export options
-- [ ] Import authorized hisabnikash data into our database
-- [ ] Remaining master-prompt phases (email auth, UI redesign, missing modules)
+- [x] Sign in to hisabnikash, inventory modules (counts match existing app data)
+- [ ] Import 2 sell returns + 2 stock adjustments (rest already present) — awaiting user go-ahead
+- [ ] Remaining master-prompt phases — awaiting user priority
