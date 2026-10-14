@@ -1,4 +1,6 @@
 import React, { useState, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import dashboardWorkbench from '@/assets/dashboard-workbench.jpg';
 import {
   TrendingUp,
   CreditCard,
@@ -287,275 +289,118 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const lowStockItems = products.filter(p => p.currentStock <= p.alertQuantity);
 
   return (
-    <div className="space-y-6 relative">
-      <div aria-hidden className="pointer-events-none absolute -top-6 -left-6 -right-6 h-[260px] bg-gradient-to-br from-[#4a1fb8] to-[#5b2bd0] -z-0" />
-      {/* Welcome Banner / Overview Header */}
-      <div className="flex flex-col gap-3 relative z-10 bg-transparent p-1 lg:flex-row lg:items-center lg:justify-between transition-colors">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-3xl font-extrabold tracking-tight text-white">
-              {lang === 'bn' ? `স্বাগতম ${currentUser?.name || 'সুপার অ্যাডমিন'}` : `Welcome ${currentUser?.name || 'Super Admin'}`}
-            </h1>
-            <span className="text-xs text-emerald-800 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-md">
-              TAMANNA MOTORS
-            </span>
-          </div>
-          <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
-            {t.dashboard.subtitle}
-          </p>
+    <div className="tm-dashboard space-y-6">
+      <section className="tm-home-banner relative isolate overflow-hidden">
+        <img src={dashboardWorkbench} alt="" width={1536} height={512} className="absolute inset-0 -z-20 h-full w-full object-cover object-right" />
+        <div className="tm-home-shade absolute inset-0 -z-10" />
+        <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-home-banner-muted">
+          <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-home-positive" />{lang === 'bn' ? 'হাজীগঞ্জ শাখা' : 'HAZIGONJ BRANCH'}</span>
+          <span className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5" />{new Date().toLocaleDateString(lang === 'bn' ? 'bn-BD' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
         </div>
+        <div className="mt-6 max-w-lg">
+          <p className="text-sm text-home-banner-muted">{lang === 'bn' ? `স্বাগতম, ${currentUser?.name || 'সুপার অ্যাডমিন'}` : `Welcome back, ${currentUser?.name || 'Super Admin'}`}</p>
+          <h1 className="mt-2 text-3xl font-extrabold text-home-banner-ink sm:text-4xl">TAMANNA MOTORS<span className="text-home-positive">.</span></h1>
+          <p className="mt-2 text-sm text-home-banner-muted">{lang === 'bn' ? 'আপনার ব্যবসার আজকের চিত্র' : 'Your business, at a glance.'}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            <Button onClick={onOpenPos} className="h-11 bg-home-positive px-5 font-semibold text-home-on-positive hover:bg-home-positive/90"><ShoppingCart />{t.openPos}<ArrowUpRight /></Button>
+            <Button variant="outline" onClick={() => onNavigate('reports-profit-loss')} className="h-11 border-home-banner-ink/25 bg-home-banner-ink/10 text-home-banner-ink hover:bg-home-banner-ink/20 hover:text-home-banner-ink"><BarChart3 />{lang === 'bn' ? 'লাভের রিপোর্ট' : 'Profit report'}</Button>
+          </div>
+        </div>
+      </section>
 
-        {/* Quick Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          <button
-            onClick={onOpenPos}
-            className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-xs hover:bg-emerald-700 transition-colors"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            <span>{t.openPos}</span>
-          </button>
-          <button
-            onClick={() => onNavigate('products-add')}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-          >
-            <Plus className="h-3.5 w-3.5 text-slate-500" />
-            <span>{t.nav.addProduct}</span>
-          </button>
-          <button
-            onClick={() => onNavigate('purchase-add')}
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-          >
-            <Plus className="h-3.5 w-3.5 text-slate-500" />
-            <span>{t.nav.addPurchase}</span>
-          </button>
+      <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+        <div><h2 className="text-lg font-bold text-home-ink">{lang === 'bn' ? 'ব্যবসার সারসংক্ষেপ' : 'Business overview'}</h2><p className="mt-1 text-xs text-home-subtle">{lang === 'bn' ? 'সর্বসময়ের হিসাব' : 'All-time totals'}</p></div>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => onNavigate('products-add')} className="border-home-border bg-home-surface text-home-ink hover:bg-home-muted"><Plus />{t.nav.addProduct}</Button>
+          <Button variant="outline" size="sm" onClick={() => onNavigate('purchase-add')} className="border-home-border bg-home-surface text-home-ink hover:bg-home-muted"><ShoppingBag />{t.nav.addPurchase}</Button>
         </div>
       </div>
 
-      {/* Top Banner Alert when Low Stock exists */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        {[
+          { label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${sales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
+          { label: t.dashboard.netSales, value: netSalesValue, icon: CreditCard, tone: 'info', note: lang === 'bn' ? 'ভ্যাট বাদে বিক্রয়' : 'Sales excluding tax' },
+          { label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
+          { label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${purchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
+          { label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
+          { label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
+          { label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
+          { label: lang === 'bn' ? 'পণ্যের ক্যাটালগ' : 'Product catalog', value: products.length, icon: Package, tone: 'positive', note: lang === 'bn' ? 'তালিকাভুক্ত পণ্য' : 'Catalog items', count: true },
+        ].map(({ label, value, icon: Icon, tone, note, featured, count }) => (
+          <article key={label} className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''}`}>
+            <div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold">{label}</span><span className={`tm-home-icon tm-home-tone-${tone}`}><Icon className="h-4 w-4" /></span></div>
+            <p className="mt-4 break-words text-2xl font-bold tabular-nums">{count ? '' : '৳'}{value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</p>
+            <p className="mt-2 text-xs tm-home-metric-note">{note}</p>
+          </article>
+        ))}
+      </div>
+
       {lowStockItems.length > 0 && (
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-2xl border border-amber-300 dark:border-amber-800/80 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-rose-500/10 dark:from-amber-950/40 dark:to-rose-950/30 p-4 shadow-xs animate-in fade-in transition-colors">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
-              <AlertTriangle className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">
-                  {t.dashboard.lowStockAlertTitle}
-                </span>
-                <span className="rounded-full bg-rose-500 text-white text-[10px] font-black px-2 py-0.5">
-                  {lowStockItems.length} {lang === 'bn' ? 'টি সতর্কবার্তা' : 'Items Alert'}
-                </span>
-              </div>
-              <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5">
-                {lang === 'bn'
-                  ? `${lowStockItems.length} টি এক্সকাভেটর ও মোটর পার্টসের বর্তমান স্টক সতর্কবার্তা সীমার সমান বা নিচে রয়েছে। এক ক্লিকে ইনভেন্টরি তালিকা দেখুন।`
-                  : `${lowStockItems.length} excavator & machinery parts currently have stock less than or equal to alert quantity.`}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={() => onNavigate('products-list')}
-            className="flex items-center justify-center gap-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white px-4 py-2.5 text-xs font-bold shadow-xs whitespace-nowrap transition-all active:scale-98"
-          >
-            <Package className="h-4 w-4" />
-            <span>{t.dashboard.oneClickToInventory}</span>
-            <ArrowRight className="h-3.5 w-3.5" />
-          </button>
+        <div className="flex flex-col gap-3 border-l-4 border-home-warning bg-home-warning/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3"><AlertTriangle className="h-5 w-5 shrink-0 text-home-warning" /><span className="text-sm text-home-ink"><strong>{lowStockItems.length}</strong> {lang === 'bn' ? 'টি পণ্যের স্টক কম রয়েছে' : 'products need stock attention'}</span></div>
+          <Button variant="ghost" size="sm" onClick={() => onNavigate('products-list')} className="justify-start text-home-warning hover:bg-home-warning/10 hover:text-home-warning">{t.dashboard.oneClickToInventory}<ArrowRight /></Button>
         </div>
       )}
-
-      {/* Summary Widgets (Cards) - All 7 Required Metrics */}
-      <div className="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {/* 1. Total Sales */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.totalSales}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
-              <TrendingUp className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
-              ৳{totalSalesValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 flex items-center gap-1 text-[11px] text-emerald-800 dark:text-emerald-400 font-medium">
-              <ArrowUpRight className="h-3 w-3" />
-              <span>+14.8% {lang === 'bn' ? 'গত মাস তুলনায়' : 'vs last mo'}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Net Sales */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.netSales}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
-              <CreditCard className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
-              ৳{netSalesValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'ছাড় ও ভ্যাট বাদে' : 'After discounts & tax'}
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Invoice Due */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.invoiceDue}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
-              <AlertCircle className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-amber-600 dark:text-amber-400">
-              ৳{invoiceDueValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Receivables to collect'}
-            </div>
-          </div>
-        </div>
-
-        {/* 4. Total Purchase */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.totalPurchase}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
-              <ShoppingBag className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
-              ৳{totalPurchaseValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'আমদানি ও ক্রয় পার্টস' : 'Inbound stock supply'}
-            </div>
-          </div>
-        </div>
-
-        {/* 5. Purchase Due */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.purchaseDue}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400">
-              <Clock className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-rose-600 dark:text-rose-400">
-              ৳{purchaseDueValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'সাপ্লায়ার দেনা' : 'Vendor payables due'}
-            </div>
-          </div>
-        </div>
-
-        {/* 6. Total Purchase Return */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.purchaseReturn}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400">
-              <RotateCcw className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
-              ৳{totalPurchaseReturnValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'ফেরতকৃত পার্টসের মূল্য' : 'Returned parts value'}
-            </div>
-          </div>
-        </div>
-
-        {/* 7. Total Expenses */}
-        <div className="flex flex-col justify-between rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 shadow-xs transition-colors">
-          <div className="flex items-center justify-between text-slate-500">
-            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{t.dashboard.totalExpenses}</span>
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-              <Receipt className="h-4 w-4" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <div className="text-lg font-bold font-mono tracking-tight tabular-nums text-slate-900 dark:text-white">
-              ৳{totalExpensesValue.toLocaleString('en-US', { minimumFractionDigits: 0 })}
-            </div>
-            <div className="mt-1 text-[11px] text-slate-600 dark:text-slate-300">
-              {lang === 'bn' ? 'দোকান ভাড়া, বেতন ও বিল' : 'Rent, bills & wages'}
-            </div>
-          </div>
-        </div>
-      </div>
 
       {/* ============================================================== */}
       {/* Total Sales for the Last 7 Days (Recharts Bar Chart) */}
       {/* ============================================================== */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs transition-colors">
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="rounded-lg border border-home-border  bg-home-surface  p-5 shadow-xs transition-colors">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between pb-4 border-b border-home-border ">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-home-positive/10  text-home-positive ">
                 <BarChart3 className="h-4 w-4" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
-                {lang === 'bn' ? 'বিগত ৭ দিনের মোট বিক্রয় (Bar Chart)' : 'Total Sales for the Last 7 Days (Bar Chart)'}
+              <h3 className="text-base font-bold text-home-ink  tracking-normal">
+                {lang === 'bn' ? 'সাপ্তাহিক বিক্রয়' : 'Weekly sales'}
               </h3>
-              <span className="rounded-md bg-emerald-100 dark:bg-emerald-950/80 px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider border border-emerald-200 dark:border-emerald-800">
-                Recharts
-              </span>
+              
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+            <p className="text-xs text-home-subtle  mt-1">
               {lang === 'bn'
-                ? 'তামান্না মোটরসের সকল কাউন্টারের বিগত ৭ দিনের মোট রাজস্ব ও অর্ডারের রিচার্টস বার চার্ট।'
-                : 'Interactive Recharts bar visualization showing daily retail revenue & order volumes.'}
+                ? 'গত ৭ দিনের হিসাব'
+                : 'Revenue over the last 7 days'}
             </p>
           </div>
 
           {/* Quick Metrics Badges */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2.5 border border-slate-100 dark:border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 tracking-wider">
+            <div className="rounded-lg bg-home-muted  p-2.5 border border-home-border ">
+              <div className="text-[10px] uppercase font-bold text-home-subtle  tracking-normal">
                 {lang === 'bn' ? '৭ দিনে মোট' : '7-Day Total'}
               </div>
-              <div className="text-sm font-black font-mono text-emerald-800 dark:text-emerald-300 mt-0.5 tabular-nums">
+              <div className="text-sm font-black font-mono text-home-positive  mt-0.5 tabular-nums">
                 ৳{total7DaysSales.toLocaleString('en-US')}
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2.5 border border-slate-100 dark:border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 tracking-wider">
+            <div className="rounded-lg bg-home-muted  p-2.5 border border-home-border ">
+              <div className="text-[10px] uppercase font-bold text-home-subtle  tracking-normal">
                 {lang === 'bn' ? 'দৈনিক গড়' : 'Daily Average'}
               </div>
-              <div className="text-sm font-black font-mono text-slate-800 dark:text-slate-100 mt-0.5 tabular-nums">
+              <div className="text-sm font-black font-mono text-home-ink  mt-0.5 tabular-nums">
                 ৳{avg7DaysDaily.toLocaleString('en-US')}
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2.5 border border-slate-100 dark:border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 tracking-wider">
+            <div className="rounded-lg bg-home-muted  p-2.5 border border-home-border ">
+              <div className="text-[10px] uppercase font-bold text-home-subtle  tracking-normal">
                 {lang === 'bn' ? 'সর্বোচ্চ বিক্রয় দিন' : 'Peak Day'}
               </div>
-              <div className="text-sm font-black text-amber-600 dark:text-amber-400 mt-0.5 flex items-center gap-1">
+              <div className="text-sm font-black text-home-warning  mt-0.5 flex items-center gap-1">
                 <span>{peakDaySales.day}</span>
-                <span className="text-[10px] font-mono tabular-nums text-slate-600 dark:text-slate-300">
+                <span className="text-[10px] font-mono tabular-nums text-home-subtle ">
                   (৳{peakDaySales.totalSales.toLocaleString('en-US')})
                 </span>
               </div>
             </div>
 
-            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/60 p-2.5 border border-slate-100 dark:border-slate-800">
-              <div className="text-[10px] uppercase font-bold text-slate-600 dark:text-slate-300 tracking-wider">
+            <div className="rounded-lg bg-home-muted  p-2.5 border border-home-border ">
+              <div className="text-[10px] uppercase font-bold text-home-subtle  tracking-normal">
                 {lang === 'bn' ? 'মোট চালান' : 'Invoices'}
               </div>
-              <div className="text-sm font-black font-mono text-indigo-800 dark:text-indigo-300 mt-0.5 tabular-nums">
+              <div className="text-sm font-black font-mono text-home-info  mt-0.5 tabular-nums">
                 {total7DaysInvoices} {lang === 'bn' ? 'টি' : 'orders'}
               </div>
             </div>
@@ -571,44 +416,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               <defs>
                 <linearGradient id="bar7DayGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10b981" stopOpacity={0.95} />
-                  <stop offset="100%" stopColor="#059669" stopOpacity={0.7} />
+                  <stop offset="0%" stopColor="var(--home-positive)" stopOpacity={0.95} />
+                  <stop offset="100%" stopColor="var(--home-positive)" stopOpacity={0.7} />
                 </linearGradient>
               </defs>
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
-                stroke="#e2e8f0"
-                className="dark:stroke-slate-800"
+                stroke="var(--home-border)"
+                className=""
               />
               <XAxis
                 dataKey="day"
                 tickLine={false}
-                axisLine={{ stroke: '#cbd5e1' }}
-                tick={{ fill: '#64748b', fontSize: 12, fontWeight: 700 }}
+                axisLine={{ stroke: 'var(--home-border)' }}
+                tick={{ fill: 'var(--home-subtle)', fontSize: 12, fontWeight: 700 }}
               />
               <YAxis
                 tickFormatter={(val: number) => `৳${(val / 1000).toFixed(0)}k`}
                 tickLine={false}
-                axisLine={{ stroke: '#cbd5e1' }}
-                tick={{ fill: '#64748b', fontSize: 11 }}
+                axisLine={{ stroke: 'var(--home-border)' }}
+                tick={{ fill: 'var(--home-subtle)', fontSize: 11 }}
               />
               <Tooltip
                 content={({ active, payload }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 shadow-xl text-xs space-y-1">
-                        <div className="font-extrabold text-slate-900 dark:text-white flex items-center justify-between gap-3">
+                      <div className="rounded-lg border border-home-border  bg-home-surface  p-3 shadow-xl text-xs space-y-1">
+                        <div className="font-extrabold text-home-ink  flex items-center justify-between gap-3">
                           <span>{data.day} ({data.date})</span>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold">
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-home-positive/10  text-home-positive  font-bold">
                             {data.invoices} {lang === 'bn' ? 'চালান' : 'invoices'}
                           </span>
                         </div>
-                        <div className="text-emerald-800 dark:text-emerald-300 font-black text-sm font-mono">
+                        <div className="text-home-positive  font-black text-sm font-mono">
                           ৳{data.totalSales.toLocaleString('en-US')}
                         </div>
-                        <div className="text-[10px] text-slate-600 dark:text-slate-300 border-t border-slate-100 dark:border-slate-700 pt-1">
+                        <div className="text-[10px] text-home-subtle  border-t border-home-border  pt-1">
                           {lang === 'bn' ? 'গড় অর্ডার মান:' : 'Avg ticket:'} ৳{data.avgTicket.toLocaleString('en-US')}
                         </div>
                       </div>
@@ -632,16 +477,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Main Visuals Grid: "Sales Last 30 Days" Line Chart & Low Stock */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Sales Last 30 Days - Line Chart (Takes 2 Columns) */}
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs lg:col-span-2 transition-colors">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 dark:border-slate-800 gap-2">
+        <div className="rounded-lg border border-home-border  bg-home-surface  p-5 shadow-xs lg:col-span-2 transition-colors">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-home-border  gap-2">
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+                <h3 className="text-base font-bold text-home-ink  tracking-normal">
                   {t.dashboard.salesLast30Days}
                 </h3>
-                <span className="text-xs text-slate-600 dark:text-slate-300">· {t.dashboard.dailyRevenueTrend}</span>
+                <span className="text-xs text-home-subtle ">· {t.dashboard.dailyRevenueTrend}</span>
               </div>
-              <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              <p className="text-xs text-home-subtle  mt-0.5">
                 {lang === 'bn' 
                   ? 'তামান্না মোটরসের সকল শাখা ও কাউন্টারের বিগত ৩০ দিনের বিক্রয় গ্রাফ।' 
                   : 'Past 30 days daily gross revenue across all Tamanna Motors retail registers.'}
@@ -650,10 +495,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="flex items-center gap-3 text-xs">
               <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                <span className="text-slate-600 dark:text-slate-300">{lang === 'bn' ? 'দৈনিক বিক্রয়' : 'Daily Revenue'}</span>
+                <span className="h-2.5 w-2.5 rounded-full bg-home-positive" />
+                <span className="text-home-subtle ">{lang === 'bn' ? 'দৈনিক বিক্রয়' : 'Daily Revenue'}</span>
               </div>
-              <div className="font-mono text-slate-900 dark:text-white font-semibold tabular-nums">
+              <div className="font-mono text-home-ink  font-semibold tabular-nums">
                 30-Day: ৳{total30DaysSales.toLocaleString('en-US')}
               </div>
             </div>
@@ -667,8 +512,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             >
               <defs>
                 <linearGradient id="salesGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#10B981" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#10B981" stopOpacity="0.0" />
+                  <stop offset="0%" stopColor="var(--home-positive)" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="var(--home-positive)" stopOpacity="0.0" />
                 </linearGradient>
               </defs>
 
@@ -684,14 +529,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       x2={chartWidth - padding.right}
                       y2={y}
                       stroke="currentColor"
-                      className="text-slate-200 dark:text-slate-800"
+                      className="text-home-subtle "
                       strokeDasharray="3 3"
                     />
                     <text
                       x={padding.left - 8}
                       y={y + 3}
                       textAnchor="end"
-                      className="text-[10px] font-mono fill-slate-400 dark:fill-slate-500"
+                      className="text-[10px] font-mono fill-home-subtle "
                     >
                       ৳{(value / 1000).toFixed(0)}k
                     </text>
@@ -706,7 +551,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <path
                 d={linePath}
                 fill="none"
-                stroke="#10B981"
+                stroke="var(--home-positive)"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -722,8 +567,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       r={hoveredPoint?.date === pt.date ? "5" : "3"}
                       className={
                         hoveredPoint?.date === pt.date
-                          ? "fill-white stroke-emerald-600 stroke-2 dark:fill-slate-900"
-                          : "fill-emerald-500"
+                          ? "fill-home-ink stroke-home-positive stroke-2 "
+                          : "fill-home-positive"
                       }
                     />
                   )}
@@ -744,7 +589,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       x={pt.x}
                       y={chartHeight - 10}
                       textAnchor="middle"
-                      className="text-[10px] font-mono fill-slate-500 dark:fill-slate-400"
+                      className="text-[10px] font-mono fill-home-subtle "
                     >
                       {pt.day}
                     </text>
@@ -758,7 +603,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   y1={padding.top}
                   x2={hoveredPoint.x}
                   y2={chartHeight - padding.bottom}
-                  stroke="#10B981"
+                  stroke="var(--home-positive)"
                   strokeWidth="1.5"
                   strokeDasharray="2 2"
                 />
@@ -767,13 +612,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {hoveredPoint && (
               <div
-                className="pointer-events-none absolute -top-2 z-20 -translate-x-1/2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-900 text-white px-2.5 py-1.5 shadow-lg"
+                className="pointer-events-none absolute -top-2 z-20 -translate-x-1/2 rounded-lg border border-home-border  bg-home-muted text-home-ink px-2.5 py-1.5 shadow-lg"
                 style={{
                   left: `${(hoveredPoint.x / chartWidth) * 100}%`,
                 }}
               >
-                <div className="text-[10px] text-slate-300 font-mono">{hoveredPoint.date}</div>
-                <div className="text-xs font-bold font-mono text-emerald-400 tabular-nums">
+                <div className="text-[10px] text-home-subtle font-mono">{hoveredPoint.date}</div>
+                <div className="text-xs font-bold font-mono text-home-positive tabular-nums">
                   ৳{hoveredPoint.amount.toLocaleString()}
                 </div>
               </div>
@@ -782,90 +627,90 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Right Column: Comprehensive 'Low Stock Alert' Widget */}
-        <div className="flex flex-col rounded-2xl border-2 border-amber-300/80 dark:border-amber-800/80 bg-white dark:bg-slate-900 p-5 shadow-sm transition-colors">
+        <div className="flex flex-col rounded-lg border-2 border-home-warning  bg-home-surface  p-5 shadow-sm transition-colors">
           {/* Widget Header with One-Click link */}
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between pb-3 border-b border-home-border ">
             <div className="flex items-center gap-2">
-              <div className="relative flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+              <div className="relative flex h-7 w-7 items-center justify-center rounded-lg bg-home-warning/10  text-home-warning ">
                 <AlertTriangle className="h-4 w-4" />
                 {lowStockItems.length > 0 && (
                   <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
+                    
+                    
                   </span>
                 )}
               </div>
               <div>
-                <h3 className="text-sm font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <h3 className="text-sm font-extrabold text-home-ink  flex items-center gap-1.5">
                   <span>{t.dashboard.lowStockAlertTitle}</span>
                   {lowStockItems.length > 0 && (
-                    <span className="rounded-full bg-rose-500 text-white text-[10px] font-black px-1.5 py-0.2">
+                    <span className="rounded-full bg-home-danger text-home-ink text-[10px] font-black px-1.5 py-0.2">
                       {lowStockItems.length}
                     </span>
                   )}
                 </h3>
               </div>
             </div>
-            <button
+            <Button variant="ghost"
               onClick={() => onNavigate('products-list')}
-              className="flex items-center gap-1 text-xs font-bold text-emerald-800 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+              className="flex items-center gap-1 text-xs font-bold text-home-positive  hover:text-home-positive  transition-colors"
               title="Navigate to complete inventory list"
             >
               <span>{t.dashboard.viewAll}</span>
               <ArrowRight className="h-3 w-3" />
-            </button>
+            </Button>
           </div>
 
           {/* Filter Pills for Low Stock */}
           {lowStockItems.length > 0 && (
-            <div className="flex items-center gap-1.5 py-2.5 border-b border-slate-100 dark:border-slate-800 text-[11px]">
-              <button
+            <div className="flex flex-wrap items-center gap-1.5 py-2.5 border-b border-home-border text-[11px]">
+              <Button variant="ghost"
                 type="button"
                 onClick={() => setLowStockFilter('all')}
                 className={`rounded-lg px-2.5 py-1 font-semibold transition-all ${
                   lowStockFilter === 'all'
-                    ? 'bg-amber-500 text-slate-950 font-bold shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                    ? 'bg-home-warning text-home-ink font-bold shadow-xs'
+                    : 'bg-home-muted  text-home-subtle '
                 }`}
               >
                 {lang === 'bn' ? 'সকল' : 'All'} ({lowStockItems.length})
-              </button>
-              <button
+              </Button>
+              <Button variant="ghost"
                 type="button"
                 onClick={() => setLowStockFilter('out_of_stock')}
                 className={`rounded-lg px-2.5 py-1 font-semibold transition-all ${
                   lowStockFilter === 'out_of_stock'
-                    ? 'bg-rose-500 text-white font-bold shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                    ? 'bg-home-danger text-home-ink font-bold shadow-xs'
+                    : 'bg-home-muted  text-home-subtle '
                 }`}
               >
                 {t.dashboard.outOfStock} ({lowStockItems.filter(p => p.currentStock === 0).length})
-              </button>
-              <button
+              </Button>
+              <Button variant="ghost"
                 type="button"
                 onClick={() => setLowStockFilter('critical')}
                 className={`rounded-lg px-2.5 py-1 font-semibold transition-all ${
                   lowStockFilter === 'critical'
-                    ? 'bg-amber-600 text-white font-bold shadow-xs'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                    ? 'bg-home-warning text-home-ink font-bold shadow-xs'
+                    : 'bg-home-muted  text-home-subtle '
                 }`}
               >
                 {t.dashboard.criticalStock} ({lowStockItems.filter(p => p.currentStock > 0 && p.currentStock <= Math.ceil(p.alertQuantity / 2)).length})
-              </button>
+              </Button>
             </div>
           )}
 
           {/* Low Stock Items List with One-Click Navigation & Progress Bars */}
-          <div className="mt-2 flex-1 divide-y divide-slate-100 dark:divide-slate-800 overflow-y-auto max-h-[300px] pr-1">
+          <div className="mt-2 flex-1 divide-y divide-home-border  overflow-y-auto max-h-[300px] pr-1">
             {lowStockItems.length === 0 ? (
               <div className="py-10 text-center text-xs space-y-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 mx-auto shadow-xs">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-home-positive/10  text-home-positive mx-auto shadow-xs">
                   <ShieldCheck className="h-6 w-6" />
                 </div>
-                <div className="font-bold text-slate-900 dark:text-white">
+                <div className="font-bold text-home-ink ">
                   {t.dashboard.allStockHealthy}
                 </div>
-                <p className="text-[11px] text-slate-500 max-w-[220px] mx-auto">
+                <p className="text-[11px] text-home-subtle max-w-[220px] mx-auto">
                   {lang === 'bn' ? 'তামান্না মোটরসের সকল পার্টসের স্টক সন্তোষজনক অবস্থায় রয়েছে।' : 'No products have fallen below minimum reorder thresholds.'}
                 </p>
               </div>
@@ -883,26 +728,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 return (
                   <div
                     key={item.id}
-                    className="py-3 group flex flex-col gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/40 p-2 rounded-xl transition-all cursor-pointer"
+                    className="py-3 group flex flex-col gap-2 hover:bg-home-muted  p-2 rounded-lg transition-all cursor-pointer"
                     onClick={() => onNavigate('products-list')}
                     title="Click to view in inventory list"
                   >
                     <div className="flex items-start justify-between gap-2 text-xs">
                       <div className="flex items-start gap-2.5">
-                        <div className="h-9 w-9 rounded-lg overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200 dark:border-slate-700">
+                        <div className="h-9 w-9 rounded-lg overflow-hidden bg-home-muted  shrink-0 border border-home-border ">
                           {item.imageUrl ? (
                             <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover" />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center text-slate-400">
+                            <div className="flex h-full w-full items-center justify-center text-home-subtle">
                               <Package className="h-4 w-4" />
                             </div>
                           )}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-800 dark:group-hover:text-emerald-400 transition-colors line-clamp-1">
+                          <div className="font-bold text-home-ink  group-hover:text-home-positive  transition-colors line-clamp-1">
                             {item.name}
                           </div>
-                          <div className="text-[10px] text-slate-500 font-mono mt-0.5">
+                          <div className="text-[10px] text-home-subtle font-mono mt-0.5">
                             {item.sku} · {item.businessLocation}
                           </div>
                         </div>
@@ -913,25 +758,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <span
                           className={`inline-block font-mono text-[11px] font-black px-2 py-0.5 rounded-md tabular-nums ${
                             isZero
-                              ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400 border border-rose-300 dark:border-rose-800'
+                              ? 'bg-home-danger/10  text-home-danger  border border-home-danger '
                               : isCritical
-                              ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800'
-                              : 'bg-yellow-100 dark:bg-yellow-950/80 text-yellow-800 dark:text-yellow-400 border border-yellow-300 dark:border-yellow-800'
+                              ? 'bg-home-warning/10  text-home-warning  border border-home-warning '
+                              : 'bg-home-warning/10  text-home-warning  border border-home-warning '
                           }`}
                         >
                           {item.currentStock} / {item.alertQuantity} {lang === 'bn' ? 'টি' : 'qty'}
                         </span>
-                        <div className="text-[10px] font-medium text-slate-500 mt-0.5">
+                        <div className="text-[10px] font-medium text-home-subtle mt-0.5">
                           ৳{item.sellingPrice.toFixed(0)}
                         </div>
                       </div>
                     </div>
 
                     {/* Stock level visual bar */}
-                    <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                    <div className="w-full bg-home-muted  h-1.5 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${
-                          isZero ? 'bg-rose-600' : isCritical ? 'bg-rose-500' : 'bg-amber-500'
+                          isZero ? 'bg-home-danger' : isCritical ? 'bg-home-danger' : 'bg-home-warning'
                         }`}
                         style={{ width: `${Math.max(5, pct)}%` }}
                       />
@@ -940,19 +785,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {/* Super Admin Quick Restock Action */}
                     {userRole === 'super_admin' && onQuickRestock && (
                       <div className="flex items-center justify-between pt-1 text-[10px]" onClick={(e) => e.stopPropagation()}>
-                        <span className="text-amber-700 dark:text-amber-400 font-bold flex items-center gap-1">
+                        <span className="text-home-warning  font-bold flex items-center gap-1">
                           <Crown className="h-3 w-3" />
                           <span>{isZero ? t.dashboard.outOfStock : isCritical ? t.dashboard.criticalStock : t.dashboard.lowStockNormal}</span>
                         </span>
-                        <button
+                        <Button variant="ghost"
                           type="button"
                           onClick={() => onQuickRestock(item.id, 10)}
-                          className="flex items-center gap-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-0.5 shadow-xs transition-transform active:scale-95"
+                          className="flex items-center gap-1 rounded-lg bg-home-positive hover:bg-home-positive/90 text-home-on-positive font-bold px-2 py-0.5 shadow-xs transition-transform active:scale-95"
                           title="Instantly add +10 stock (Super Admin)"
                         >
                           <Zap className="h-3 w-3" />
                           <span>{t.dashboard.quickRestock}</span>
-                        </button>
+                        </Button>
                       </div>
                     )}
                   </div>
@@ -962,22 +807,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* One-Click Navigation Buttons */}
-          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <button
+          <div className="mt-4 pt-3 border-t border-home-border grid grid-cols-1 gap-2">
+            <Button variant="ghost"
               onClick={() => onNavigate('products-list')}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 active:bg-amber-800 py-2.5 text-xs font-extrabold text-white shadow-xs transition-all active:scale-98"
+              className="flex items-center justify-center gap-1.5 rounded-lg bg-home-warning hover:bg-home-warning active:bg-home-warning py-2.5 text-xs font-extrabold text-home-ink shadow-xs transition-all active:scale-98"
               title="One-click direct navigation to inventory list"
             >
               <Package className="h-4 w-4" />
               <span>{t.dashboard.oneClickToInventory}</span>
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               onClick={() => onNavigate('purchase-add')}
-              className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 py-2.5 text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              className="flex items-center justify-center gap-1.5 rounded-lg border border-home-border  bg-home-muted  py-2.5 text-xs font-bold text-home-ink  hover:bg-home-muted  transition-colors"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>{t.dashboard.createPoForLowStock}</span>
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -986,103 +831,101 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Monthly Sales Performance Trends (Recharts) */}
       {/* Visualizes monthly sales performance compared to previous months and year */}
       {/* ============================================================== */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs transition-colors">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="rounded-lg border border-home-border  bg-home-surface  p-5 shadow-xs transition-colors">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-home-border ">
           <div>
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-home-positive/10  text-home-positive ">
                 <BarChart3 className="h-4 w-4" />
               </div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+              <h3 className="text-base font-bold text-home-ink  tracking-normal">
                 {t.dashboard.monthlySalesTrends}
               </h3>
-              <span className="hidden sm:inline-block rounded-md bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 text-[10px] font-extrabold text-emerald-800 dark:text-emerald-400 uppercase tracking-wider">
-                Recharts Analytics
-              </span>
+              
             </div>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+            <p className="text-xs text-home-subtle  mt-1">
               {t.dashboard.monthlySalesComparison}
             </p>
           </div>
 
           {/* View Mode Selector Tabs */}
-          <div className="flex items-center gap-1.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 p-1">
-            <button
+          <div className="flex items-center gap-1.5 rounded-lg border border-home-border  bg-home-muted  p-1">
+            <Button variant="ghost"
               type="button"
               onClick={() => setMonthlyViewMode('comparison')}
               className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 monthlyViewMode === 'comparison'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-home-surface  text-home-ink  shadow-xs'
+                  : 'text-home-subtle  hover:text-home-ink '
               }`}
             >
               {t.dashboard.viewModeRevenue}
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               type="button"
               onClick={() => setMonthlyViewMode('target')}
               className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 monthlyViewMode === 'target'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-home-surface  text-home-ink  shadow-xs'
+                  : 'text-home-subtle  hover:text-home-ink '
               }`}
             >
               {t.dashboard.viewModeTarget}
-            </button>
-            <button
+            </Button>
+            <Button variant="ghost"
               type="button"
               onClick={() => setMonthlyViewMode('mom')}
               className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
                 monthlyViewMode === 'mom'
-                  ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-home-surface  text-home-ink  shadow-xs'
+                  : 'text-home-subtle  hover:text-home-ink '
               }`}
             >
               {t.dashboard.viewModeMoM}
-            </button>
+            </Button>
           </div>
         </div>
 
         {/* Quick Analytical Metric Highlights */}
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 pb-4 border-b border-slate-100 dark:border-slate-800/60">
-          <div className="rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-800/40 p-3">
-            <div className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{t.dashboard.avgMonthlyRevenue}</div>
-            <div className="mt-1 font-mono text-base font-bold text-slate-900 dark:text-white tabular-nums">
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 pb-4 border-b border-home-border ">
+          <div className="rounded-lg border border-home-border  bg-home-muted  p-3">
+            <div className="text-[11px] font-medium text-home-subtle ">{t.dashboard.avgMonthlyRevenue}</div>
+            <div className="mt-1 font-mono text-base font-bold text-home-ink  tabular-nums">
               ৳{avgMonthlyRevenue.toLocaleString('en-US')}
             </div>
-            <div className="mt-0.5 text-[10px] text-slate-600 dark:text-slate-300">
+            <div className="mt-0.5 text-[10px] text-home-subtle ">
               {lang === 'bn' ? `${monthlySalesPerformance.length} মাসের গড় বিক্রয়` : `${monthlySalesPerformance.length}-month sales average`}
             </div>
           </div>
-          <div className="rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-800/40 p-3">
-            <div className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{t.dashboard.bestMonth}</div>
-            <div className="mt-1 font-mono text-base font-bold text-emerald-800 dark:text-emerald-400 tabular-nums">
+          <div className="rounded-lg border border-home-border  bg-home-muted  p-3">
+            <div className="text-[11px] font-medium text-home-subtle ">{t.dashboard.bestMonth}</div>
+            <div className="mt-1 font-mono text-base font-bold text-home-positive  tabular-nums">
               {bestMonthObj && bestMonthObj.current2026 > 0
                 ? `${lang === 'bn' ? bestMonthObj.monthBn : bestMonthObj.month} (৳${(bestMonthObj.current2026 / 1000).toFixed(0)}k)`
                 : (lang === 'bn' ? 'কোন বিক্রয় নেই' : 'No sales yet')}
             </div>
-            <div className="mt-0.5 text-[10px] text-emerald-800 dark:text-emerald-400 font-medium">
+            <div className="mt-0.5 text-[10px] text-home-positive  font-medium">
               {bestMonthObj && bestMonthObj.current2026 > 0
                 ? `${bestMonthObj.ordersCount} ${lang === 'bn' ? 'টি চালান' : 'invoices'}`
                 : (lang === 'bn' ? 'পিওএস-এ বিক্রয় শুরু করুন' : 'Record sales in POS')}
             </div>
           </div>
-          <div className="rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-800/40 p-3">
-            <div className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{t.dashboard.monthOverMonthGrowth}</div>
-            <div className="mt-1 flex items-center gap-1 font-mono text-base font-bold text-blue-600 dark:text-blue-400 tabular-nums">
+          <div className="rounded-lg border border-home-border  bg-home-muted  p-3">
+            <div className="text-[11px] font-medium text-home-subtle ">{t.dashboard.monthOverMonthGrowth}</div>
+            <div className="mt-1 flex items-center gap-1 font-mono text-base font-bold text-home-info  tabular-nums">
               <ArrowUpRight className="h-4 w-4" />
               <span>{currentMonthData ? `${currentMonthData.momGrowth >= 0 ? '+' : ''}${currentMonthData.momGrowth}%` : '0%'}</span>
             </div>
-            <div className="mt-0.5 text-[10px] text-slate-600 dark:text-slate-300">
+            <div className="mt-0.5 text-[10px] text-home-subtle ">
               {lang === 'bn' ? 'চলতি মাসের পরিবর্তন' : 'Current month MoM'}
             </div>
           </div>
-          <div className="rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/60 dark:bg-slate-800/40 p-3">
-            <div className="text-[11px] font-medium text-slate-600 dark:text-slate-300">{lang === 'bn' ? 'মোট বিক্রয় চালানের সংখ্যা' : 'Total Invoices'}</div>
-            <div className="mt-1 flex items-center gap-1 font-mono text-base font-bold text-emerald-800 dark:text-emerald-400 tabular-nums">
+          <div className="rounded-lg border border-home-border  bg-home-muted  p-3">
+            <div className="text-[11px] font-medium text-home-subtle ">{lang === 'bn' ? 'মোট বিক্রয় চালানের সংখ্যা' : 'Total Invoices'}</div>
+            <div className="mt-1 flex items-center gap-1 font-mono text-base font-bold text-home-positive  tabular-nums">
               <span>{(sales || []).length} {lang === 'bn' ? 'টি' : 'orders'}</span>
             </div>
-            <div className="mt-0.5 text-[10px] text-emerald-800 dark:text-emerald-400 font-medium">
+            <div className="mt-0.5 text-[10px] text-home-positive  font-medium">
               {lang === 'bn' ? 'লাইভ সিস্টেম ডেটা' : 'Live system data'}
             </div>
           </div>
@@ -1098,13 +941,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <CartesianGrid
                 strokeDasharray="3 3"
                 vertical={false}
-                stroke="#94a3b8"
+                stroke="var(--home-subtle)"
                 opacity={0.2}
               />
               <XAxis
                 dataKey={lang === 'bn' ? 'monthBn' : 'month'}
                 tickLine={false}
-                axisLine={{ stroke: '#cbd5e1' }}
+                axisLine={{ stroke: 'var(--home-border)' }}
                 tick={{ fontSize: 11 }}
               />
               {monthlyViewMode === 'mom' ? (
@@ -1135,32 +978,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         const momPercent = data.momGrowth;
 
                         return (
-                          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[220px]">
-                            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 font-bold text-slate-900 dark:text-white">
+                          <div className="rounded-lg border border-home-border  bg-home-muted  p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[220px]">
+                            <div className="flex items-center justify-between border-b border-home-border  pb-1.5 font-bold text-home-ink ">
                               <span>{data.fullMonth}</span>
-                              <span className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">
+                              <span className="text-[10px] text-home-subtle  font-mono">
                                 {data.ordersCount} {lang === 'bn' ? 'অর্ডার' : 'orders'}
                               </span>
                             </div>
                             <div className="space-y-1">
-                              <div className="flex justify-between items-center text-emerald-800 dark:text-emerald-400 font-bold">
+                              <div className="flex justify-between items-center text-home-positive  font-bold">
                                 <span>{t.dashboard.currentYear}:</span>
                                 <span className="font-mono text-sm tabular-nums">৳{current.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                              <div className="flex justify-between items-center text-home-subtle ">
                                 <span>{t.dashboard.previousMonth}:</span>
                                 <span className="font-mono tabular-nums">৳{prevMonth.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-blue-600 dark:text-blue-400 font-semibold">
+                              <div className="flex justify-between items-center text-home-info  font-semibold">
                                 <span>{t.dashboard.monthOverMonthGrowth}:</span>
                                 <span className="font-mono tabular-nums">{momPercent > 0 ? `+${momPercent}%` : `${momPercent}%`}</span>
                               </div>
                             </div>
-                            <div className="border-t border-slate-100 dark:border-slate-800 pt-1.5 flex items-center justify-between text-[11px]">
-                              <span className="text-slate-600 dark:text-slate-300">
+                            <div className="border-t border-home-border  pt-1.5 flex items-center justify-between text-[11px]">
+                              <span className="text-home-subtle ">
                                 {lang === 'bn' ? 'মাসিক পরিবর্তন' : 'Monthly Change'}:
                               </span>
-                              <span className={`font-mono font-bold ${diffPrevMonth >= 0 ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'}`}>
+                              <span className={`font-mono font-bold ${diffPrevMonth >= 0 ? 'text-home-positive ' : 'text-home-danger '}`}>
                                 {diffPrevMonth >= 0 ? `+৳${diffPrevMonth.toLocaleString()}` : `-৳${Math.abs(diffPrevMonth).toLocaleString()}`}
                               </span>
                             </div>
@@ -1171,12 +1014,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     }}
                   />
                   <Legend wrapperStyle={{ paddingTop: '10px', fontSize: '12px' }} />
-                  <ReferenceLine y={0} yAxisId="right" stroke="#EF4444" strokeDasharray="3 3" />
+                  <ReferenceLine y={0} yAxisId="right" stroke="var(--home-danger)" strokeDasharray="3 3" />
                   <Bar
                     yAxisId="left"
                     dataKey="current2026"
                     name={t.dashboard.currentYear}
-                    fill="#10B981"
+                    fill="var(--home-positive)"
                     opacity={0.3}
                     radius={[4, 4, 0, 0]}
                     maxBarSize={32}
@@ -1186,9 +1029,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     type="monotone"
                     dataKey="momGrowth"
                     name={t.dashboard.monthOverMonthGrowth + " (%)"}
-                    stroke="#3B82F6"
+                    stroke="var(--home-info)"
                     strokeWidth={3}
-                    dot={{ r: 4, fill: '#3B82F6', strokeWidth: 2, stroke: '#ffffff' }}
+                    dot={{ r: 4, fill: 'var(--home-info)', strokeWidth: 2, stroke: 'var(--home-surface)' }}
                     activeDot={{ r: 6 }}
                   />
                 </>
@@ -1210,28 +1053,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         const achievePercent = ((current / target) * 100).toFixed(1);
 
                         return (
-                          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[220px]">
-                            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 font-bold text-slate-900 dark:text-white">
+                          <div className="rounded-lg border border-home-border  bg-home-muted  p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[220px]">
+                            <div className="flex items-center justify-between border-b border-home-border  pb-1.5 font-bold text-home-ink ">
                               <span>{data.fullMonth}</span>
-                              <span className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">
+                              <span className="text-[10px] text-home-subtle  font-mono">
                                 {data.ordersCount} {lang === 'bn' ? 'অর্ডার' : 'orders'}
                               </span>
                             </div>
                             <div className="space-y-1">
-                              <div className="flex justify-between items-center text-emerald-800 dark:text-emerald-400 font-bold">
+                              <div className="flex justify-between items-center text-home-positive  font-bold">
                                 <span>{t.dashboard.currentYear}:</span>
                                 <span className="font-mono text-sm tabular-nums">৳{current.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-amber-800 dark:text-amber-400 font-semibold">
+                              <div className="flex justify-between items-center text-home-warning  font-semibold">
                                 <span>{t.dashboard.salesTarget}:</span>
                                 <span className="font-mono tabular-nums">৳{target.toLocaleString()}</span>
                               </div>
                             </div>
-                            <div className="border-t border-slate-100 dark:border-slate-800 pt-1.5 flex items-center justify-between text-[11px]">
-                              <span className="text-slate-600 dark:text-slate-300">
+                            <div className="border-t border-home-border  pt-1.5 flex items-center justify-between text-[11px]">
+                              <span className="text-home-subtle ">
                                 {lang === 'bn' ? 'টার্গেট অর্জন' : 'Achievement'}:
                               </span>
-                              <span className={`font-mono font-bold ${diff >= 0 ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'}`}>
+                              <span className={`font-mono font-bold ${diff >= 0 ? 'text-home-positive ' : 'text-home-danger '}`}>
                                 {achievePercent}% ({diff >= 0 ? `+৳${diff.toLocaleString()}` : `-৳${Math.abs(diff).toLocaleString()}`})
                               </span>
                             </div>
@@ -1245,7 +1088,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <Bar
                     dataKey="current2026"
                     name={t.dashboard.currentYear}
-                    fill="#10B981"
+                    fill="var(--home-positive)"
                     radius={[5, 5, 0, 0]}
                     maxBarSize={38}
                   />
@@ -1253,10 +1096,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     type="monotone"
                     dataKey="target"
                     name={t.dashboard.salesTarget}
-                    stroke="#F59E0B"
+                    stroke="var(--home-warning)"
                     strokeWidth={2.5}
                     strokeDasharray="4 4"
-                    dot={{ r: 4, fill: '#F59E0B', strokeWidth: 2, stroke: '#ffffff' }}
+                    dot={{ r: 4, fill: 'var(--home-warning)', strokeWidth: 2, stroke: 'var(--home-surface)' }}
                     activeDot={{ r: 6 }}
                   />
                 </>
@@ -1281,44 +1124,44 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         const yoyPercent = data.yoyGrowth;
 
                         return (
-                          <div className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[230px]">
-                            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-1.5 font-bold text-slate-900 dark:text-white">
+                          <div className="rounded-lg border border-home-border  bg-home-muted  p-3.5 shadow-xl backdrop-blur-sm text-xs space-y-2 min-w-[230px]">
+                            <div className="flex items-center justify-between border-b border-home-border  pb-1.5 font-bold text-home-ink ">
                               <span>{data.fullMonth}</span>
-                              <span className="text-[10px] text-slate-600 dark:text-slate-300 font-mono">
+                              <span className="text-[10px] text-home-subtle  font-mono">
                                 {data.ordersCount} {lang === 'bn' ? 'অর্ডার' : 'orders'}
                               </span>
                             </div>
                             <div className="space-y-1">
-                              <div className="flex justify-between items-center text-emerald-800 dark:text-emerald-400 font-bold">
+                              <div className="flex justify-between items-center text-home-positive  font-bold">
                                 <span>{t.dashboard.currentYear}:</span>
                                 <span className="font-mono text-sm tabular-nums">৳{current.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                              <div className="flex justify-between items-center text-home-subtle ">
                                 <span>{t.dashboard.previousYear}:</span>
                                 <span className="font-mono tabular-nums">৳{prevYear.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-slate-600 dark:text-slate-300">
+                              <div className="flex justify-between items-center text-home-subtle ">
                                 <span>{t.dashboard.previousMonth}:</span>
                                 <span className="font-mono tabular-nums">৳{prevMonth.toLocaleString()}</span>
                               </div>
-                              <div className="flex justify-between items-center text-amber-800 dark:text-amber-400 font-medium">
+                              <div className="flex justify-between items-center text-home-warning  font-medium">
                                 <span>{t.dashboard.salesTarget}:</span>
                                 <span className="font-mono tabular-nums">৳{data.target.toLocaleString()}</span>
                               </div>
                             </div>
-                            <div className="border-t border-slate-100 dark:border-slate-800 pt-1.5 flex items-center justify-between text-[11px]">
-                              <span className="text-slate-600 dark:text-slate-300">
+                            <div className="border-t border-home-border  pt-1.5 flex items-center justify-between text-[11px]">
+                              <span className="text-home-subtle ">
                                 {lang === 'bn' ? 'পূর্ববর্তী মাসের চেয়ে' : 'vs Previous Month'}:
                               </span>
-                              <span className={`font-mono font-bold ${diffPrevMonth >= 0 ? 'text-emerald-800 dark:text-emerald-400' : 'text-rose-800 dark:text-rose-400'}`}>
+                              <span className={`font-mono font-bold ${diffPrevMonth >= 0 ? 'text-home-positive ' : 'text-home-danger '}`}>
                                 {diffPrevMonth >= 0 ? '+' : ''}{momPercent}% (৳{(diffPrevMonth >= 0 ? diffPrevMonth : -diffPrevMonth).toLocaleString()})
                               </span>
                             </div>
                             <div className="flex items-center justify-between text-[11px]">
-                              <span className="text-slate-600 dark:text-slate-300">
+                              <span className="text-home-subtle ">
                                 {lang === 'bn' ? 'গত বছরের তুলনায়' : 'vs Prior Year'}:
                               </span>
-                              <span className="font-mono font-bold text-emerald-800 dark:text-emerald-400">
+                              <span className="font-mono font-bold text-home-positive ">
                                 +{yoyPercent}% (+৳{diffPrevYear.toLocaleString()})
                               </span>
                             </div>
@@ -1332,14 +1175,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <Bar
                     dataKey="current2026"
                     name={t.dashboard.currentYear}
-                    fill="#10B981"
+                    fill="var(--home-positive)"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={30}
                   />
                   <Bar
                     dataKey="previous2025"
                     name={t.dashboard.previousYear}
-                    fill="#94A3B8"
+                    fill="var(--home-subtle)"
                     radius={[4, 4, 0, 0]}
                     maxBarSize={30}
                   />
@@ -1347,7 +1190,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     type="monotone"
                     dataKey="target"
                     name={t.dashboard.salesTarget}
-                    stroke="#F59E0B"
+                    stroke="var(--home-warning)"
                     strokeWidth={2}
                     strokeDasharray="3 3"
                     dot={false}
@@ -1360,27 +1203,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </div>
 
       {/* Recent POS Sales Activity Table */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 shadow-xs transition-colors">
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+      <div className="rounded-lg border border-home-border  bg-home-surface  p-5 shadow-xs transition-colors">
+        <div className="flex items-center justify-between pb-3 border-b border-home-border ">
           <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">{t.dashboard.recentSales}</h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300">
+            <h3 className="text-sm font-bold text-home-ink ">{t.dashboard.recentSales}</h3>
+            <p className="text-xs text-home-subtle ">
               {lang === 'bn' 
                 ? 'তামান্না মোটরসের সাম্প্রতিক সম্পন্নকৃত রসিদ ও বিক্রয়।' 
                 : 'Latest completed receipts across all active cash registers.'}
             </p>
           </div>
-          <button
+          <Button variant="ghost"
             onClick={() => onNavigate('sales-pos-list')}
-            className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+            className="text-xs font-semibold text-home-positive  hover:underline"
           >
             {t.dashboard.viewAll}
-          </button>
+          </Button>
         </div>
 
         <div className="mt-3 overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-300 uppercase">
+            <thead className="bg-home-muted  text-[11px] font-semibold text-home-subtle  uppercase">
               <tr>
                 <th className="py-2.5 px-3">Invoice No</th>
                 <th className="py-2.5 px-3">{lang === 'bn' ? 'গ্রাহক' : 'Customer'}</th>
@@ -1391,25 +1234,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <th className="py-2.5 px-3 text-center">{lang === 'bn' ? 'অবস্থা' : 'Status'}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+            <tbody className="divide-y divide-home-border  text-home-ink ">
               {sales.slice(0, 5).map((sale) => (
-                <tr key={sale.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                  <td className="py-2.5 px-3 font-mono font-bold text-slate-900 dark:text-white">{sale.invoiceNo}</td>
+                <tr key={sale.id} className="hover:bg-home-muted ">
+                  <td className="py-2.5 px-3 font-mono font-bold text-home-ink ">{sale.invoiceNo}</td>
                   <td className="py-2.5 px-3">{sale.customerName}</td>
                   <td className="py-2.5 px-3">{sale.businessLocation}</td>
                   <td className="py-2.5 px-3">{sale.paymentMethod}</td>
                   <td className="py-2.5 px-3 text-right font-mono tabular-nums">{sale.itemsCount}</td>
-                  <td className="py-2.5 px-3 text-right font-mono font-bold tabular-nums text-slate-900 dark:text-white">
+                  <td className="py-2.5 px-3 text-right font-mono font-bold tabular-nums text-home-ink ">
                     ৳{sale.totalAmount.toFixed(2)}
                   </td>
                   <td className="py-2.5 px-3 text-center">
                     <span
                       className={`inline-block text-[11px] font-bold ${
                         sale.paymentStatus === 'Paid'
-                          ? 'text-emerald-800 dark:text-emerald-400'
+                          ? 'text-home-positive '
                           : sale.paymentStatus === 'Partial'
-                          ? 'text-amber-800 dark:text-amber-400'
-                          : 'text-rose-800 dark:text-rose-400'
+                          ? 'text-home-warning '
+                          : 'text-home-danger '
                       }`}
                     >
                       {sale.paymentStatus === 'Paid' ? (lang === 'bn' ? 'পরিশোধিত' : 'Paid') : sale.paymentStatus}
