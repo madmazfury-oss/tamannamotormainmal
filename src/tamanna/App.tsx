@@ -1833,7 +1833,7 @@ export default function App() {
           <DataTable
             title={t.nav.allSales}
             subtitle={lang === 'bn' ? 'তামান্না মোটরসের সকল বিক্রয় মেমো ও ক্যাশ কাউন্টার চালান।' : 'Complete ledger of all Point of Sale receipts and invoices.'}
-            data={sales}
+            data={sortSalesNewestFirst(sales)}
             columns={saleColumns}
             addNewLabel={t.nav.addSale}
             onAddNew={() => setIsPosOpen(true)}
@@ -1850,7 +1850,7 @@ export default function App() {
           <DataTable
             title={t.nav.listOfPos}
             subtitle={lang === 'bn' ? 'পিওএস কাউন্টারের সকল বিক্রিত রসিদ ও ক্যাশ মেমো তালিকা।' : 'Point of sale registers tickets, cashier terminal records, and receipt histories.'}
-            data={sales.filter(s => s.type === 'pos')}
+            data={sortSalesNewestFirst(sales.filter(s => s.type === 'pos'))}
             columns={saleColumns}
             addNewLabel={t.openPos}
             onAddNew={() => setIsPosOpen(true)}
