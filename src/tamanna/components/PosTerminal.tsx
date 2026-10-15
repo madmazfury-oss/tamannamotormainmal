@@ -697,7 +697,12 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                     <div className="flex-1 min-w-0">
                       <div className="font-bold text-slate-900 dark:text-white truncate">{item.product.name}</div>
                       <div className="text-[11px] text-slate-600 dark:text-slate-300 font-mono">
-                        ৳{price.toFixed(0)}{isLooseProduct(item.product) ? (lang === 'bn' ? ' / লিটার-কেজি' : ' / L-kg') : ''}
+                        <span className="inline-flex items-center gap-1">৳<input type="number" min={0} step="any" value={price}
+                          onChange={e => { const v = Number(e.target.value); setCart(prev => prev.map(ci => ci.product.id === item.product.id ? { ...ci, customPrice: isNaN(v) ? 0 : v } : ci)); }}
+                          title={lang === 'bn' ? 'নিজের দাম লিখুন' : 'Manual price'}
+                          className={`w-20 rounded border px-1 py-0.5 text-[11px] bg-transparent ${item.customPrice !== undefined && item.customPrice !== item.product.sellingPrice ? 'border-amber-500 text-amber-700 dark:text-amber-300' : 'border-slate-300 dark:border-slate-600'}`} /></span>
+                        {isLooseProduct(item.product) ? (lang === 'bn' ? ' / লিটার-কেজি' : ' / L-kg') : ''}
+                        {item.customPrice !== undefined && item.customPrice !== item.product.sellingPrice && <span className="ml-1 text-[10px] text-slate-500">({lang === 'bn' ? 'আসল' : 'list'} ৳{item.product.sellingPrice})</span>}
                       </div>
                       {isLooseProduct(item.product) ? (
                         <div className="mt-1 flex flex-wrap items-center gap-1">

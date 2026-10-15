@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { saleProfit, catalogueMargin } from '../utils/profit';
 import { Button } from '@/components/ui/button';
 import dashboardWorkbench from '@/assets/dashboard-workbench.jpg';
 import {
@@ -204,6 +205,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     [pExpenses]
   );
 
+  const margin = useMemo(() => catalogueMargin(products), [products]);
+  const periodProfit = useMemo(() => pSales.filter(s => s.type !== 'draft').reduce((a, s) => a + saleProfit(s, margin).profit, 0) - totalExpensesValue, [pSales, margin, totalExpensesValue]);
+  const allTimeProfit = useMemo(() => (sales || []).filter(s => s.type !== 'draft').reduce((a, s) => a + saleProfit(s, margin).profit, 0) - (expenses || []).reduce((a, e) => a + (Number(e.amount) || 0), 0), [sales, expenses, margin]);
+  const netDueValue = invoiceDueValue - purchaseDueValue;
   // Dynamic 30 Days sales calculation from real sales
   const last30DaysSalesData = useMemo(() => {
     const daysArr = [];
@@ -375,6 +380,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           { label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
           { label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
           { label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
+          { label: lang === 'bn' ? 'এই সময়ের লাভ' : 'Profit (period)', value: periodProfit, icon: TrendingUp, tone: periodProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'বিক্রির লাভ − খরচ' : 'Sales profit − expenses' },
+          { label: lang === 'bn' ? 'সারাসময়ের লাভ' : 'All-time profit', value: allTimeProfit, icon: BarChart3, tone: allTimeProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'শুরু থেকে আজ পর্যন্ত' : 'Since the beginning' },
+          { label: lang === 'bn' ? 'নিট বাকি' : 'Net due', value: netDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'পাওনা − দেনা (এই সময়ের)' : 'Receivable − payable' },
           { label: lang === 'bn' ? 'পণ্যের ক্যাটালগ' : 'Product catalog', value: products.length, icon: Package, tone: 'positive', note: lang === 'bn' ? 'তালিকাভুক্ত পণ্য' : 'Catalog items', count: true },
         ].map(({ label, value, icon: Icon, tone, note, featured, count }) => (
           <article key={label} className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''}`}>
