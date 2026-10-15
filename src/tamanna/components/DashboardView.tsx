@@ -376,9 +376,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         {[
           { go: 'sales-all', label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${pSales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
           { go: 'sales-all', label: t.dashboard.netSales, value: netSalesValue, icon: CreditCard, tone: 'info', note: lang === 'bn' ? 'ভ্যাট বাদে বিক্রয়' : 'Sales excluding tax' },
-          { go: 'contacts-customers', label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
+          { go: 'contact-customers', label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
           { go: 'purchase-list', label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${pPurchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
-          { go: 'contacts-suppliers', label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
+          { go: 'contact-suppliers', label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
           { go: 'purchase-return-list', label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
           { go: 'expenses-list', label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
           { label: lang === 'bn' ? 'এই সময়ের লাভ' : 'Profit (period)', value: periodProfit, icon: TrendingUp, tone: periodProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'বিক্রি − ক্রয় − খরচ · বিস্তারিত দেখুন' : 'Sold − bought − expenses · tap for details', detailKey: 'period' },
