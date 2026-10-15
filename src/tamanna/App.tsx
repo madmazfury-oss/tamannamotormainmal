@@ -1029,7 +1029,24 @@ export default function App() {
     setter(prev => {
       const key = name.trim().toLowerCase();
       const i = prev.findIndex(c => (phone && c.phone === phone) || (c.name || '').trim().toLowerCase() === key || (c.businessName || '').trim().toLowerCase() === key);
-      if (i < 0) return prev;
+      if (i < 0) {
+        // New customer/supplier from a sale/purchase — auto-add to the panel and sync
+        const skip = ['walk-in', 'walk in', 'cash sale', 'cash customer', 'ক্যাশ', 'ওয়াক-ইন'].includes(key);
+        if (skip) return prev;
+        const c = {
+          id: `${kind}-${Date.now()}`,
+          type: kind,
+          name: name.trim(),
+          phone: phone || '',
+          customerGroup: kind === 'customer' ? 'Retail' : undefined,
+          balance: +dueDelta.toFixed(2),
+          totalPurchases: +totalDelta.toFixed(2),
+        } as Contact;
+        SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
+        const next = [c, ...prev];
+        kind === 'customer' ? DatabaseStorage.saveCustomers(next) : DatabaseStorage.saveSuppliers(next);
+        return next;
+      }
       const c = { ...prev[i], balance: +((prev[i].balance || 0) + dueDelta).toFixed(2), totalPurchases: +(((prev[i] as any).totalPurchases || 0) + totalDelta).toFixed(2) } as Contact;
       SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
       const next = [...prev]; next[i] = c;
