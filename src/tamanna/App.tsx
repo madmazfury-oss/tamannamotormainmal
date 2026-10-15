@@ -58,6 +58,26 @@ import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
+
+// Parses both "DD-MM-YYYY hh:mm AM/PM" (imported data) and locale/ISO strings (new sales)
+const parseSaleDateTime = (raw?: string): number => {
+  if (!raw) return 0;
+  const m = raw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?/i);
+  if (m) {
+    let h = m[4] ? parseInt(m[4], 10) : 0;
+    const ampm = (m[7] || '').toUpperCase();
+    if (ampm === 'PM' && h < 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    const d = new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10), h, m[5] ? parseInt(m[5], 10) : 0, m[6] ? parseInt(m[6], 10) : 0);
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+  }
+  const d = new Date(raw);
+  return isNaN(d.getTime()) ? 0 : d.getTime();
+};
+
+// Newest sales always first, regardless of amount
+const sortSalesNewestFirst = (list: Sale[]): Sale[] =>
+  [...list].sort((a, b) => parseSaleDateTime(b.saleDate) - parseSaleDateTime(a.saleDate));
 import { StaffAccountsView } from './components/StaffAccountsView';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceScanModal } from './components/InvoiceScanModal';
@@ -1813,7 +1833,7 @@ export default function App() {
           <DataTable
             title={t.nav.allSales}
             subtitle={lang === 'bn' ? 'তামান্না মোটরসের সকল বিক্রয় মেমো ও ক্যাশ কাউন্টার চালান।' : 'Complete ledger of all Point of Sale receipts and invoices.'}
-            data={sales}
+            data={sortSalesNewestFirst(sales)}
             columns={saleColumns}
             addNewLabel={t.nav.addSale}
             onAddNew={() => setIsPosOpen(true)}
@@ -1830,7 +1850,7 @@ export default function App() {
           <DataTable
             title={t.nav.listOfPos}
             subtitle={lang === 'bn' ? 'পিওএস কাউন্টারের সকল বিক্রিত রসিদ ও ক্যাশ মেমো তালিকা।' : 'Point of sale registers tickets, cashier terminal records, and receipt histories.'}
-            data={sales.filter(s => s.type === 'pos')}
+            data={sortSalesNewestFirst(sales.filter(s => s.type === 'pos'))}
             columns={saleColumns}
             addNewLabel={t.openPos}
             onAddNew={() => setIsPosOpen(true)}
@@ -1847,7 +1867,7 @@ export default function App() {
           <DataTable
             title={t.nav.listDraft}
             subtitle={lang === 'bn' ? 'গ্রাহকদের জন্য প্রস্তুতকৃত কোটেশন ও ড্রাফট মেমো।' : 'Pending quotations and draft tickets waiting for customer confirmation.'}
-            data={sales.filter(s => s.type === 'draft')}
+            data={sortSalesNewestFirst(sales.filter(s => s.type === 'draft'))}
             columns={saleColumns}
             addNewLabel={t.nav.addDraft}
             onAddNew={() => {
