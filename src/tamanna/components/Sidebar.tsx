@@ -191,6 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       category: 'operations',
       children: [
         { id: 'sales-all', labelKey: t.nav.allSales },
+        { id: 'sales-ai', labelKey: lang === 'bn' ? 'AI বিক্রয় সহকারী' : 'AI Sales Assistant' },
         { id: 'sales-add', labelKey: t.nav.addSale },
         { id: 'sales-pos-list', labelKey: t.nav.listOfPos },
         { id: 'pos-terminal', labelKey: lang === 'bn' ? 'পিওএস টার্মিনাল' : 'POS Terminal' },

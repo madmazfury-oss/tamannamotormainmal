@@ -58,6 +58,7 @@ import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
+import { SalesAiView } from './components/SalesAiView';
 
 // Parses both "DD-MM-YYYY hh:mm AM/PM" (imported data) and locale/ISO strings (new sales)
 const parseSaleDateTime = (raw?: string): number => {
@@ -1844,6 +1845,9 @@ export default function App() {
             lang={lang}
           />
         );
+
+      case 'sales-ai':
+        return <SalesAiView sales={sales} parseDate={parseSaleDateTime} lang={lang} />;
 
       case 'sales-all':
         return (
