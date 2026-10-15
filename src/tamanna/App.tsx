@@ -257,7 +257,8 @@ export default function App() {
           setCurrentUser(prev => {
             if (!prev) return null;
             const updated = validSbUsers.find(m => m.username?.toLowerCase() === prev.username?.toLowerCase() || m.email?.toLowerCase() === prev.email?.toLowerCase());
-            return updated || null;
+            // Keep the signed-in cloud user even if the synced staff list doesn't include them yet
+            return updated || prev;
           });
         } else if (userRes.status === 'fulfilled' && Array.isArray(userRes.value) && userRes.value.length > 0) {
           const mappedUsers: AuthUser[] = userRes.value.map((u: any) => ({
