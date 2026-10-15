@@ -95,6 +95,7 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('cust-walkin');
   const [walkInName, setWalkInName] = useState<string>('');
+  const [walkInMissing, setWalkInMissing] = useState<{ name: boolean; phone: boolean } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [discountPercent, setDiscountPercent] = useState<number>(0);
@@ -246,6 +247,21 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
       showToast(lang === 'bn' ? 'কার্ট খালি। পার্টস যোগ করুন।' : 'Cart is empty. Please add items to proceed.');
       return;
     }
+
+    // Walk-in sales must carry the customer's name and phone number — they get saved to Customers
+    if (selectedCustomerId === 'cust-walkin') {
+      const nameMissing = !walkInName.trim();
+      const phoneDigits = (customerPhone.match(/\d/g) || []).length;
+      const phoneMissing = !customerPhone.trim() || phoneDigits < 6;
+      if (nameMissing || phoneMissing) {
+        setWalkInMissing({ name: nameMissing, phone: phoneMissing });
+        showToast(lang === 'bn'
+          ? 'ওয়াক-ইন ক্রেতার নাম ও ফোন নম্বর লিখুন — তারপর বিক্রিটি হবে।'
+          : 'Enter the walk-in customer name and phone number first.');
+        return;
+      }
+    }
+    setWalkInMissing(null);
 
     const prefix = invoiceSettings?.invoicePrefix || "TM-2026-";
     const invoiceNo = `${prefix}${Math.floor(1000 + Math.random() * 9000)}`;
