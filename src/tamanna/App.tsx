@@ -58,6 +58,26 @@ import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
+
+// Parses both "DD-MM-YYYY hh:mm AM/PM" (imported data) and locale/ISO strings (new sales)
+const parseSaleDateTime = (raw?: string): number => {
+  if (!raw) return 0;
+  const m = raw.match(/^(\d{1,2})-(\d{1,2})-(\d{4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?)?/i);
+  if (m) {
+    let h = m[4] ? parseInt(m[4], 10) : 0;
+    const ampm = (m[7] || '').toUpperCase();
+    if (ampm === 'PM' && h < 12) h += 12;
+    if (ampm === 'AM' && h === 12) h = 0;
+    const d = new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10), h, m[5] ? parseInt(m[5], 10) : 0, m[6] ? parseInt(m[6], 10) : 0);
+    return isNaN(d.getTime()) ? 0 : d.getTime();
+  }
+  const d = new Date(raw);
+  return isNaN(d.getTime()) ? 0 : d.getTime();
+};
+
+// Newest sales always first, regardless of amount
+const sortSalesNewestFirst = (list: Sale[]): Sale[] =>
+  [...list].sort((a, b) => parseSaleDateTime(b.saleDate || b.date) - parseSaleDateTime(a.saleDate || a.date));
 import { StaffAccountsView } from './components/StaffAccountsView';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceScanModal } from './components/InvoiceScanModal';
