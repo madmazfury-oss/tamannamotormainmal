@@ -373,7 +373,7 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
 
     window.addEventListener('keydown', handlePosKeyDown);
     return () => window.removeEventListener('keydown', handlePosKeyDown);
-  }, [cart, grandTotal, currentCustomer, isReceiptOpen, amountTendered, paymentMethod]);
+  }, [cart, grandTotal, currentCustomer, isReceiptOpen, amountTendered, paymentMethod, selectedCustomerId, walkInName, customerPhone, walkInMissing]);
 
   const handlePrintCurrentDraftEstimate = () => {
     if (cart.length === 0) {
