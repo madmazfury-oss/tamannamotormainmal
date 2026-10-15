@@ -55,3 +55,34 @@ export function profitBetween(sales: Sale[], expenses: Expense[], products: Prod
 
 export const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 export const endOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+
+/** Real-bill profit: what was sold minus what was bought minus expenses, from the full bill totals. */
+export function billTotals(sales: Sale[], purchases: { grandTotal: number; paymentDue: number }[], expenses: Expense[]) {
+  const live = sales.filter(s => s.type !== 'draft');
+  const sold = live.reduce((a, s) => a + (Number(s.totalAmount) || 0), 0);
+  const bought = purchases.reduce((a, p) => a + (Number(p.grandTotal) || 0), 0);
+  const spent = expenses.reduce((a, e) => a + (Number(e.amount) || 0), 0);
+  const receivable = live.reduce((a, s) => a + (Number(s.invoiceDue) || 0), 0);
+  const payable = purchases.reduce((a, p) => a + (Number(p.paymentDue) || 0), 0);
+  return { sold, bought, spent, profit: sold - bought - spent, receivable, payable, netDue: receivable - payable };
+}
+
+export interface ProductLine { productId: string; name: string; qty: number; soldAmount: number; costAmount: number; profit: number; }
+
+/** Per-product sold / cost / profit from bills that carry item lines (uses the actual price on the bill). */
+export function productBreakdown(sales: Sale[]): ProductLine[] {
+  const map = new Map<string, ProductLine>();
+  for (const s of sales) {
+    if (s.type === 'draft' || !s.items) continue;
+    for (const it of s.items) {
+      if (!it?.product) continue;
+      const price = (it.customPrice ?? it.product.sellingPrice) * (1 - (it.discountPercent || 0) / 100);
+      const sold = price * it.quantity;
+      const cost = (it.product.unitPurchasePrice || 0) * it.quantity;
+      const row = map.get(it.product.id) || { productId: it.product.id, name: it.product.name, qty: 0, soldAmount: 0, costAmount: 0, profit: 0 };
+      row.qty += it.quantity; row.soldAmount += sold; row.costAmount += cost; row.profit += sold - cost;
+      map.set(it.product.id, row);
+    }
+  }
+  return [...map.values()].sort((a, b) => b.soldAmount - a.soldAmount);
+}

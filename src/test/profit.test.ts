@@ -16,3 +16,20 @@ describe('profit report', () => {
     expect(r.netProfit).toBe(300);
   });
 });
+
+import { billTotals, productBreakdown } from '@/tamanna/utils/profit';
+describe('home profit from real bills', () => {
+  it('profit = total sold - total bought - expenses; drafts ignored', () => {
+    const r = billTotals(
+      [{ type: 'pos', totalAmount: 1000, invoiceDue: 200 } as any, { type: 'draft', totalAmount: 999, invoiceDue: 0 } as any],
+      [{ grandTotal: 600, paymentDue: 50 }],
+      [{ amount: 100 } as any],
+    );
+    expect(r.profit).toBe(300);
+    expect(r.netDue).toBe(150);
+  });
+  it('product line uses the manual price written on the bill', () => {
+    const rows = productBreakdown([{ type: 'pos', items: [{ product: prod, quantity: 2, customPrice: 650 }] } as any]);
+    expect(rows[0]).toMatchObject({ soldAmount: 1300, costAmount: 1000, profit: 300 });
+  });
+});

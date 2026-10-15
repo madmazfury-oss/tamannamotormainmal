@@ -43,6 +43,13 @@
       "when": 1791984717017,
       "tag": "0005_media_bucket_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792041016355,
+      "tag": "0006_product_stock_qty_decimal",
+      "breakpoints": true
     }
   ]
 }
