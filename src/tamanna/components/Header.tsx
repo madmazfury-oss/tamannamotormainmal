@@ -505,7 +505,16 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {profileDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
+            <div className="relative w-full absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
+              <button
+                type="button"
+                onClick={() => setProfileDropdownOpen(false)}
+                title={lang === 'bn' ? 'ছোট করুন' : 'Minimize'}
+                aria-label={lang === 'bn' ? 'ছোট করুন' : 'Minimize'}
+                className="absolute top-2 right-2 z-10 grid place-items-center h-6 w-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              >
+                <Minimize2 className="h-3 w-3" />
+              </button>
               <div className="border-b border-slate-100 dark:border-slate-800/80 px-4 py-2.5">
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={() => avatarInput.current?.click()} title={lang === 'bn' ? 'ছবি পরিবর্তন' : 'Change photo'}
