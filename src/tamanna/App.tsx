@@ -276,11 +276,12 @@ export default function App() {
           }));
           setStaffUsers(mappedUsers);
           DatabaseStorage.saveStaffUsers(mappedUsers);
-          setCurrentUser(prev => {
-            if (!prev) return null;
-            const updated = mappedUsers.find(m => m.username?.toLowerCase() === prev.username?.toLowerCase() || m.email?.toLowerCase() === prev.email?.toLowerCase());
-            return updated || null;
-          });
+            setCurrentUser(prev => {
+              if (!prev) return null;
+              const updated = mappedUsers.find(m => m.username?.toLowerCase() === prev.username?.toLowerCase() || m.email?.toLowerCase() === prev.email?.toLowerCase());
+              // Keep the signed-in cloud user even if the synced staff list doesn't include them yet
+              return updated || prev;
+            });
         }
 
         if (prodRes.status === 'fulfilled' && Array.isArray(prodRes.value) && prodRes.value.length > 0) {
