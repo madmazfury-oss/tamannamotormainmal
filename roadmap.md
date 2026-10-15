@@ -33,3 +33,4 @@
 - [ ] Field-by-field match: Add Product, POS/Add Sale, Contacts
 - [ ] Print Labels with real barcodes
 - [ ] Publish (Publish button gives the public link)
+- [x] POS manual price per item; home profit/all-time profit/net due cards from real bills with per-product/bill details; loose stock saved with decimals

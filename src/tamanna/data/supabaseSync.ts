@@ -20,7 +20,7 @@ export const SupabaseSync = {
         businessLocation: item.business_location || 'Hazigonj Branch',
         unitPurchasePrice: Number(item.unit_purchase_price) || 0,
         sellingPrice: Number(item.selling_price) || 0,
-        currentStock: Number(item.current_stock) || 0,
+        currentStock: Number(item.stock_qty ?? item.current_stock) || 0,
         alertQuantity: Number(item.alert_quantity) || 5,
         imageUrl: item.image_url || '',
         createdAt: item.created_at || ''
@@ -42,7 +42,8 @@ export const SupabaseSync = {
         business_location: product.businessLocation || 'Hazigonj Branch',
         unit_purchase_price: Number(product.unitPurchasePrice) || 0,
         selling_price: Number(product.sellingPrice) || 0,
-        current_stock: Math.round((Number(product.currentStock) || 0) * 1000) / 1000,
+        current_stock: Math.round(Number(product.currentStock) || 0),
+        stock_qty: Math.round((Number(product.currentStock) || 0) * 1000) / 1000,
         alert_quantity: Math.round(Number(product.alertQuantity) || 5),
         image_url: product.imageUrl || '',
         created_at: product.createdAt || new Date().toISOString()

@@ -29,7 +29,8 @@ export async function syncProductToSupabase(product: Product): Promise<boolean> 
       business_location: product.businessLocation || 'Hazigonj Branch',
       unit_purchase_price: product.unitPurchasePrice,
       selling_price: product.sellingPrice,
-      current_stock: product.currentStock,
+      current_stock: Math.round(Number(product.currentStock) || 0),
+      stock_qty: Number(product.currentStock) || 0,
       alert_quantity: product.alertQuantity,
       image_url: product.imageUrl || null,
       created_at: product.createdAt || new Date().toISOString()
@@ -195,7 +196,7 @@ export async function fetchAllFromSupabase(): Promise<{
       businessLocation: p.business_location || 'Hazigonj Branch',
       unitPurchasePrice: Number(p.unit_purchase_price) || 0,
       sellingPrice: Number(p.selling_price) || 0,
-      currentStock: Number(p.current_stock) || 0,
+      currentStock: Number(p.stock_qty ?? p.current_stock) || 0,
       alertQuantity: Number(p.alert_quantity) || 5,
       imageUrl: p.image_url || undefined,
       createdAt: p.created_at
@@ -297,7 +298,8 @@ export async function pushAllToSupabase(
         business_location: p.businessLocation || 'Hazigonj Branch',
         unit_purchase_price: p.unitPurchasePrice,
         selling_price: p.sellingPrice,
-        current_stock: p.currentStock,
+        current_stock: Math.round(Number(p.currentStock) || 0),
+        stock_qty: Number(p.currentStock) || 0,
         alert_quantity: p.alertQuantity,
         image_url: p.imageUrl || null,
         created_at: p.createdAt || new Date().toISOString()
