@@ -1025,34 +1025,43 @@ export default function App() {
   // Keep customer / supplier ledgers linked to sales & purchases
   const bumpContact = (kind: 'customer' | 'supplier', name: string, phone: string | undefined, dueDelta: number, totalDelta: number) => {
     if (!name || (!dueDelta && !totalDelta)) return;
+    const key = name.trim().toLowerCase();
+    // Generic walk-in names stay off the Customers/Suppliers panels
+    if (['walk-in', 'walk in', 'cash sale', 'cash customer', 'ক্যাশ', 'ওয়াক-ইন'].includes(key)) return;
     const setter = kind === 'customer' ? setCustomers : setSuppliers;
-    setter(prev => {
-      const key = name.trim().toLowerCase();
-      const i = prev.findIndex(c => (phone && c.phone === phone) || (c.name || '').trim().toLowerCase() === key || (c.businessName || '').trim().toLowerCase() === key);
-      if (i < 0) {
-        // New customer/supplier from a sale/purchase — auto-add to the panel and sync
-        const skip = ['walk-in', 'walk in', 'cash sale', 'cash customer', 'ক্যাশ', 'ওয়াক-ইন'].includes(key);
-        if (skip) return prev;
-        const c = {
-          id: `${kind}-${Date.now()}`,
-          type: kind,
-          name: name.trim(),
-          phone: phone || '',
-          customerGroup: kind === 'customer' ? 'Retail' : undefined,
-          balance: +dueDelta.toFixed(2),
-          totalPurchases: +totalDelta.toFixed(2),
-        } as Contact;
-        SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
+    const list = kind === 'customer' ? customers : suppliers;
+    const i = list.findIndex(c => (phone && c.phone === phone) || (c.name || '').trim().toLowerCase() === key || (c.businessName || '').trim().toLowerCase() === key);
+    if (i < 0) {
+      // New customer/supplier from a sale/purchase — auto-add to the panel and sync.
+      // Sync + save stay OUTSIDE the state updater: StrictMode runs updaters twice,
+      // which used to insert two contact rows with different ids.
+      const c = {
+        id: `${kind}-${Date.now()}`,
+        type: kind,
+        name: name.trim(),
+        phone: phone || '',
+        customerGroup: kind === 'customer' ? 'Retail' : undefined,
+        balance: +dueDelta.toFixed(2),
+        totalPurchases: +totalDelta.toFixed(2),
+      } as Contact;
+      SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
+      setter(prev => {
+        if (prev.some(cc => cc.id === c.id || (cc.name || '').trim().toLowerCase() === key)) return prev;
         const next = [c, ...prev];
         kind === 'customer' ? DatabaseStorage.saveCustomers(next) : DatabaseStorage.saveSuppliers(next);
         return next;
-      }
-      const c = { ...prev[i], balance: +((prev[i].balance || 0) + dueDelta).toFixed(2), totalPurchases: +(((prev[i] as any).totalPurchases || 0) + totalDelta).toFixed(2) } as Contact;
+      });
+    } else {
+      const c = { ...list[i], balance: +((list[i].balance || 0) + dueDelta).toFixed(2), totalPurchases: +((((list[i] as any).totalPurchases || 0) + totalDelta)).toFixed(2) } as Contact;
       SupabaseSync.upsertContact(c); FirestoreSync.upsertContact(c);
-      const next = [...prev]; next[i] = c;
-      kind === 'customer' ? DatabaseStorage.saveCustomers(next) : DatabaseStorage.saveSuppliers(next);
-      return next;
-    });
+      setter(prev => {
+        const j = prev.findIndex(cc => cc.id === c.id);
+        if (j < 0) return prev;
+        const next = [...prev]; next[j] = c;
+        kind === 'customer' ? DatabaseStorage.saveCustomers(next) : DatabaseStorage.saveSuppliers(next);
+        return next;
+      });
+    }
   };
 
   // Handlers for Purchases
