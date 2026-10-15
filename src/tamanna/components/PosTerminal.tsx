@@ -338,6 +338,11 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
     setIsReceiptOpen(true);
     setCart([]);
     setAmountTendered('');
+    // Fresh customer fields for the next sale
+    setSelectedCustomerId('cust-walkin');
+    setWalkInName('');
+    setCustomerPhone('');
+    setWalkInMissing(null);
   };
 
   // POS In-session Keyboard Shortcuts (F2 / Ctrl+Enter: complete sale, F4: print, Esc: close)
@@ -674,14 +679,17 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                   onChange={(e) => {
                     if (selectedCustomerId === 'cust-walkin') {
                       setWalkInName(e.target.value);
+                      if (walkInMissing?.name) setWalkInMissing({ ...walkInMissing, name: false });
                     }
                   }}
                   readOnly={selectedCustomerId !== 'cust-walkin'}
-                  placeholder={lang === 'bn' ? 'ক্রেতার নাম (Walk-in Name)' : 'Customer Name (Walk-in)'}
+                  placeholder={lang === 'bn' ? 'ক্রেতার নাম * (বাধ্যতামূলক)' : 'Customer Name * (required)'}
                   className={`w-1/2 rounded-lg border px-2.5 py-1 text-[11px] font-bold focus:outline-none transition-colors ${
-                    selectedCustomerId === 'cust-walkin'
-                      ? 'border-emerald-500/50 bg-emerald-50/40 dark:bg-emerald-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
-                      : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                    selectedCustomerId !== 'cust-walkin'
+                      ? 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                      : walkInMissing?.name
+                        ? 'border-rose-500 ring-1 ring-rose-400 bg-rose-50/40 dark:bg-rose-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
+                        : 'border-emerald-500/50 bg-emerald-50/40 dark:bg-emerald-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
                   }`}
                   title={lang === 'bn' ? 'ওয়াক-ইন ক্রেতার নাম' : 'Walk-in Customer Name'}
                 />
