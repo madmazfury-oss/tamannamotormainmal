@@ -523,7 +523,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <span className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition grid place-items-center text-[10px] !text-white">{avatarBusy ? '...' : (lang === 'bn' ? 'ছবি দিন' : 'Upload')}</span>
                   </button>
                   <input ref={avatarInput} type="file" accept="image/*" className="hidden" onChange={onAvatarPick} />
-                  <div className="overflow-hidden">
+                  <div className="overflow-hidden pr-8">
                     <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {currentUser?.name || 'TAMANNA MOTORS'}
                     </p>
