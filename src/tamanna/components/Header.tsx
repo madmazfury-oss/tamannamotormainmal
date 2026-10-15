@@ -30,7 +30,8 @@ import {
   Repeat,
   QrCode,
   Search,
-  Keyboard
+  Keyboard,
+  Minimize2
 } from 'lucide-react';
 import { Language, TRANSLATIONS } from '../i18n/translations';
 import { BusinessSettings, UserRole, AuthUser } from '../types';
@@ -505,6 +506,15 @@ export const Header: React.FC<HeaderProps> = ({
 
           {profileDropdownOpen && (
             <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
+              <button
+                type="button"
+                onClick={() => setProfileDropdownOpen(false)}
+                title={lang === 'bn' ? 'ছোট করুন' : 'Minimize'}
+                aria-label={lang === 'bn' ? 'ছোট করুন' : 'Minimize'}
+                className="absolute top-2 right-2 z-10 grid place-items-center h-6 w-6 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+              >
+                <Minimize2 className="h-3 w-3" />
+              </button>
               <div className="border-b border-slate-100 dark:border-slate-800/80 px-4 py-2.5">
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={() => avatarInput.current?.click()} title={lang === 'bn' ? 'ছবি পরিবর্তন' : 'Change photo'}
@@ -513,7 +523,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <span className="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition grid place-items-center text-[10px] !text-white">{avatarBusy ? '...' : (lang === 'bn' ? 'ছবি দিন' : 'Upload')}</span>
                   </button>
                   <input ref={avatarInput} type="file" accept="image/*" className="hidden" onChange={onAvatarPick} />
-                  <div className="overflow-hidden">
+                  <div className="overflow-hidden pr-8">
                     <p className="text-xs font-bold text-slate-900 dark:text-white truncate">
                       {currentUser?.name || 'TAMANNA MOTORS'}
                     </p>
