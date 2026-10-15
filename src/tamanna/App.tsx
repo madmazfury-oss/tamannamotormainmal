@@ -77,7 +77,7 @@ const parseSaleDateTime = (raw?: string): number => {
 
 // Newest sales always first, regardless of amount
 const sortSalesNewestFirst = (list: Sale[]): Sale[] =>
-  [...list].sort((a, b) => parseSaleDateTime(b.saleDate || b.date) - parseSaleDateTime(a.saleDate || a.date));
+  [...list].sort((a, b) => parseSaleDateTime(b.saleDate) - parseSaleDateTime(a.saleDate));
 import { StaffAccountsView } from './components/StaffAccountsView';
 import { supabase } from '@/integrations/supabase/client';
 import { InvoiceScanModal } from './components/InvoiceScanModal';
