@@ -1867,7 +1867,7 @@ export default function App() {
           <DataTable
             title={t.nav.listDraft}
             subtitle={lang === 'bn' ? 'গ্রাহকদের জন্য প্রস্তুতকৃত কোটেশন ও ড্রাফট মেমো।' : 'Pending quotations and draft tickets waiting for customer confirmation.'}
-            data={sales.filter(s => s.type === 'draft')}
+            data={sortSalesNewestFirst(sales.filter(s => s.type === 'draft'))}
             columns={saleColumns}
             addNewLabel={t.nav.addDraft}
             onAddNew={() => {
