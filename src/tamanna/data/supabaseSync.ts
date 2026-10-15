@@ -549,6 +549,23 @@ export const SupabaseSync = {
   },
 
   // Settings Sync
+  async fetchSetting<T = any>(key: string): Promise<T | null | undefined> {
+    // returns undefined on network/error, null when no row exists
+    if (!isSupabaseConfigured()) return undefined;
+    try {
+      const { data, error } = await supabase
+        .from('app_settings')
+        .select('value')
+        .eq('key', key)
+        .maybeSingle();
+      if (error) return undefined;
+      if (!data?.value) return null;
+      try { return JSON.parse(data.value) as T; } catch { return data.value as any; }
+    } catch {
+      return undefined;
+    }
+  },
+
   async saveSetting(key: string, value: any): Promise<boolean> {
     if (!isSupabaseConfigured()) return false;
     try {
