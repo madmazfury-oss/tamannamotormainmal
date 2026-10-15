@@ -658,6 +658,13 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                 onChange={(e) => {
                   const custId = e.target.value;
                   setSelectedCustomerId(custId);
+                  setWalkInMissing(null);
+                  if (custId === 'cust-walkin') {
+                    // Fresh walk-in: clear the previous customer's phone so it doesn't leak in
+                    setCustomerPhone('');
+                    setWalkInName('');
+                    return;
+                  }
                   const found = customers.find(c => c.id === custId);
                   if (found && found.phone) {
                     setCustomerPhone(found.phone);
@@ -696,9 +703,16 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                 <input
                   type="text"
                   value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder={lang === 'bn' ? 'ফোন নম্বর (Phone)' : 'Phone number'}
-                  className="w-1/2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                  onChange={(e) => {
+                    setCustomerPhone(e.target.value);
+                    if (walkInMissing?.phone) setWalkInMissing({ ...walkInMissing, phone: false });
+                  }}
+                  placeholder={lang === 'bn' ? 'ফোন নম্বর * (বাধ্যতামূলক)' : 'Phone number * (required)'}
+                  className={`w-1/2 rounded-lg border px-2.5 py-1 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none transition-colors ${
+                    walkInMissing?.phone
+                      ? 'border-rose-500 ring-1 ring-rose-400 bg-rose-50/40 dark:bg-rose-950/30'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500'
+                  }`}
                 />
               </div>
             </div>
