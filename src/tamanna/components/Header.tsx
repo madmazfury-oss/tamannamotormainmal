@@ -505,7 +505,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {profileDropdownOpen && (
-            <div className="relative w-full absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
+            <div className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-2xl border border-white/20 dark:border-white/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl py-1.5 shadow-2xl z-[100] animate-in fade-in zoom-in-95">
               <button
                 type="button"
                 onClick={() => setProfileDropdownOpen(false)}
