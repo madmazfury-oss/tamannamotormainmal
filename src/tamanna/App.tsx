@@ -58,6 +58,7 @@ import { SupabaseSync } from './data/supabaseSync';
 import { FirestoreSync, CloudCollections } from './data/firestoreSync';
 import { ReceiptModal } from './components/ReceiptModal';
 import { AuthScreen } from './components/AuthScreen';
+import { SalesAiView } from './components/SalesAiView';
 
 // Parses both "DD-MM-YYYY hh:mm AM/PM" (imported data) and locale/ISO strings (new sales)
 const parseSaleDateTime = (raw?: string): number => {
@@ -1409,6 +1410,23 @@ export default function App() {
       cell: (row) => <span className="font-mono font-bold text-slate-900 dark:text-white">{row.invoiceNo}</span>
     },
     {
+      header: lang === 'bn' ? 'তারিখ ও সময়' : 'Date & Time',
+      accessorKey: 'saleDate',
+      cell: (row) => {
+        const ms = parseSaleDateTime(row.saleDate);
+        if (!ms) return <span className="text-xs text-slate-500">{row.saleDate || '—'}</span>;
+        const d = new Date(ms);
+        return (
+          <span className="whitespace-nowrap text-xs font-semibold text-slate-700 dark:text-slate-200">
+            {d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+            <span className="block text-[11px] font-normal text-slate-500 dark:text-slate-400">
+              {d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+            </span>
+          </span>
+        );
+      }
+    },
+    {
       header: lang === 'bn' ? 'ধরণ' : 'Type',
       accessorKey: 'type',
       cell: (row) => (
@@ -1827,6 +1845,9 @@ export default function App() {
             lang={lang}
           />
         );
+
+      case 'sales-ai':
+        return <SalesAiView sales={sales} parseDate={parseSaleDateTime} lang={lang} />;
 
       case 'sales-all':
         return (
