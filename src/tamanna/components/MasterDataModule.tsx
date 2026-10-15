@@ -97,6 +97,10 @@ export const MODULES: Record<string, ModuleDef> = {
     collection: 'selling_price_groups', en: 'Selling Price Group', bn: 'বিক্রয় মূল্য গ্রুপ',
     subEn: 'Different selling prices for customer groups.', subBn: 'গ্রাহক গ্রুপভিত্তিক বিক্রয় মূল্য।',
     fields: [f('name', 'Name', 'নাম', { required: true }), f('description', 'Description', 'বিবরণ')],
+    seed: [
+      { id: 'spg-retail', name: 'Retail', description: 'Default selling price for walk-in & retail customers (hisabnikash)' },
+      { id: 'spg-wholesale', name: 'Wholesale', description: 'Wholesale / workshop customers' },
+    ],
   },
   'notification-templates': {
     collection: 'notification_templates', en: 'Notification Templates', bn: 'নোটিফিকেশন টেমপ্লেট',

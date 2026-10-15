@@ -432,8 +432,15 @@ export default function App() {
     });
     const unsubContacts = FirestoreSync.subscribeContacts((cnts) => {
       if (cnts.length > 0) {
-        setCustomers(cnts.filter(c => c.type === 'customer'));
-        setSuppliers(cnts.filter(c => c.type === 'supplier'));
+        // Merge live updates into the full imported list instead of replacing it
+        const merge = (prev: Contact[], incoming: Contact[]) => {
+          const map = new Map<string, Contact>();
+          for (const c of prev) map.set(c.id, c);
+          for (const c of incoming) map.set(c.id, c);
+          return Array.from(map.values());
+        };
+        setCustomers(prev => merge(prev, cnts.filter(c => c.type === 'customer')));
+        setSuppliers(prev => merge(prev, cnts.filter(c => c.type === 'supplier')));
       }
     });
     const unsubUsers = FirestoreSync.subscribeUsers((usrs) => {
@@ -1637,7 +1644,13 @@ export default function App() {
           <DataTable
             title={t.nav.customerGroup}
             subtitle={lang === 'bn' ? 'ওয়ার্কশপ ও পাইকারি ক্রেতাদের জন্য স্বয়ংক্রিয় ক্যাশ মেমো ডিসকাউন্ট।' : 'Tiered loyalty discounts and wholesale pricing bands applied automatically at POS checkout.'}
-            data={customerGroups}
+            data={(() => {
+              const names = new Map<string, number>();
+              customers.forEach(c => { const g = (c.customerGroup || 'Retail').trim() || 'Retail'; names.set(g, (names.get(g) || 0) + 1); });
+              const list = [...customerGroups];
+              names.forEach((n, g) => { if (!list.some(x => x.name.toLowerCase() === g.toLowerCase())) list.unshift({ id: `cg-${g.toLowerCase().replace(/\s+/g, '-')}`, name: g, calculationPercentage: 0, sellingPriceGroup: g }); });
+              return list.map(x => ({ ...x, name: names.get(x.name) ? `${x.name} (${names.get(x.name)})` : x.name }));
+            })()}
             columns={[
               {
                 header: lang === 'bn' ? 'গ্রুপের নাম' : 'Group Name',
