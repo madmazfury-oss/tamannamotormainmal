@@ -374,19 +374,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[
-          { label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${pSales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
-          { label: t.dashboard.netSales, value: netSalesValue, icon: CreditCard, tone: 'info', note: lang === 'bn' ? 'ভ্যাট বাদে বিক্রয়' : 'Sales excluding tax' },
-          { label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
-          { label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${pPurchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
-          { label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
-          { label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
-          { label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
+          { go: 'sales-all', label: t.dashboard.totalSales, value: totalSalesValue, icon: TrendingUp, tone: 'positive', note: `${pSales.length} ${lang === 'bn' ? 'টি চালান' : 'sales invoices'}`, featured: true },
+          { go: 'sales-all', label: t.dashboard.netSales, value: netSalesValue, icon: CreditCard, tone: 'info', note: lang === 'bn' ? 'ভ্যাট বাদে বিক্রয়' : 'Sales excluding tax' },
+          { go: 'contact-customers', label: t.dashboard.invoiceDue, value: invoiceDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'গ্রাহকদের নিকট পাওনা' : 'Customer receivables' },
+          { go: 'purchase-list', label: t.dashboard.totalPurchase, value: totalPurchaseValue, icon: ShoppingBag, tone: 'info', note: `${pPurchases.length} ${lang === 'bn' ? 'টি ক্রয়' : 'purchase invoices'}` },
+          { go: 'contact-suppliers', label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
+          { go: 'purchase-return-list', label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
+          { go: 'expenses-list', label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
           { label: lang === 'bn' ? 'এই সময়ের লাভ' : 'Profit (period)', value: periodProfit, icon: TrendingUp, tone: periodProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'বিক্রি − ক্রয় − খরচ · বিস্তারিত দেখুন' : 'Sold − bought − expenses · tap for details', detailKey: 'period' },
           { label: lang === 'bn' ? 'সারাসময়ের লাভ' : 'All-time profit', value: allTimeProfit, icon: BarChart3, tone: allTimeProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'শুরু থেকে আজ পর্যন্ত · বিস্তারিত দেখুন' : 'Since the beginning · tap for details', detailKey: 'all' },
           { label: lang === 'bn' ? 'নিট বাকি' : 'Net due', value: netDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'পাওনা − দেনা · বিস্তারিত দেখুন' : 'Receivable − payable · tap for details', detailKey: 'due' },
-          { label: lang === 'bn' ? 'পণ্যের ক্যাটালগ' : 'Product catalog', value: products.length, icon: Package, tone: 'positive', note: lang === 'bn' ? 'তালিকাভুক্ত পণ্য' : 'Catalog items', count: true },
-        ].map(({ label, value, icon: Icon, tone, note, featured, count, detailKey }: any) => (
-          <article key={label} onClick={detailKey ? () => setDetail(detailKey) : undefined} role={detailKey ? 'button' : undefined} className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''} ${detailKey ? 'cursor-pointer hover:ring-2 hover:ring-home-positive/40' : ''}`}>
+          { go: 'products-list', label: lang === 'bn' ? 'পণ্যের ক্যাটালগ' : 'Product catalog', value: products.length, icon: Package, tone: 'positive', note: lang === 'bn' ? 'তালিকাভুক্ত পণ্য' : 'Catalog items', count: true },
+        ].map(({ label, value, icon: Icon, tone, note, featured, count, detailKey, go }: any) => (
+          <article key={label} onClick={detailKey ? () => setDetail(detailKey) : go ? () => onNavigate(go) : undefined} role="button" className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''} cursor-pointer transition hover:-translate-y-0.5 hover:ring-2 hover:ring-home-positive/40`}>
             <div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold">{label}</span><span className={`tm-home-icon tm-home-tone-${tone}`}><Icon className="h-4 w-4" /></span></div>
             <p className="mt-4 break-words text-2xl font-bold tabular-nums">{count ? '' : '৳'}{value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</p>
             <p className="mt-2 text-xs tm-home-metric-note">{note}</p>
