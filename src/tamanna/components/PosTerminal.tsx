@@ -95,6 +95,7 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('cust-walkin');
   const [walkInName, setWalkInName] = useState<string>('');
+  const [walkInMissing, setWalkInMissing] = useState<{ name: boolean; phone: boolean } | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [discountPercent, setDiscountPercent] = useState<number>(0);
@@ -247,6 +248,21 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
       return;
     }
 
+    // Walk-in sales must carry the customer's name and phone number — they get saved to Customers
+    if (selectedCustomerId === 'cust-walkin') {
+      const nameMissing = !walkInName.trim();
+      const phoneDigits = (customerPhone.match(/\d/g) || []).length;
+      const phoneMissing = !customerPhone.trim() || phoneDigits < 6;
+      if (nameMissing || phoneMissing) {
+        setWalkInMissing({ name: nameMissing, phone: phoneMissing });
+        showToast(lang === 'bn'
+          ? 'ওয়াক-ইন ক্রেতার নাম ও ফোন নম্বর লিখুন — তারপর বিক্রিটি হবে।'
+          : 'Enter the walk-in customer name and phone number first.');
+        return;
+      }
+    }
+    setWalkInMissing(null);
+
     const prefix = invoiceSettings?.invoicePrefix || "TM-2026-";
     const invoiceNo = `${prefix}${Math.floor(1000 + Math.random() * 9000)}`;
     const now = new Date();
@@ -322,6 +338,11 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
     setIsReceiptOpen(true);
     setCart([]);
     setAmountTendered('');
+    // Fresh customer fields for the next sale
+    setSelectedCustomerId('cust-walkin');
+    setWalkInName('');
+    setCustomerPhone('');
+    setWalkInMissing(null);
   };
 
   // POS In-session Keyboard Shortcuts (F2 / Ctrl+Enter: complete sale, F4: print, Esc: close)
@@ -352,7 +373,7 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
 
     window.addEventListener('keydown', handlePosKeyDown);
     return () => window.removeEventListener('keydown', handlePosKeyDown);
-  }, [cart, grandTotal, currentCustomer, isReceiptOpen, amountTendered, paymentMethod]);
+  }, [cart, grandTotal, currentCustomer, isReceiptOpen, amountTendered, paymentMethod, selectedCustomerId, walkInName, customerPhone, walkInMissing]);
 
   const handlePrintCurrentDraftEstimate = () => {
     if (cart.length === 0) {
@@ -637,6 +658,13 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                 onChange={(e) => {
                   const custId = e.target.value;
                   setSelectedCustomerId(custId);
+                  setWalkInMissing(null);
+                  if (custId === 'cust-walkin') {
+                    // Fresh walk-in: clear the previous customer's phone so it doesn't leak in
+                    setCustomerPhone('');
+                    setWalkInName('');
+                    return;
+                  }
                   const found = customers.find(c => c.id === custId);
                   if (found && found.phone) {
                     setCustomerPhone(found.phone);
@@ -658,23 +686,33 @@ export const PosTerminal: React.FC<PosTerminalProps> = ({
                   onChange={(e) => {
                     if (selectedCustomerId === 'cust-walkin') {
                       setWalkInName(e.target.value);
+                      if (walkInMissing?.name) setWalkInMissing({ ...walkInMissing, name: false });
                     }
                   }}
                   readOnly={selectedCustomerId !== 'cust-walkin'}
-                  placeholder={lang === 'bn' ? 'ক্রেতার নাম (Walk-in Name)' : 'Customer Name (Walk-in)'}
+                  placeholder={lang === 'bn' ? 'ক্রেতার নাম * (বাধ্যতামূলক)' : 'Customer Name * (required)'}
                   className={`w-1/2 rounded-lg border px-2.5 py-1 text-[11px] font-bold focus:outline-none transition-colors ${
-                    selectedCustomerId === 'cust-walkin'
-                      ? 'border-emerald-500/50 bg-emerald-50/40 dark:bg-emerald-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
-                      : 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                    selectedCustomerId !== 'cust-walkin'
+                      ? 'border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300'
+                      : walkInMissing?.name
+                        ? 'border-rose-500 ring-1 ring-rose-400 bg-rose-50/40 dark:bg-rose-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
+                        : 'border-emerald-500/50 bg-emerald-50/40 dark:bg-emerald-950/30 text-slate-900 dark:text-white placeholder:text-slate-400'
                   }`}
                   title={lang === 'bn' ? 'ওয়াক-ইন ক্রেতার নাম' : 'Walk-in Customer Name'}
                 />
                 <input
                   type="text"
                   value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder={lang === 'bn' ? 'ফোন নম্বর (Phone)' : 'Phone number'}
-                  className="w-1/2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none focus:border-emerald-500"
+                  onChange={(e) => {
+                    setCustomerPhone(e.target.value);
+                    if (walkInMissing?.phone) setWalkInMissing({ ...walkInMissing, phone: false });
+                  }}
+                  placeholder={lang === 'bn' ? 'ফোন নম্বর * (বাধ্যতামূলক)' : 'Phone number * (required)'}
+                  className={`w-1/2 rounded-lg border px-2.5 py-1 text-[11px] font-mono text-slate-800 dark:text-white focus:outline-none transition-colors ${
+                    walkInMissing?.phone
+                      ? 'border-rose-500 ring-1 ring-rose-400 bg-rose-50/40 dark:bg-rose-950/30'
+                      : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500'
+                  }`}
                 />
               </div>
             </div>
