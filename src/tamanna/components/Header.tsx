@@ -30,7 +30,8 @@ import {
   Repeat,
   QrCode,
   Search,
-  Keyboard
+  Keyboard,
+  Minimize2
 } from 'lucide-react';
 import { Language, TRANSLATIONS } from '../i18n/translations';
 import { BusinessSettings, UserRole, AuthUser } from '../types';
