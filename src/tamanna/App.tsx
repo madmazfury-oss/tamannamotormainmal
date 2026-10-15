@@ -170,12 +170,44 @@ export default function App() {
     DatabaseStorage.saveExpenses(expenses);
   }, [expenses]);
 
+  // Business & invoice settings (incl. logo) are persisted to the cloud so they survive refresh/devices
+  const settingsHydratedRef = React.useRef(false);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [cloudB, cloudI] = await Promise.all([
+        SupabaseSync.fetchSetting<BusinessSettings>('business_settings'),
+        SupabaseSync.fetchSetting<InvoiceSettings>('invoice_settings'),
+      ]);
+      if (cancelled) return;
+      if (cloudB && typeof cloudB === 'object') setBusinessSettings(prev => ({ ...prev, ...cloudB }));
+      if (cloudI && typeof cloudI === 'object') setInvoiceSettings(prev => ({ ...prev, ...cloudI }));
+      // keep logo in sync between both configs
+      const cloudLogo = (cloudB as any)?.logoUrl || (cloudI as any)?.logoUrl;
+      if (cloudLogo) {
+        setBusinessSettings(prev => ({ ...prev, logoUrl: cloudLogo }));
+        setInvoiceSettings(prev => ({ ...prev, logoUrl: cloudLogo }));
+      }
+      settingsHydratedRef.current = true;
+      // Cloud had nothing yet: push current local copy up once
+      if (cloudB === null) SupabaseSync.saveSetting('business_settings', DatabaseStorage.loadBusinessSettings());
+      if (cloudI === null) SupabaseSync.saveSetting('invoice_settings', DatabaseStorage.loadInvoiceSettings());
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
   useEffect(() => {
     DatabaseStorage.saveBusinessSettings(businessSettings);
+    if (!settingsHydratedRef.current) return;
+    const t = setTimeout(() => { SupabaseSync.saveSetting('business_settings', businessSettings); }, 600);
+    return () => clearTimeout(t);
   }, [businessSettings]);
 
   useEffect(() => {
     DatabaseStorage.saveInvoiceSettings(invoiceSettings);
+    if (!settingsHydratedRef.current) return;
+    const t = setTimeout(() => { SupabaseSync.saveSetting('invoice_settings', invoiceSettings); }, 600);
+    return () => clearTimeout(t);
   }, [invoiceSettings]);
 
   // Auto-hydrate live dataset from TAMANNA MOTORS reference if browser storage was empty or had old partial records
