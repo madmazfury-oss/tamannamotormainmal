@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { saleProfit, catalogueMargin } from '../utils/profit';
+import { billTotals } from '../utils/profit';
+import { ProfitDetailsModal } from './ProfitDetailsModal';
 import { Button } from '@/components/ui/button';
 import dashboardWorkbench from '@/assets/dashboard-workbench.jpg';
 import {
@@ -205,10 +206,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     [pExpenses]
   );
 
-  const margin = useMemo(() => catalogueMargin(products), [products]);
-  const periodProfit = useMemo(() => pSales.filter(s => s.type !== 'draft').reduce((a, s) => a + saleProfit(s, margin).profit, 0) - totalExpensesValue, [pSales, margin, totalExpensesValue]);
-  const allTimeProfit = useMemo(() => (sales || []).filter(s => s.type !== 'draft').reduce((a, s) => a + saleProfit(s, margin).profit, 0) - (expenses || []).reduce((a, e) => a + (Number(e.amount) || 0), 0), [sales, expenses, margin]);
-  const netDueValue = invoiceDueValue - purchaseDueValue;
+  const periodProfit = useMemo(() => billTotals(pSales, pPurchases, pExpenses).profit, [pSales, pPurchases, pExpenses]);
+  const allTimeProfit = useMemo(() => billTotals(sales || [], purchases || [], expenses || []).profit, [sales, purchases, expenses]);
+  const netDueValue = useMemo(() => billTotals(pSales, pPurchases, pExpenses).netDue, [pSales, pPurchases, pExpenses]);
+  const [detail, setDetail] = useState<null | 'period' | 'all' | 'due'>(null);
   // Dynamic 30 Days sales calculation from real sales
   const last30DaysSalesData = useMemo(() => {
     const daysArr = [];
@@ -380,18 +381,29 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           { label: t.dashboard.purchaseDue, value: purchaseDueValue, icon: Clock, tone: 'danger', note: lang === 'bn' ? 'সরবরাহকারীদের দেনা' : 'Supplier payables' },
           { label: t.dashboard.purchaseReturn, value: totalPurchaseReturnValue, icon: RotateCcw, tone: 'info', note: lang === 'bn' ? 'ফেরতকৃত পণ্যের মূল্য' : 'Returned stock value' },
           { label: t.dashboard.totalExpenses, value: totalExpensesValue, icon: Receipt, tone: 'warning', note: lang === 'bn' ? 'ব্যবসার মোট খরচ' : 'Business expenses' },
-          { label: lang === 'bn' ? 'এই সময়ের লাভ' : 'Profit (period)', value: periodProfit, icon: TrendingUp, tone: periodProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'বিক্রির লাভ − খরচ' : 'Sales profit − expenses' },
-          { label: lang === 'bn' ? 'সারাসময়ের লাভ' : 'All-time profit', value: allTimeProfit, icon: BarChart3, tone: allTimeProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'শুরু থেকে আজ পর্যন্ত' : 'Since the beginning' },
-          { label: lang === 'bn' ? 'নিট বাকি' : 'Net due', value: netDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'পাওনা − দেনা (এই সময়ের)' : 'Receivable − payable' },
+          { label: lang === 'bn' ? 'এই সময়ের লাভ' : 'Profit (period)', value: periodProfit, icon: TrendingUp, tone: periodProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'বিক্রি − ক্রয় − খরচ · বিস্তারিত দেখুন' : 'Sold − bought − expenses · tap for details', detailKey: 'period' },
+          { label: lang === 'bn' ? 'সারাসময়ের লাভ' : 'All-time profit', value: allTimeProfit, icon: BarChart3, tone: allTimeProfit >= 0 ? 'positive' : 'danger', note: lang === 'bn' ? 'শুরু থেকে আজ পর্যন্ত · বিস্তারিত দেখুন' : 'Since the beginning · tap for details', detailKey: 'all' },
+          { label: lang === 'bn' ? 'নিট বাকি' : 'Net due', value: netDueValue, icon: AlertCircle, tone: 'warning', note: lang === 'bn' ? 'পাওনা − দেনা · বিস্তারিত দেখুন' : 'Receivable − payable · tap for details', detailKey: 'due' },
           { label: lang === 'bn' ? 'পণ্যের ক্যাটালগ' : 'Product catalog', value: products.length, icon: Package, tone: 'positive', note: lang === 'bn' ? 'তালিকাভুক্ত পণ্য' : 'Catalog items', count: true },
-        ].map(({ label, value, icon: Icon, tone, note, featured, count }) => (
-          <article key={label} className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''}`}>
+        ].map(({ label, value, icon: Icon, tone, note, featured, count, detailKey }: any) => (
+          <article key={label} onClick={detailKey ? () => setDetail(detailKey) : undefined} role={detailKey ? 'button' : undefined} className={`tm-home-metric ${featured ? 'tm-home-metric-featured' : ''} ${detailKey ? 'cursor-pointer hover:ring-2 hover:ring-home-positive/40' : ''}`}>
             <div className="flex items-center justify-between gap-2"><span className="text-xs font-semibold">{label}</span><span className={`tm-home-icon tm-home-tone-${tone}`}><Icon className="h-4 w-4" /></span></div>
             <p className="mt-4 break-words text-2xl font-bold tabular-nums">{count ? '' : '৳'}{value.toLocaleString('en-US', { maximumFractionDigits: 0 })}</p>
             <p className="mt-2 text-xs tm-home-metric-note">{note}</p>
           </article>
         ))}
       </div>
+
+      <ProfitDetailsModal
+        open={detail !== null}
+        onClose={() => setDetail(null)}
+        bn={lang === 'bn'}
+        title={detail === 'all' ? (lang === 'bn' ? 'সারাসময়ের লাভের বিস্তারিত' : 'All-time profit details') : detail === 'due' ? (lang === 'bn' ? 'বাকির বিস্তারিত' : 'Due details') : (lang === 'bn' ? 'এই সময়ের লাভের বিস্তারিত' : 'Period profit details')}
+        sales={detail === 'all' ? (sales || []) : pSales}
+        purchases={detail === 'all' ? (purchases || []) : pPurchases}
+        expenses={detail === 'all' ? (expenses || []) : pExpenses}
+        initialTab={detail === 'due' ? 'dues' : 'products'}
+      />
 
       {lowStockItems.length > 0 && (
         <div className="flex flex-col gap-3 border-l-4 border-home-warning bg-home-warning/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
