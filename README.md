@@ -1,6 +1,17 @@
-# Tamannamotor
+# TAMANNA MOTORS — POS & Inventory
 
-https://github.com/farizhossen93-ship-it/TAMANNA-MOTORS project ta add koro project ta add koro amra etate kaj koro eta already ready ekta project
+This repository contains the current TAMANNA MOTORS application, including the excavator sign-in screen, updated home dashboard, POS terminal, and business modules.
+
+## Current application
+
+- Framework: TanStack Start with React and Vite.
+- Entry: `src/routes/index.tsx` renders `src/tamanna/App.tsx`.
+- Sign-in: `src/tamanna/components/AuthScreen.tsx`.
+- Home: `src/tamanna/components/DashboardView.tsx`.
+- Theme: `src/styles.css` defines the design tokens and excavator sign-in; `src/tamanna/tamanna.css` supports the active business screens and home dashboard.
+- Real records are stored separately in Lovable Cloud. Downloading or syncing this repository does not export the live database.
+
+Use the branch connected in Lovable when downloading from GitHub. Another branch, an older ZIP, or an existing deployment may still contain an earlier version. Lovable changes sync automatically to its connected GitHub branch; restarting a previously downloaded copy does not update that copy.
 
 This project was built with [Lovable](https://lovable.dev).
 
