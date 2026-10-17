@@ -1,6 +1,6 @@
 # TAMANNA MOTORS Migration Roadmap
 
-- [ ] Recheck remaining retired UI and remove obsolete styling without changing the current appearance or records.
+- [x] Recheck retired UI: no remaining old application panels or unused themes; remove unreferenced template UI files, retain the current shared Button and all active business screens; routing test passed.
 
 - [x] Remove unused old login/audit/deletion UI and unused themes; preserve records, sync and active module styling; route tests and excavator login/reload verified. Signed-in screen check unavailable because no session could be minted for the requester.
 

@@ -12,3 +12,4 @@
 - Keep home-dashboard visuals scoped to `.tm-dashboard` and use global `home-*` semantic tokens; this isolates its theme from legacy module styling without changing business calculations.
 - Scope sign-in visuals to `.tm-excavator-*` with global `auth-*` semantic tokens and shared Button controls so legacy dashboard themes cannot override the entry screen.
 - The sole app entry is `src/routes/index.tsx` → `src/tamanna/App.tsx`; use `AuthScreen` for sign-in and `DashboardView` for home, and do not restore retired UI components or unused themes, so exports retain the current experience.
+- Keep only the shared Button in `src/components/ui`; the active business screens own their remaining controls, so unused template panels cannot be mistaken for a second application UI.
