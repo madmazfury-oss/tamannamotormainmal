@@ -1,5 +1,7 @@
 # TAMANNA MOTORS Migration Roadmap
 
+- [ ] Recheck remaining retired UI and remove obsolete styling without changing the current appearance or records.
+
 - [x] Remove unused old login/audit/deletion UI and unused themes; preserve records, sync and active module styling; route tests and excavator login/reload verified. Signed-in screen check unavailable because no session could be minted for the requester.
 
 - [x] Redesign login with excavator and spare-parts imagery; verify desktop/mobile, signup/reset forms, password visibility and invalid-login feedback without changing authentication.
